@@ -1,0 +1,85 @@
+﻿<nav class="animated bounceInDown no-print">
+    <ul>
+        <li><a href="../Home_Page.aspx">Home</a></li>
+        <li><a href="magic_computer.aspx">Magic Computer</a></li>
+        <li class="sub-menu">
+            <a>Create<i class="fa fa-caret-down right"></i></a>
+            <ul>
+                <li><a href="../Create/Create_Visit.aspx">Create a Visit</a></li>
+                <li><a href="../Create/Create_School.aspx">Create a School</a></li>
+                <li><a href="../Create/Create_Teacher.aspx">Create a Teacher</a></li>
+            </ul>
+        </li>
+        <li class="sub-menu">
+            <a>Edit<i class="fa fa-caret-down right"></i></a>
+            <ul>
+                <li><a href="../Edit/Edit_Visit.aspx">Edit Visit</a></li>
+                <li><a href="../Edit/Edit_School.aspx">Edit School</a></li>
+                <li><a href="../Edit/Edit_Teacher.aspx">Edit Teacher</a></li>
+                <li><a href="employee_management_system_review.aspx">Employee Management System</a></li>
+                <li><a href="business_profit_updates.aspx">Edit Profits</a></li>
+                <li><a href="Edit_sales.aspx">Edit Sales</a></li>
+                <li><a href="Edit_Business.aspx">Edit Business</a></li>
+            </ul>
+        </li>
+        <li class='sub-menu'>
+            <a>Tools<div class='fa fa-caret-down right'></div></a>
+            <ul>
+                <li><a href="Profit_display.aspx">Town Hall Powerpoint</a></li>
+                <li><a href="School_Visit_Checklist.aspx">School Visit Checklist</a></li>
+                <li><a href="Kit_Inventory.aspx">Kit Inventory</a></li>
+                <li><a href="Upload_Move_Articles.aspx">Upload / Move Articles</a></li>
+                <li><a href="School_Notes.aspx">School Notes</a></li>
+                <li><a href="Schedule_request_form_checklist.aspx">Schedule Request Form Checklist</a></li>
+                <li><a href="volunteer_database.aspx">Volunteer Database</a></li>
+                <li><a href="Requested_Features.aspx">Requested Features and Bug Reports</a></li>
+            </ul>
+        </li>
+        <li class='sub-menu'>
+            <a>Reports<div class='fa fa-caret-down right'></div></a>
+            <ul>
+                <li><a href="Business_sales_report.aspx">Business Sales Report</a></li>
+                <li><a href="Student_Spending_Report.aspx">Student Spending Report</a></li>
+                <li><a href="Amount_spend_report.aspx">Amount Spent Report</a></li>
+                <li><a href="Negative_balance_report.aspx">Negative Balance Report</a></li>
+                <li><a href="Business_profit_report.aspx">Profit Report</a></li>
+                <li><a href="Duplicate_numbers_report.aspx">Duplicate Number Report</a></li>
+                <li><a href="Duplicate_Students.aspx">Duplicate Students Report</a></li>
+                <li><a href="Employee_Report.aspx">Student Report</a></li>
+                <li><a href="School_Report.aspx">School Report</a></li>
+                <li><a href="Visit_Report.aspx">Visit Report</a></li>
+                <li><a href="Teacher_Report.aspx">Teacher Report</a></li>
+            </ul>
+        </li>
+        <li class='sub-menu'>
+            <a>Forms and Letters<div class='fa fa-caret-down right'></div></a>
+            <ul>
+                <li><a href="Liason_Information.aspx">Family & Community Liason Information</a></li>
+                <li><a href="teacher_letter.aspx">Teacher Letter</a></li>
+                <li><a href="Parent_Letter.aspx">Parent Letter</a></li>
+                <li><a href="EV_Daily_Forms.aspx">EV Daily Forms</a></li>
+                <li><a href="EV_Lunch_Forms.aspx">EV Lunch Forms</a></li>
+                <li><a href="Staff_List.aspx">Staff List</a></li>
+                <li><a href="Break_Schedules.aspx">Break Schedules</a></li>
+                <li><a href="Bus_Transportation.aspx">Bus Transportation</a></li>
+                <li><a href="school_schedule.aspx">School Schedule</a></li>
+                <li><a href="closed_business_checks.aspx">Closed Business Checks</a></li>
+                <li><a href="visit_calendar.aspx">Visit Calendar</a></li>
+            </ul>
+        </li>
+        <li><a href="directory.aspx">Business Directory</a></li>
+        <li><a href="Checklist_Directory.aspx">Checklist Directory</a></li>
+        <li><a href="Help_page.aspx">Help</a></li>
+        <li><a href="default.aspx">Log Out</a></li>
+    </ul>
+</nav>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="Scripts.js"></script>
+<script>
+            /* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
+            $(".sub-menu ul").hide();
+            $(".sub-menu a").click(function () {
+                $(this).parent(".sub-menu").children("ul").slideToggle("100");
+                $(this).find(".right").toggleClass("fa-caret-up fa-caret-down");
+            });
+</script>  

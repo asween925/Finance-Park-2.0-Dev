@@ -1,0 +1,1268 @@
+
+/*    USE 'Ctrl + M + H' TO HIDE BLOCKS OF CODE    */
+
+
+/************************ CLASSES USED ON MULTIPLE PAGES *************************/
+
+
+
+/*-----Main Classes-----*/
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Franklin Gothic Book', sans-serif;
+    background: #f5f5f5;
+}
+
+.gridview {
+    word-wrap: break-word;
+    table-layout: auto;
+    overflow-y: hidden;
+}
+
+.h2 {
+    border-bottom: 1px solid gray;
+    padding-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.h4 {
+    padding-bottom: 5px;
+    text-decoration: underline;
+}
+
+
+.ddl {
+    border-radius: 25px;
+    padding: 1px;
+    text-align: left;
+    border: 1px solid gray;
+    transition-duration: 0.2s;
+    font-size: 14px;
+    height: 25px;
+}
+
+    .ddl:hover {
+        border: 1px solid #34911e;
+    }
+
+.textbox {
+    border-radius: 15px;
+    border: 1px solid gray;
+    text-align: left;
+    padding: 1px;
+    padding-left: 6px;
+    font-size: 14px;
+    height: 20px;
+    font-family: 'Franklin Gothic Book', sans-serif;
+}
+
+    .textbox:hover {
+        border: 1px solid #34911e;
+    }
+
+.textbox2 {
+    border-radius: 15px;
+    border: 1px solid black;
+    text-align: left;
+    font-family: 'Franklin Gothic Book', sans-serif;
+}
+
+/*-----Main Classes End-----*/
+
+
+
+/*-----Misc Classes-----*/
+
+#Screen1 {
+    display: normal;
+}
+
+#Screen2 {
+    display: none;
+}
+
+.FP_logo_print {
+    margin-left: 42%;
+    width: 130px;
+    height: 70px;
+    position: fixed;
+    bottom: 0px;
+    bottom: 0px;
+}
+
+/*-----Misc Classes End-----*/
+
+
+
+/*-----Top Header (for Login, home page, ISI, inv home, print isi, teacher home-----*/
+
+#header-e1 {
+    float: left;
+    background: #34911e;
+    color: white;
+    padding: 15px;
+    position: sticky;
+    overflow-y: hidden;
+}
+
+#header-e2 {
+    text-align: center;
+    background: #34911e;
+    color: white;
+    padding: 15px;
+    overflow: hidden;
+    position: sticky;
+}
+
+#header-e3 {
+    float: right;
+    background: #34911e;
+    color: white;
+    padding: 15px;
+    position: sticky;
+    overflow-y: hidden;
+}
+
+/*-----Top Header End (for Login, home page, ISI, inv home, print isi, teacher home-----*/
+
+
+
+/*-----New Header-----*/
+
+.headerTop {
+    background: #34911e;
+    color: white;
+    padding: 15px;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+}
+
+/*-----New Header End-----*/
+
+
+
+/*-----Business Logo-----*/
+
+.business {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 50%;
+    max-height: 50%;
+}
+
+.Business_logo {
+    display: block;
+    margin: auto;
+    width: 100%;
+    height: auto;
+    max-height: 60%;
+    max-width: 50%;
+}
+
+/*-----Business Logo End-----*/
+
+
+
+/*-----Buttons-----*/
+
+.button {
+    background-color: #00a632;
+    border-radius: 10px;
+    color: white;
+    padding: 7px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.2s;
+    /*box-shadow: 1px 2px 10px 0px rgba(0,0,0,0.24),0 17px 500px 0 rgba(0,0,0,0.19);*/
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-bottom: 4px;
+    border: none;
+}
+
+    .button:hover {
+        background-color: darkgreen;
+    }
+
+.button1 {
+    background-color: #20690f; /* Dark blue */
+    border-radius: 25px;
+    color: white; /*font color*/
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    display: inline-block;
+    font-size: large;
+    font-variant-caps: normal;
+    margin: 4px 2px;
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.2s;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.button1:hover {
+    /*box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);*/
+    background-color: white;
+    color: black; /*font color*/
+    /*border: 2px solid #4CAF50;*/
+    font-size: large;
+    text-transform: uppercase;
+}
+
+.button2 {
+    background-color: #8452b9;
+    border-radius: 10px;
+    border-style: initial;
+    color: white;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.2s;
+}
+
+    .button2:hover {
+        background-color: #311b47;
+    }
+
+.transfer_savings_btn {
+    background-color: #00a632; /*light green*/
+    border-style: initial;
+    border-radius: 10px;
+    color: white;
+    padding: 7px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.2s;
+    /*box-shadow: 1px 2px 10px 0px rgba(0,0,0,0.24),0 17px 500px 0 rgba(0,0,0,0.19);*/
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-bottom: 4px;
+}
+
+    .transfer_savings_btn:hover {
+        background-color: #004515;
+        color: white;
+    }
+
+.button_grid {
+    text-align: center;
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    padding: 10px;
+}
+
+.button_grid_home {
+    text-align: center;
+    display: grid;
+    grid-template-columns: auto auto;
+    padding: 10px;
+}
+
+.button_grid_inv {
+    text-align: center;
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    padding: 10px;
+}
+
+.button_item {
+    padding: 10px;
+    font-size: 15px;
+    text-align: center;
+    border: 2px solid black;
+    border-radius: 25px;
+    margin: 10px;
+    background-color: white;
+    box-shadow: 0px 7px 3px rgba(50, 50, 50, 0.50);
+}
+
+.button_item2 {
+    padding: 10px;
+    font-size: 15px;
+    text-align: center;
+}
+
+.button_item3 {
+    padding: 10px;
+    font-size: 15px;
+    margin-left: 10%;
+}
+
+.button_inv_home {
+    background-color: #116bfa;
+    border-style: initial;
+    border-radius: 10px;
+    color: white;
+    padding: 7px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 35px;
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.2s;
+    /*box-shadow: 1px 2px 10px 0px rgba(0,0,0,0.24),0 17px 500px 0 rgba(0,0,0,0.19);*/
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-bottom: 4px;
+}
+
+    .button_inv_home:hover {
+        background-color: #1e2c73;
+    }
+
+/*-----Buttons End-----*/
+
+
+
+/*-----Navigation Bar-----*/
+
+nav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 15%;
+    height: 100%;
+    background-color: #ebebeb;
+    position: fixed;
+    overflow: auto;
+    top: 50px;
+}
+
+    nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+        nav ul li {
+            /* Sub Menu */
+        }
+
+            nav ul li a {
+                display: block;
+                background: #ebebeb;
+                padding: 10px 15px;
+                color: #333;
+                text-decoration: none;
+                -webkit-transition: 0.2s linear;
+                -moz-transition: 0.2s linear;
+                -o-transition: 0.2s linear;
+                transition: 0.2s linear;
+            }
+
+                nav ul li a:hover {
+                    background: #f8f8f8;
+                    color: #515151;
+                }
+
+                nav ul li a .fa {
+                    width: 22px;
+                    text-align: center;
+                    margin-right: 5px;
+                    float: right;
+                    height: 13px;
+                }
+
+        nav ul ul {
+            background-color: #ebebeb;
+        }
+
+        nav ul li ul li a {
+            background: #f8f8f8;
+            border-left: 4px solid transparent;
+            padding: 10px 20px;
+        }
+
+            nav ul li ul li a:hover {
+                background: #ebebeb;
+                border-left: 4px solid #3498db;
+            }
+
+/*-----Navigation Bar End-----*/
+
+
+
+/*-----Gridview-----*/
+
+.mydatagrid {
+    width: 80%;
+    border: solid 2px black;
+    min-width: 80%;
+}
+
+.header {
+    background-color: #00a632;
+    color: White;
+    height: 25px;
+    text-align: center;
+}
+
+.rows {
+    color: #000;
+}
+
+    .rows:hover {
+        background-color: #52bb72;
+        color: #fff;
+    }
+
+.mydatagrid a /** FOR THE PAGING ICONS **/ {
+    background-color: Transparent;
+    padding: 5px 5px 5px 5px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+    .mydatagrid a:hover /** FOR THE PAGING ICONS HOVER STYLES**/ {
+        background-color: #000;
+        color: #fff;
+    }
+
+.mydatagrid span /** FOR THE PAGING ICONS CURRENT PAGE INDICATOR **/ {
+    background-color: #fff;
+    color: #000;
+    padding: 5px 5px 5px 5px;
+}
+
+.pager {
+    background-color: #00a632;
+    color: White;
+    height: 30px;
+    text-align: left;
+}
+
+.mydatagrid td {
+    padding: 5px;
+}
+
+.mydatagrid th {
+    padding: 5px;
+}
+
+.gridviewDiv {
+    overflow-x: scroll;
+    width: 90%;
+    height: 65%;
+}
+
+/***********Gridview CSS End************/
+
+
+
+/*-----Content Classes-----*/
+
+.content {
+    margin-left: 16%;
+    padding: 1px 16px;
+    margin-top: 47px;
+    /*box-shadow: -10px 0px 10px -5px #888888;*/
+}
+
+.content_ISI {
+    padding: 1px 50px;
+    overflow-x: hidden;
+    height: 95vh;
+    /*box-shadow: -10px 0px 10px -5px #888888;*/
+}
+
+.content_ISI2 {
+    padding: 1px 50px;
+    overflow-x: hidden;
+    height: 95vh;
+    /*box-shadow: -10px 0px 10px -5px #888888;*/
+}
+
+.content_home {
+    padding: 1px 50px;
+    /*overflow-x: hidden;*/
+    text-align: center;
+}
+
+.content_home_bottom {
+    font-size: 10px;
+    color: gray;
+}
+
+.content_home_changelog {
+    font-size: 16px;
+    color: gray;
+}
+
+.content_home_onfloor {
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    right: 0px;
+}
+
+.content_help {
+    padding-right: 400px;
+    overflow-x: hidden;
+    text-align: left;
+}
+
+/*-----Content Classes End-----*/
+
+
+
+/************************ SPECIFIC PAGES CLASSES *************************/
+
+
+
+/*-----EV Lunches-----*/
+
+.daily_receipt {
+    border: 2px solid black;
+    padding: 10px;
+    background-image: radial-gradient(#212121 20%, transparent 20%), radial-gradient(#fafafa 20%, transparent 20%);
+    /*background-color: #e53935;*/
+    background-position: 0 0, 50px 50px;
+    background-size: 5px 5px;
+    /*    height: 100px;
+    width: 100px;*/
+}
+
+.EV_logo_lunches_receipt {
+    height: 80px;
+    width: 100px;
+    float: right;
+}
+
+/*-----EV Lunches End-----*/
+
+
+
+/*-----Help Page-----*/
+
+.dropbtn {
+    background-color: #116bfa;
+    border-style: initial;
+    border-radius: 10px;
+    color: white;
+    padding: 7px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    color: black;
+    border-radius: 25px;
+}
+
+    .dropdown-content a {
+        color: black;
+        padding: 4px 4px;
+        text-decoration: none;
+        display: block;
+    }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1
+        }
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: #1e2c73;
+}
+
+.help_page_divs:target {
+    display: block !important;
+}
+
+.help_page_ddl_button {
+    background-color: #f9f9f9;
+    display: inline-block;
+    cursor: pointer;
+    color: #000000;
+    font-family: Arial;
+    font-size: 12px;
+    padding: 8px;
+    text-decoration: none;
+    text-shadow: 0px 1px 0px #ffffff;
+    border: none;
+}
+
+/*-----Help Page End-----*/
+
+
+
+/*-----Home Page-----*/
+
+.Home_Page_Todays_Info {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Popup container - can be anything you want */
+
+.popup {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+    /* The actual popup */
+    .popup .popuptext {
+        visibility: hidden;
+        background-color: #cac8c8;
+        border: 2px solid #116bfa;
+        width: 500px;
+        color: black;
+        text-align: left;
+        border-radius: 6px;
+        padding: 20px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -250px;
+        font-size: 15px;
+    }
+
+    /* Toggle this class - hide and show the popup */
+    .popup .show {
+        visibility: visible;
+        -webkit-animation: fadeIn 1s;
+        animation: fadeIn 1s;
+    }
+
+/*-----Home Page Drop Downs-----*/
+
+.Home_Page_Drop_Down_Btn {
+    background-color: #00a632;
+    border-radius: 20px;
+    color: white;
+    padding: 15px 15px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    margin-left: 5px;
+    margin-right: 5px;
+    font-weight: bold;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.14),0 17px 50px 0 rgba(0,0,0,0.09);
+}
+
+/* The container <div> - needed to position the dropdown content */
+.Home_Page_Drop_Down_Menu {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.Home_Page_Drop_Down_Content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 10px;
+}
+
+    /* Links inside the dropdown */
+    .Home_Page_Drop_Down_Content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        text-align: left;
+    }
+
+        /* Change color of dropdown links on hover */
+        .Home_Page_Drop_Down_Content a:hover {
+            background-color: #f1f1f1;
+            border-radius: 10px;
+        }
+
+/* Show the dropdown menu on hover */
+.Home_Page_Drop_Down_Menu:hover .Home_Page_Drop_Down_Content {
+    display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.Home_Page_Drop_Down_Menu:hover .Home_Page_Drop_Down_Btn {
+    background-color: #257e11;
+}
+
+/*-----Home Page Drop Down End-----*/
+
+/*-----Home Page Calendar-----*/
+
+.Home_Page_Calendar_Outer {
+    margin-top: 80px;
+}
+
+.Home_Page_Calendar_Inner {
+    align-content: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.Home_Page_Calendar_Block_Start {
+    border-left: 2px solid black;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    border-right: 1.5px solid black;
+    width: 150px;
+    height: 160px;
+    position: relative;
+}
+
+.Home_Page_Calendar_Block {
+    border: 1.5px solid black;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    width: 150px;
+    height: 160px;
+    position: relative;
+}
+
+.Home_Page_Calendar_Block_End {
+    border-right: 2px solid black;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    border-left: 1.5px solid black;
+    width: 150px;
+    height: 160px;
+    position: relative;
+}
+
+.Home_Page_Calendar_Number {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    padding: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.Home_Page_Calendar_Day {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    padding: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.Home_Page_Calendar_Button {
+    background-color: #116bfa;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    padding: 5px 7px;
+    text-align: left;
+    font-size: 10px;
+    width: 146px;
+    max-height: 20px;
+    margin-top: 2px;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+    .Home_Page_Calendar_Button:hover {
+        background-color: #1e2c73;
+    }
+
+/*-----Home Page Calendar End-----*/
+
+/*-----Home Page Weather-----*/
+
+.Home_Page_Weather {
+    position: absolute;
+}
+
+.Home_Page_Weather_Button {
+    border: 1px solid black;
+    border-radius: 50px;
+    background-color: orange;
+}
+
+    .Home_Page_Weather_Button:hover {
+        background-color: #ce7c00;
+        transition-duration: 0.2s;
+    }
+
+.Home_Page_Weather_Popup {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+    .Home_Page_Weather_Popup .Home_Page_Weather_Popup_Text {
+        visibility: hidden;
+        background-color: #cac8c8;
+        border: 2px solid #116bfa;
+        width: 200px;
+        height: 300px;
+        color: black;
+        text-align: center;
+        border-radius: 6px;
+        padding: 20px;
+        position: absolute;
+        z-index: 1;
+        left: 10%;
+        margin-left: 20px;
+        font-size: 15px;
+    }
+
+    .Home_Page_Weather_Popup .Home_Page_Weather_Popup_Show {
+        visibility: visible;
+        -webkit-animation: fadeIn 1s;
+        animation: fadeIn 1s;
+    }
+
+/*-----Home Page Weather End-----*/
+
+/*-----Home Page End-----*/
+
+
+
+/*-----Parent Letter-----*/
+
+.Parent_Letter_Slip {
+    border-top: 2px dashed black;
+}
+
+/*-----Parent Letter End-----*/
+
+
+
+/*-----Closed Business Checks-----*/
+
+.Closed_Checks {
+    border: 2px solid black;
+    text-align: center;
+    width: 20.2cm;
+    height: 6.34444cm;
+    margin: auto;
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-top: 12px;
+    background-color: lightcyan;
+    display: inline-block;
+}
+
+.Closed_Checks_Check_Number {
+    float: right;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    font-size: 20px;
+}
+
+.Closed_Checks_Check_Business_Name {
+    float: left;
+    padding-left: 24px;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.Closed_Checks_Business_Address {
+    float: left;
+    font-size: 15px;
+    padding-left: 24px;
+}
+
+.Closed_Checks_Check_Date_Text {
+    float: right;
+    padding-right: 8px;
+    font-size: 18px;
+}
+
+.Closed_Checks_Check_Date {
+    float: right;
+    padding-right: 0px;
+    font-size: 18px;
+}
+
+.Closed_Checks_Pay_To_The {
+    float: left;
+    padding-right: 8px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.Closed_Checks_Student_Name {
+    float: left;
+    padding-left: 5px;
+    font-size: 18px;
+    width: 440px;
+}
+
+.Closed_Checks_Written_Amount {
+    float: left;
+    padding-left: 5px;
+    font-size: 18px;
+    width: 630px;
+}
+
+.Closed_Checks_Memo_Text {
+    float: left;
+    padding-left: 5px;
+    font-size: 18px;
+    width: 300px;
+}
+
+.Closed_Checks_Dollars_Text {
+    float: left;
+    padding-left: 8px;
+    font-size: 18px;
+}
+
+.Closed_Checks_Memo {
+    float: left;
+    padding-right: 5px;
+    padding-top: 2px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.Closed_Checks_Sign_Line {
+    float: right;
+    padding-top: 8px;
+    font-weight: bold;
+}
+
+.Closed_Checks_Bottom_Check {
+    padding-top: 10px;
+}
+
+.Closed_Checks_Signature_Image {
+    width: 240px;
+    height: 90px;
+    position: absolute;
+    margin-left: -100px;
+    margin-top: -20px;
+}
+
+/*-----Closed Business Checks End-----*/
+
+
+
+/*-----Visit Calendar-----*/
+
+.Visit_Calendar_Calendar_Outer {
+    margin-top: 50px;
+}
+
+.Visit_Calendar_Calendar_Inner {
+    align-content: center;
+    display: flex;
+    align-items: center;
+}
+
+.Visit_Calendar_Calendar_Block {
+    width: 150px;
+    height: 160px;
+    position: relative;
+}
+
+.VCC_Mon {
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+}
+
+.VCC_Tue {
+    border-right: 2px solid black;
+}
+
+.VCC_Wed {
+    border-right: 2px solid black;
+}
+
+.VCC_Thu {
+    border-right: 2px solid black;
+}
+
+.VCC_Fri {
+    border-right: 2px solid black;
+}
+
+.VCC_W1 {
+    border-top: 2px solid black;
+}
+
+.VCC_W2 {
+    border-top: 2px solid black;
+}
+
+.VCC_W3 {
+    border-top: 2px solid black;
+}
+
+.VCC_W4 {
+    border-top: 2px solid black;
+}
+
+.VCC_W5 {
+    border-bottom: 2px solid black;
+    border-top: 2px solid black;
+}
+
+.Visit_Calendar_Calendar_Number {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    padding: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.Visit_Calendar_Calendar_Day {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    padding: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.Visit_Calendar_Calendar_Button {
+    background-color: #116bfa;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    padding: 5px 7px;
+    text-align: left;
+    font-size: 10px;
+    width: 146px;
+    max-height: 20px;
+    margin-top: 2px;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+    .Visit_Calendar_Calendar_Button:hover {
+        background-color: #1e2c73;
+    }
+
+/*-----Visit Calendar End-----*/
+
+
+
+/*-----Login Page-----*/
+
+.login {
+    text-align: center;
+    font-size: 16px;
+    padding: 1px 16px;
+}
+
+/*-----Login Page End-----*/
+
+
+
+/*-----Town Hall Powerpoint-----*/
+
+#Bus1 {
+    display: none;
+}
+
+#Bus2 {
+    display: none;
+}
+
+#Bus3 {
+    display: none;
+}
+
+#Bus4 {
+    display: none;
+}
+
+#Bus5 {
+    display: none;
+}
+
+#Bus6 {
+    display: none;
+}
+
+#Bus7 {
+    display: none;
+}
+
+#Bus8 {
+    display: none;
+}
+
+#Bus9 {
+    display: none;
+}
+
+#Bus10 {
+    display: none;
+}
+
+#Bus11 {
+    display: none;
+}
+
+#Bus12 {
+    display: none;
+}
+
+#Bus13 {
+    display: none;
+}
+
+#Bus14 {
+    display: none;
+}
+
+#Bus15 {
+    display: none;
+}
+
+#Bus16 {
+    display: none;
+}
+
+#Bus17 {
+    display: none;
+}
+
+#Message {
+    visibility: visible;
+    display: inline-block
+}
+
+.Heading1 {
+    font-size: calc(90px + 2vw);
+    font-weight: 700
+}
+
+.Heading2 {
+    font-size: calc(70px + 2vw);
+}
+
+
+/*-----Town Hall Powerpoint Ends-----*/
+
+
+
+/*-----Magic Computer-----*/
+
+.transactions_dgv_table {
+    position: relative;
+    bottom: 370px;
+    left: 450px;
+    overflow-x: scroll;
+    width: 200px;
+}
+
+/*-----Magic Computer End-----*/
+
+
+
+/*-----EMS------*/
+
+.print_dgv {
+    display: none;
+}
+
+/*-----EMS End-----*/
+
+
+
+/*-----School Visit Checklist-----*/
+
+.school_visit_section {
+    border-top: 1px solid gray;
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+/*-----School Visit Checklist End-----*/
+
+
+
+/*-----Teacher Home-----*/
+
+.teacher_home_stavros_logo {
+    padding: 30px;
+    height: 70px;
+    width: 240px;
+    bottom: 0px;
+    right: 0px;
+    position: absolute;
+}
+
+/*-----Teacher Home End-----*/
+
+
+
+/************************ SPECIFIC PAGES CLASSES END *************************/
+
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

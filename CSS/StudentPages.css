@@ -1,0 +1,287 @@
+﻿
+/*    USE 'Ctrl + M + H' TO HIDE BLOCKS OF CODE    */
+
+
+/************************ CLASSES USED ON MULTIPLE PAGES *************************/
+
+/*-----Main Classes-----*/
+
+.ddl {
+    border-radius: 25px;
+    padding: 1px;
+    text-align: left;
+    border: 1px solid gray;
+    transition-duration: 0.2s;
+    font-size: 14px;
+    height: 25px;
+}
+
+    .ddl:hover {
+        border: 1px solid #34911e;
+    }
+
+.textbox {
+    border-radius: 15px;
+    border: 1px solid gray;
+    text-align: left;
+    padding: 1px;
+    padding-left: 6px;
+    font-size: 14px;
+    height: 20px;
+    font-family: 'Franklin Gothic Book', sans-serif;
+}
+
+    .textbox:hover {
+        border: 1px solid #34911e;
+    }
+
+#Site_Wrap_Fullscreen {
+    display: block;
+    height: 100%;
+    width: 100%;
+    ms-transform-origin: top left;
+    webkit-transform-origin: top left;
+    transform-origin: top left;
+    webkit-transition: all 500ms ease-in-out !important;
+    transition: all 500ms ease-in-out !important;
+    position: absolute;
+    font-family: 'Franklin Gothic Book', sans-serif;
+}
+
+#Site_Wrap_Header {
+    font-family: 'Franklin Gothic Book', sans-serif;
+    grid-gap: 0px;
+    display: grid;
+    grid-template-areas: "header1 header2 header3"
+        "main main main"
+        "footer1 footer2 footer3";
+    grid-template-columns: 20% 60% 20%;
+    grid-template-rows: 10% 90% 0%;
+    height: 100%;
+    width: 100%;
+    ms-transform-origin: top left;
+    webkit-transform-origin: top left;
+    transform-origin: top left;
+    webkit-transition: all 500ms ease-in-out !important;
+    transition: all 500ms ease-in-out !important;
+    position: absolute;
+    overflow: auto;
+}
+
+body {
+    margin: 0;
+    background-color: #8ec851;
+}
+
+h3 {
+    font-size: 42px;
+    text-decoration: underline;
+}
+
+/*-----End Main Classes-----*/
+
+
+
+/*-----Headers-----*/
+
+.header {
+    margin-right: auto;
+    margin-top: 40px;
+    max-width: 80%;
+    background: white;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+}
+
+    .header img {
+        height: 100%;
+        width: 100%;
+        object-fit: scale-down;
+        transform: scale(.9,.9);
+    }
+
+/*-----End Headers-----*/
+
+
+
+/*-----Logos-----*/
+
+.Business_logo {
+    display: block;
+    margin: auto;
+    padding-top: 9px;
+    padding-bottom: 7px;
+    max-width: 90%;
+    min-width: 20%;
+    height: 85%;
+}
+
+.EV_logo {
+    display: block;
+    margin-right: auto;
+    padding-top: 15px;
+    margin-left: auto;
+    max-width: 90%;
+    min-width: 20%;
+    height: 99%;
+}
+
+/*-----End Logos-----*/
+
+
+
+/*-----Buttons-----*/
+
+.button {
+    background-color: #00a632;
+    border-radius: 10px;
+    color: white;
+    padding: 7px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.2s;
+    /*box-shadow: 1px 2px 10px 0px rgba(0,0,0,0.24),0 17px 500px 0 rgba(0,0,0,0.19);*/
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-bottom: 4px;
+    border: none;
+}
+
+    .button:hover {
+        background-color: darkgreen;
+    }
+
+.buttonLarge {
+    background-color: #20690f;
+    border-radius: 50px;
+    border-style: initial;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: calc(17px + 2vh);
+    margin: 2px;
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.3s;
+    box-shadow: 0 6px #164a0a;
+
+}
+
+    .buttonLarge:hover {
+        background-color: #268710;
+        box-shadow: 0 4px #164a0a;
+        bottom: -2px;
+    }
+
+    .buttonLarge:active {
+        box-shadow: none;
+        bottom: -6px;
+    }
+
+.buttonReset {
+    background-color: #afafaf;
+    border-radius: 10px;
+    color: white;
+    padding: 7px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.2s;
+    /*box-shadow: 1px 2px 10px 0px rgba(0,0,0,0.24),0 17px 500px 0 rgba(0,0,0,0.19);*/
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-bottom: 4px;
+    border: none;
+}
+    .buttonReset:hover {
+        background-color: #858585;
+    }
+
+/*-----Buttons End-----*/
+
+
+
+/************************ SPECIFIC PAGES CLASSES *************************/
+
+/*-----Sim Start-----*/
+
+.Sim_Start_Logo_Back {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 40px;
+    max-width: 80%;
+    background: white;
+    border-radius: 25px;
+}
+
+.Sim_Start_Btn_Div {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 40px;
+    max-width: 80%
+}
+
+.Sim_Start_Logo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 40px;
+    max-width: 70%;
+}
+
+.Sim_Start_Btn {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 150px;
+    max-width: 30%;
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+
+/*-----Sim Start End-----*/
+
+
+
+/*-----Sim Login-----*/
+
+.Sim_Login_Div {
+    border: 2px solid black;
+    background: white;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 40px;
+    max-width: 40%;
+    border-radius: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    color: darkgreen;
+}
+
+.Sim_Login_Fields {
+    float: right;
+}
+
+.Sim_Login_Top {
+    border-bottom: 1px solid gray;
+    padding-bottom: 10px;
+    color: black;
+    font-size: 24px;
+}
+
+/*-----Sim Login End-----*/
+
+/************************ SPECIFIC PAGES CLASSES END *************************/
+
