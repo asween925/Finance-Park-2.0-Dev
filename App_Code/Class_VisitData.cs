@@ -140,19 +140,19 @@ public partial class Class_VisitData
 
     public object LoadVisitInfoTable(string SQLWhereVisitDate = null, string SQLWhereSchool = null, string SQLWhereMonth = null, string SQLWhereNot = null)
     {
+        string connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
         string SQLStatement = @"SELECT v.id, IIF(s.id='505', s.schoolName, CONCAT(s.schoolName, ' (', s.id, ')')) as 'School #1',
 		                                    IIF(s2.id='505', s2.schoolName, CONCAT(s2.schoolName, ' (', s2.id, ')')) as 'School #2', 
                                              IIF(s3.id='505', s3.schoolName, CONCAT(s3.schoolName, ' (', s3.id, ')')) as 'School #3', 
                                              IIF(s4.id='505', s4.schoolName, CONCAT(s4.schoolName, ' (', s4.id, ')')) as 'School #4', 
                                              IIF(s5.id='505', s5.schoolName, CONCAT(s5.schoolName, ' (', s5.id, ')')) as 'School #5',
-                                            v.vTrainingTime, v.vMinCount, v.vMaxCount, v.replyBy, v.visitDate, v.studentCount, v.vLead
-                                            ,v.floorFacilitator, v.backupTeacher, v.visitTime, v.teacherCompleted, v.lastEdited
+                                            v.vTrainingTime, v.vMinCount, v.vMaxCount, v.replyBy, v.visitDate, v.studentCount, v.visitTime, v.teacherCompleted, v.lastEdited
                                             FROM visitInfoFP v 
-                                            LEFT JOIN schoolInfo s ON s.ID = v.school
-                                            LEFT JOIN schoolInfo s2 ON s2.ID = v.school2
-                                            LEFT JOIN schoolInfo s3 ON s3.ID = v.school3
-                                            LEFT JOIN schoolInfo s4 ON s4.ID = v.school4
-                                            LEFT JOIN schoolInfo s5 ON s5.ID = v.school5";
+                                            LEFT JOIN schoolInfoFP s ON s.ID = v.school
+                                            LEFT JOIN schoolInfoFP s2 ON s2.ID = v.school2
+                                            LEFT JOIN schoolInfoFP s3 ON s3.ID = v.school3
+                                            LEFT JOIN schoolInfoFP s4 ON s4.ID = v.school4
+                                            LEFT JOIN schoolInfoFP s5 ON s5.ID = v.school5";
 
         if (!string.IsNullOrEmpty(SQLWhereVisitDate))
         {

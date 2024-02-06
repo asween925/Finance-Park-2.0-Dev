@@ -96,6 +96,9 @@
                 <div class="Home_Page_Drop_Down_Menu">
                     <button class="Home_Page_Drop_Down_Btn">Reports ▼</button>
                     <div class="Home_Page_Drop_Down_Content">
+                        <a href="../Pages/Reports/Visit_Report.aspx">Visit Report</a>
+                        <a href="../Pages/Reports/School_Report.aspx">School Report</a>                      
+                        <a href="../Pages/Reports/Teacher_Report.aspx">Teacher Report</a>
                         <a href="Business_sales_report.aspx">Business Sales Report</a>
                         <a href="Student_Spending_Report.aspx">Student Spending Report</a>
                         <a href="Amount_spend_report.aspx">Amount Spent Report</a>
@@ -104,9 +107,6 @@
                         <a href="Duplicate_numbers_report.aspx">Duplicate Number Report</a>
                         <a href="Duplicate_Students.aspx">Duplicate Students Report</a>
                         <a href="Employee_Report.aspx">Student Report</a>
-                        <a href="School_Report.aspx">School Report</a>
-                        <a href="Visit_Report.aspx">Visit Report</a>
-                        <a href="Teacher_Report.aspx">Teacher Report</a>
                     </div>
                 </div>
 

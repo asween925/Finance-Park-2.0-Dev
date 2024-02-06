@@ -11,4 +11,11 @@ public partial class Sim_Login : System.Web.UI.Page
     {
 
     }
+
+    protected void reset_btn_Click(object sender, EventArgs e)
+    {
+        firstName_tb.Text = "";
+        lastName_tb.Text = "";
+
+    }
 }

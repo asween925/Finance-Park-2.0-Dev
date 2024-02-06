@@ -41,7 +41,7 @@
             </h3>
             <p>School Name:</p>
             <asp:DropDownList ID="schoolName_ddl" runat="server" CssClass="ddl" AutoPostBack="true" OnSelectedIndexChanged="schoolName_ddl_SelectedIndexChanged"></asp:DropDownList>&ensp;<asp:Label ID="error_lbl" runat="server" ForeColor="Red" Font-Bold="true" Font-Size="X-Large"></asp:Label>
-            <p>Search by School Name:</p>
+            <p>Type in School Name:</p>
             <asp:TextBox ID="search_tb" runat="server" CssClass="textbox"></asp:TextBox> &nbsp;&nbsp; <asp:Button ID="search_btn" runat="server" CssClass="button" text="Search" OnClick="search_btn_Click"/>     
             <br /><br />            
             <asp:Button ID="refresh_btn" runat="server" CssClass="button" text="Show All Schools" OnClick="refresh_btn_Click"/>

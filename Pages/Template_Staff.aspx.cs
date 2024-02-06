@@ -63,7 +63,7 @@ public partial class Template_Staff : Page
         //}
     }
 
-    //private void notes_dgv_RowUpdating(object sender, GridViewUpdateEventArgs e)
+    //protected void notes_dgv_RowUpdating(object sender, GridViewUpdateEventArgs e)
     //{
     //    int ID = Convert.ToInt32(notes_dgv.DataKeys[e.RowIndex].Values[0]); // Gets id number
     //    string SchoolName = ((DropDownList)notes_dgv.Rows[e.RowIndex].FindControl("schoolNameDGV_ddl")).SelectedValue;
@@ -99,7 +99,7 @@ public partial class Template_Staff : Page
     //    }
     //}
 
-    //private void notes_dgv_RowDeleting(object sender, GridViewDeleteEventArgs e)
+    //protected void notes_dgv_RowDeleting(object sender, GridViewDeleteEventArgs e)
     //{
     //    int ID = Convert.ToInt32(notes_dgv.DataKeys[e.RowIndex].Values[0]); // Gets id number
 
@@ -127,25 +127,25 @@ public partial class Template_Staff : Page
     //    }
     //}
 
-    //private void notes_dgv_RowEditing(object sender, GridViewEditEventArgs e)
+    //protected void notes_dgv_RowEditing(object sender, GridViewEditEventArgs e)
     //{
     //    notes_dgv.EditIndex = e.NewEditIndex;
     //    LoadData();
     //}
 
-    //private void notes_dgv_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+    //protected void notes_dgv_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
     //{
     //    notes_dgv.EditIndex = -1;
     //    LoadData();
     //}
 
-    //private void notes_dgv_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    //protected void notes_dgv_PageIndexChanging(object sender, GridViewPageEventArgs e)
     //{
     //    notes_dgv.PageIndex = e.NewPageIndex;
     //    LoadData();
     //}
 
-    //private void notes_dgv_RowDataBound(object sender, GridViewRowEventArgs e)
+    //protected void notes_dgv_RowDataBound(object sender, GridViewRowEventArgs e)
     //{
     //    if ((e.Row.RowType == DataControlRowType.DataRow))
     //    {

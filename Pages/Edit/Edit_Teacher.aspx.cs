@@ -81,8 +81,8 @@ public partial class Edit_Teacher : Page
         }
 
         //Load teacherInfoFP table
-        //try
-        //{
+        try
+        {
             con.ConnectionString = ConnectionString;
             con.Open();
             Review_sds.ConnectionString = ConnectionString;
@@ -93,12 +93,12 @@ public partial class Edit_Teacher : Page
             cmd.Dispose();
             con.Close();
 
-        //}
-        //catch
-        //{
-        //    error_lbl.Text = "Error in LoadData(). Cannot load teacherInfo table.";
-        //    return;
-        //}
+        }
+        catch
+        {
+            error_lbl.Text = "Error in LoadData(). Cannot load teacherInfo table.";
+            return;
+        }
 
         // Highlight row being edited
         foreach (GridViewRow row in teachers_dgv.Rows)
