@@ -84,7 +84,7 @@ h3 {
 
 /*-----Headers-----*/
 
-.header {
+.headerStart {
     margin-right: auto;
     margin-top: 40px;
     max-width: 80%;
@@ -93,9 +93,21 @@ h3 {
     border-bottom-right-radius: 25px;
 }
 
-    .header img {
+    .headerStart img {
         height: 100%;
         width: 100%;
+        object-fit: scale-down;
+        transform: scale(.9,.9);
+    }
+
+.header {
+    background: white;
+    border-bottom-right-radius: 25px;
+}
+
+    .header img {
+        height: 80%;
+        width: 80%;
         object-fit: scale-down;
         transform: scale(.9,.9);
     }
@@ -282,6 +294,46 @@ h3 {
 }
 
 /*-----Sim Login End-----*/
+
+
+
+
+/*-----Sim Research-----*/
+
+.Sim_Research_Div {
+    border: 1px solid gray;
+    border-radius: 10px;
+    background: white;
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 40px;
+}
+
+.Sim_Research_Button {
+    border: 1px solid gray;
+    border-radius: 5px;
+    color: darkgreen;
+    background-color: #f0f0f0;
+    background-size: 30px 30px;
+    background-repeat: no-repeat;
+    background-position: left;
+    text-align: right;
+    max-width: 50%;
+    padding-left: 50px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-weight: bold;
+    max-height: 40%;
+    margin: 10px;
+}
+
+.Sim_Research_Table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/*-----Sim Research End-----*/
 
 /************************ SPECIFIC PAGES CLASSES END *************************/
 

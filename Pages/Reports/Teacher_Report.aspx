@@ -54,6 +54,8 @@
                         <asp:BoundField DataField="password" HeaderText="Password" Visible="true" />
                         <asp:BoundField DataField="schoolName" HeaderText="School Name" Visible="true" />
                         <asp:BoundField DataField="contact" HeaderText="Contact Teacher?" Visible="true" />
+                        <asp:BoundField DataField="currVisitDate" HeaderText="Current<br />Visit Date" DataFormatString="{0: MM/dd/yyyy } " HtmlEncode="false" />
+                        <asp:BoundField DataField="prevVisitDate" HeaderText="Previous<br />Visit Date" DataFormatString="{0: MM/dd/yyyy } " HtmlEncode="false" />
                     </Columns>
                 </asp:GridView>
                 <br />

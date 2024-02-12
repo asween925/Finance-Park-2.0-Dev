@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Visit_Report.aspx.cs" Inherits="Visit_Report" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Simulation_Report.aspx.cs" Inherits="Simulation_Report" %>
 
 <!doctype html>
 <html>
@@ -33,8 +33,8 @@
 
         <%--Content--%>
         <div class="content">
-            <h2 class="h2">Visit Report</h2>
-            <h3 class="no-print">This page will allow you to view all visit dates in the database.</h3>
+            <h2 class="h2">Simulation Report</h2>
+            <h3 class="no-print">This page will allow you to view all existing simulations in the database.</h3>
             <p class="no-print">Visit Date:</p>
             <asp:TextBox ID="visitDate_tb" runat="server" TextMode="Date" AutoPostBack="true" CssClass="textbox no-print" OnTextChanged="visitDate_tb_TextChanged"></asp:TextBox><a class="no-print">&emsp;</a><asp:Label ID="error_lbl" runat="server" Font-Size="X-Large" ForeColor="Red"></asp:Label>
             <p class="no-print">School Name:</p>

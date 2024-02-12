@@ -8,7 +8,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class Edit_Visit : Page
+public partial class Edit_Simulation : Page
 {
     private string SQLServer = ConfigurationManager.AppSettings["FP_sfp"].ToString();
     private string SQLDatabase = ConfigurationManager.AppSettings["FP_DB"].ToString();
@@ -24,7 +24,7 @@ public partial class Edit_Visit : Page
     private Class_GridviewFunctions Gridviews = new Class_GridviewFunctions();
     private int VisitID;
 
-    public Edit_Visit()
+    public Edit_Simulation()
     {
         ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
         VisitID = VisitData.GetVisitID();
@@ -177,6 +177,7 @@ public partial class Edit_Visit : Page
         UpdateCurrentVisitDate(VisitDate, School3);
         UpdateCurrentVisitDate(VisitDate, School4);
         UpdateCurrentVisitDate(VisitDate, School5);
+
     }
 
     protected void visit_dgv_RowEditing(object sender, GridViewEditEventArgs e)

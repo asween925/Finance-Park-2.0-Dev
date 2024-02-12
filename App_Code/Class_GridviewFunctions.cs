@@ -41,6 +41,11 @@ public class Class_GridviewFunctions
         }
     }
 
+    //public object BusinessNames(DropDownList ddlBusiness, string lblBusiness)
+    //{
+    //    return;
+    //}
+
     private DataSet GetData(string query)
     {
         var cmd = new SqlCommand(query);

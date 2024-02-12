@@ -8,7 +8,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class Visit_Report : Page
+public partial class Simulation_Report : Page
 {
     private string SQLServer = ConfigurationManager.AppSettings["FP_sfp"].ToString();
     private string SQLDatabase = ConfigurationManager.AppSettings["FP_DB"].ToString();
@@ -23,7 +23,7 @@ public partial class Visit_Report : Page
     private Class_SchoolHeader SchoolHeader = new Class_SchoolHeader();
     private int VisitID;
 
-    public Visit_Report()
+    public Simulation_Report()
     {
         ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
         VisitID = VisitData.GetVisitID();

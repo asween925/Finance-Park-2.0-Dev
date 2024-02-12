@@ -55,7 +55,7 @@ public partial class Edit_Teacher : Page
     public void LoadData()
     {
         string SchoolID;
-        string SQLStatement = "SELECT DISTINCT * FROM teacherInfoFP";
+        string SQLStatement = "SELECT t.id, t.firstName, t.lastName, t.email, t.contact, t.password, t.schoolID, v.visitDate as currVisitDate, v2.visitDate as prevVisitDate FROM teacherInfoFP t LEFT JOIN visitInfoFP v ON v.id = t.currVisitID LEFT JOIN visitInfoFP v2 ON v2.id = t.prevVisitID";
 
         //Clear teacher table
         teachers_dgv.DataSource = null;

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Edit_Visit.aspx.cs" Inherits="Edit_Visit" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Edit_Simulation.aspx.cs" Inherits="Edit_Simulation" %>
 
 <!doctype html>
 <html>
@@ -33,10 +33,10 @@
 
         <%--Content--%>
         <div class="content">
-            <h2 class="h2">Edit Visit</h2>
-            <h3>This page will allow you to edit the visit information of a visit date in the database.
+            <h2 class="h2">Edit Simulation</h2>
+            <h3>This page will allow you to edit the simulation of an existing simulation.
                 <br /><br />
-                Enter an existing visit date in the textbox below, then click the 'Edit' button to edit a visit date.
+                Enter an existing simulation visit date in the textbox below, then click the 'Edit' button to edit a simulation.
             </h3>
             <p>Visit Date:</p>
             <asp:TextBox ID="visitDate_tb" runat="server" AutoPostBack="true" CssClass="textbox" TextMode="Date" OnTextChanged="visitDate_tb_TextChanged" ></asp:TextBox>&ensp;<asp:Label ID="error_lbl" runat="server" Font-Size="X-Large" ForeColor="Red" Font-Bold="true"></asp:Label>

@@ -116,6 +116,7 @@ public partial class Class_VisitData
     public object LoadVisitInfoFromDate(string VisitDate, string Column)
     {
         string ReturnData = "";
+        string connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
 
         // Get school info from school name
         con.ConnectionString = connection_string;

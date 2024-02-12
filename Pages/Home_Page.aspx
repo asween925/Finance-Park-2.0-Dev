@@ -10,7 +10,7 @@
     <title>FP 2.0 - Home</title>
 
     <link href="../CSS/StaffPages.css" rel="stylesheet" media="screen" type="text/css">
-    <link rel="shortcut icon" type="image/png" href="../Media/FP_favicon_2.png" />
+    <link rel="shortcut icon" type="image/png" href="../Media/faviconFP.png" />
 </head>
 
 <body>
@@ -56,9 +56,10 @@
                 <div class="Home_Page_Drop_Down_Menu">
                     <button class="Home_Page_Drop_Down_Btn">Create ▼</button>
                     <div class="Home_Page_Drop_Down_Content">
-                        <a href="../Pages/Create/Create_Visit.aspx">Create a Visit</a>
+                        <a href="../Pages/Create/Create_Simulation.aspx">Create a Simulation</a>
                         <a href="../Pages/Create/Create_School.aspx">Create a School</a>
                         <a href="../Pages/Create/Create_Teacher.aspx">Create a Teacher</a>
+                        <a href="../Pages/Create/Create_Job.aspx">Create a Job</a>
                     </div>
                 </div>
 
@@ -66,14 +67,9 @@
                 <div class="Home_Page_Drop_Down_Menu">
                     <button class="Home_Page_Drop_Down_Btn">Edit ▼</button>
                     <div class="Home_Page_Drop_Down_Content">
-                        <a href="../Pages/Edit/edit_visit.aspx">Edit Visit</a>
+                        <a href="../Pages/Edit/edit_Simulation.aspx">Edit Simulation</a>
                         <a href="../Pages/Edit/edit_school.aspx">Edit School</a>
                         <a href="../Pages/Edit/edit_teacher.aspx">Edit Teacher</a>
-                        <a href="../Pages/Edit/Open_Closed_Status.aspx">Edit Open / Closed Status</a>
-                        <a href="../Pages/Edit/Employee_Management_System_review.aspx">Employee Management System (EMS)</a>
-                        <a href="../Pages/Edit/business_profit_updates.aspx">Edit Profits</a>
-                        <a href="../Pages/Edit/Edit_Sales.aspx">Edit Sales</a>
-                        <a href="../Pages/Edit/Edit_Business.aspx">Edit Business</a>
                     </div>
                 </div>
 
@@ -96,17 +92,9 @@
                 <div class="Home_Page_Drop_Down_Menu">
                     <button class="Home_Page_Drop_Down_Btn">Reports ▼</button>
                     <div class="Home_Page_Drop_Down_Content">
-                        <a href="../Pages/Reports/Visit_Report.aspx">Visit Report</a>
+                        <a href="../Pages/Reports/Simulation_Report.aspx">Visit Report</a>
                         <a href="../Pages/Reports/School_Report.aspx">School Report</a>                      
                         <a href="../Pages/Reports/Teacher_Report.aspx">Teacher Report</a>
-                        <a href="Business_sales_report.aspx">Business Sales Report</a>
-                        <a href="Student_Spending_Report.aspx">Student Spending Report</a>
-                        <a href="Amount_spend_report.aspx">Amount Spent Report</a>
-                        <a href="Negative_balance_report.aspx">Negative Balance Report</a>
-                        <a href="Business_profit_report.aspx">Profit Report</a>
-                        <a href="Duplicate_numbers_report.aspx">Duplicate Number Report</a>
-                        <a href="Duplicate_Students.aspx">Duplicate Students Report</a>
-                        <a href="Employee_Report.aspx">Student Report</a>
                     </div>
                 </div>
 

@@ -40,8 +40,7 @@ body {
     border: 1px solid gray;
     transition-duration: 0.2s;
     font-size: 14px;
-    height: 25px;
-}
+    }
 
     .ddl:hover {
         border: 1px solid #34911e;

@@ -54,7 +54,7 @@ public partial class Teacher_Report : Page
     public void LoadData()
     {
         string SchoolID;
-        string SQLStatement = "SELECT t.id, s.schoolName, t.firstName, t.lastName, t.email, t.password, t.contact FROM teacherInfoFP t LEFT JOIN schoolInfoFP s ON s.id = t.schoolID";
+        string SQLStatement = "SELECT t.id, s.schoolName, t.firstName, t.lastName, t.email, t.password, t.contact, v.visitDate as currVisitDate, v2.visitDate as prevVisitDate FROM teacherInfoFP t LEFT JOIN schoolInfoFP s ON s.id = t.schoolID LEFT JOIN visitInfoFP v ON v.id = t.currVisitID LEFT JOIN visitInfoFP v2 ON v2.id = t.prevVisitID";
 
         //Clear teacher table
         teachers_dgv.DataSource = null;

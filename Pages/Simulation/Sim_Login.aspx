@@ -18,7 +18,7 @@
         <div id="Site_Wrap_Fullscreen">
 
             <%--Header--%>
-            <div id="header_div" runat="server" class="header">
+            <div id="header_div" runat="server" class="headerStart">
                 <asp:Image ID="startLogo_img" runat="server" ImageUrl="~/Media/FP_SI_Logo.png" CssClass="Sim_Start_Logo" />
             </div>
 
