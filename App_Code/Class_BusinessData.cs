@@ -9,8 +9,8 @@ public partial class Class_BusinessData
     private SqlConnection con = new SqlConnection();
     private SqlCommand cmd = new SqlCommand();
     private SqlDataReader dr;
-    private string sqlserver = System.Configuration.ConfigurationManager.AppSettings["EV_sfp"].ToString();
-    private string sqldatabase = System.Configuration.ConfigurationManager.AppSettings["EV_DB"].ToString();
+    private string sqlserver = System.Configuration.ConfigurationManager.AppSettings["FP_sfp"].ToString();
+    private string sqldatabase = System.Configuration.ConfigurationManager.AppSettings["FP_DB"].ToString();
     private string sqluser = System.Configuration.ConfigurationManager.AppSettings["db_user"].ToString();
     private string sqlpassword = System.Configuration.ConfigurationManager.AppSettings["db_password"].ToString();
     private string ConnectionString;
@@ -60,7 +60,7 @@ public partial class Class_BusinessData
         {
             con.ConnectionString = ConnectionString;
             con.Open();
-            cmd.CommandText = "SELECT businessName FROM businessInfo WHERE NOT id=28 AND NOT id=29 ORDER BY businessName";
+            cmd.CommandText = "SELECT businessName FROM businessInfoFP ORDER BY businessName";
             cmd.Connection = con;
             dr = cmd.ExecuteReader();
 

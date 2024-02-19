@@ -23,6 +23,7 @@ public partial class Create_Job : Page
     private Class_SchoolData SchoolData = new Class_SchoolData();
     private Class_SchoolHeader SchoolHeader = new Class_SchoolHeader();
     private Class_JobData JobData = new Class_JobData();
+    private Class_BusinessData BusinessData = new Class_BusinessData();
     private int VisitID;
 
     public Create_Job()
@@ -43,7 +44,7 @@ public partial class Create_Job : Page
         if (!IsPostBack)
         {
             //Load businesses ddl from businessInfoFP
-            JobData.LoadBusinessDDL(businessName_ddl);
+            BusinessData.LoadBusinessNamesDDL(businessName_ddl);
 
             // Populating school header
             headerSchoolName_lbl.Text = (SchoolHeader.GetSchoolHeader()).ToString();

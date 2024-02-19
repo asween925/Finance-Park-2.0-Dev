@@ -19,12 +19,12 @@
 
             <%--Header--%>
             <div id="header_div" runat="server" class="header">
-                <asp:Image ID="startLogo_img" runat="server" ImageUrl="~/Media/FP_SI_Logo.png" CssClass="Sim_Start_Logo" />
+                <asp:Image ID="startLogo_img" runat="server" ImageUrl="~/Media/FP_SI_Logo.png" />
             </div>
             <br />
                   
             <%--Research Table--%>
-            <div class="Sim_Research_Div">
+            <div class="content_div">
                 <table class="Sim_Research_Table">
                     <tbody>
                       <tr>

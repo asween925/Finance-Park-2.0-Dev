@@ -18,17 +18,14 @@ public partial class Edit_Job : Page
     private SqlCommand cmd = new SqlCommand();
     private SqlDataReader dr;
     private string ConnectionString;
-    private Class_VisitData VisitData = new Class_VisitData();
-    private Class_SchoolData SchoolData = new Class_SchoolData();
     private Class_SchoolHeader SchoolHeader = new Class_SchoolHeader();
     private Class_GridviewFunctions Gridviews = new Class_GridviewFunctions();
     private Class_BusinessData BusinessData = new Class_BusinessData();
-    private int VisitID;
+    private Class_JobData JobData = new Class_JobData(); 
 
     public Edit_Job()
     {
         ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
-        VisitID = VisitData.GetVisitID();
         Load += Page_Load;
     }
 
@@ -41,14 +38,63 @@ public partial class Edit_Job : Page
         }
 
         if (!IsPostBack)
-        {     
+        {
+            //Load jobs ddl
+            JobData.LoadJobsDDL(jobTitle_ddl);
+
             // Populating school header
-            headerSchoolName_lbl.Text = (SchoolHeader.GetSchoolHeader()).ToString();
+            headerSchoolName_lbl.Text = SchoolHeader.GetSchoolHeader().ToString();
+
+            //Load table
+            LoadData();
         }
     }
 
     public void LoadData()
     {
+        string SQLStatement = "SELECT * FROM jobsFP";
+
+        //Clear error
+        error_lbl.Text = "";
+
+        //Clear table
+        jobs_dgv.DataSource = null;
+        jobs_dgv.DataBind();
+
+        //If loading by the DDL, add school name to search query
+        if (jobTitle_ddl.SelectedIndex != 0)
+        {
+            SQLStatement = SQLStatement + " WHERE jobTitle='" + jobTitle_ddl.SelectedValue + "'";
+        }
+        else if (search_tb.Text != "")
+        {
+            SQLStatement = SQLStatement + " WHERE jobTitle LIKE '%" + search_tb.Text + "%'";
+        }
+        else
+        {
+            SQLStatement = SQLStatement + " ORDER BY jobTitle ASC";
+        }
+
+        //Load schoolInfoFP table
+        try
+        {
+            con.ConnectionString = ConnectionString;
+            con.Open();
+            Review_sds.ConnectionString = ConnectionString;
+            Review_sds.SelectCommand = SQLStatement;
+            jobs_dgv.DataSource = Review_sds;
+            jobs_dgv.DataBind();
+
+            cmd.Dispose();
+            con.Close();
+
+        }
+        catch
+        {
+            error_lbl.Text = "Error in LoadData(). Cannot load jobs table.";
+            return;
+        }
+
         // Highlight row being edited
         foreach (GridViewRow row in jobs_dgv.Rows)
         {
@@ -160,17 +206,41 @@ public partial class Edit_Job : Page
     {
         if ((e.Row.RowType == DataControlRowType.DataRow))
         {
-            string lblSchool1 = (e.Row.FindControl("schoolName1DGV_lbl") as Label).Text;
-            DropDownList ddlSchool1 = e.Row.FindControl("school1DGV_ddl") as DropDownList;
+            string lblBusiness = (e.Row.FindControl("businessNameDGV_lbl") as Label).Text;
+            DropDownList ddlBusiness = e.Row.FindControl("businessNameDGV_ddl") as DropDownList;
 
             //Load gridview school DDLs with school names
-            Gridviews.SchoolNames(ddlSchool1, lblSchool1);
+            Gridviews.BusinessNames(ddlBusiness, lblBusiness);
+
+            string lblEdBG = (e.Row.FindControl("educationBGDGV_lbl") as Label).Text;
+            DropDownList ddlEdBG = e.Row.FindControl("educationBGDGV_ddl") as DropDownList;
+
+            //Select business name from label
+            ddlEdBG.SelectedValue = lblEdBG;
+
         }
     }
 
+
+
     protected void submit_btn_Click(object sender, EventArgs e)
     {
-
+        if (search_tb.Text != "")
+        {
+            LoadData();
+        }
     }
 
+    protected void jobTitle_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (jobTitle_ddl.SelectedIndex != 0) 
+        {
+            LoadData();
+        }
+    }
+
+    protected void refresh_btn_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("edit_job.aspx");
+    }
 }

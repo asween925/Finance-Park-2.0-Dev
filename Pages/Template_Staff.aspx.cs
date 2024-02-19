@@ -17,9 +17,11 @@ public partial class Template_Staff : Page
     private SqlCommand cmd = new SqlCommand();
     private SqlDataReader dr;
     private string ConnectionString;
+    private Class_SQLCommands SQL = new Class_SQLCommands();
     private Class_VisitData VisitData = new Class_VisitData();
     private Class_SchoolData SchoolData = new Class_SchoolData();
     private Class_SchoolHeader SchoolHeader = new Class_SchoolHeader();
+    private Class_GridviewFunctions Gridviews = new Class_GridviewFunctions();
     private int VisitID;
 
     public Template_Staff()
@@ -74,21 +76,8 @@ public partial class Template_Staff : Page
 
     //    try
     //    {
-    //        using (SqlConnection con = new SqlConnection(ConnectionString))
-    //        {
-    //            using (SqlCommand cmd = new SqlCommand("UPDATE schoolNotesFP SET schoolName=@schoolName, note=@note, noteUser=@noteUser, noteTimestamp=@noteTimestamp WHERE ID=@Id"))
-    //            {
-    //                cmd.Parameters.AddWithValue("@ID", ID);
-    //                cmd.Parameters.AddWithValue("@schoolName", SchoolName);
-    //                cmd.Parameters.AddWithValue("@note", Note);
-    //                cmd.Parameters.AddWithValue("@noteUser", NoteUser);
-    //                cmd.Parameters.AddWithValue("@noteTimestamp", NoteTimestamp);
-    //                cmd.Connection = con;
-    //                con.Open();
-    //                cmd.ExecuteNonQuery();
-    //                con.Close();
-    //            }
-    //        }
+    //        SQL.UpdateRow(ID, "questionOrder", QuestionOrder, "questionsFP");
+
     //        notes_dgv.EditIndex = -1;       // reset the grid after editing
     //        LoadData();
     //    }
@@ -105,17 +94,8 @@ public partial class Template_Staff : Page
 
     //    try
     //    {
-    //        using (SqlConnection con = new SqlConnection(ConnectionString))
-    //        {
-    //            using (SqlCommand cmd = new SqlCommand("DELETE FROM schoolNotesFP WHERE id=@ID"))
-    //            {
-    //                cmd.Parameters.AddWithValue("@ID", ID);
-    //                cmd.Connection = con;
-    //                con.Open();
-    //                cmd.ExecuteNonQuery();
-    //                con.Close();
-    //            }
-    //        }
+    //        SQL.DeleteRow(ID, "notes_dgv");
+
     //        notes_dgv.EditIndex = -1;       // reset the grid after editing
 
     //        LoadData();
@@ -154,24 +134,6 @@ public partial class Template_Staff : Page
 
     //        //Load gridview school DDLs with school names
     //        Gridviews.SchoolNames(ddlSchool1, lblSchool1);
-    //    }
-    //}
-
-    //private DataSet GetData(string query)
-    //{
-    //    var cmd = new SqlCommand(query);
-    //    using (var con = new SqlConnection(ConnectionString))
-    //    {
-    //        using (var sda = new SqlDataAdapter())
-    //        {
-    //            cmd.Connection = con;
-    //            sda.SelectCommand = cmd;
-    //            using (var ds = new DataSet())
-    //            {
-    //                sda.Fill(ds);
-    //                return ds;
-    //            }
-    //        }
     //    }
     //}
 

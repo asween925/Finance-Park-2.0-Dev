@@ -42,8 +42,7 @@
 
                 <%--Header Links--%>
                 <asp:LinkButton ID="LinkButton9" runat="server" PostBackUrl="/Pages/Simulation/Sim_Start.aspx" Font-Size="Large" CssClass="button1">SIMULATION START</asp:LinkButton>
-                <asp:LinkButton ID="LinkButton13" runat="server" PostBackUrl="/directory.aspx" Font-Size="Large" CssClass="button1">SIMULATION DIRECTORY</asp:LinkButton>
-                <asp:LinkButton ID="LinkButton14" runat="server" PostBackUrl="/checklist_directory.aspx" Font-Size="Large" CssClass="button1">CHECKLIST DIRECTORY</asp:LinkButton>
+                <asp:LinkButton ID="LinkButton13" runat="server" PostBackUrl="/Pages/Simulation/Sim_Directory.aspx" Font-Size="Large" CssClass="button1">SIMULATION DIRECTORY</asp:LinkButton>
                 <asp:LinkButton ID="LinkButton33" runat="server" PostBackUrl="/inventory_home.aspx" Font-Size="Large" CssClass="button1">INVENTORY</asp:LinkButton>
                 <asp:LinkButton ID="LinkButton27" runat="server" PostBackUrl="/Help_page.aspx" Font-Size="Large" CssClass="button1">HELP</asp:LinkButton>
                 <asp:LinkButton ID="LinkButton24" runat="server" PostBackUrl="/default.aspx" Font-Size="Large" CssClass="button1">LOG OUT</asp:LinkButton>
@@ -60,6 +59,8 @@
                         <a href="../Pages/Create/Create_School.aspx">Create a School</a>
                         <a href="../Pages/Create/Create_Teacher.aspx">Create a Teacher</a>
                         <a href="../Pages/Create/Create_Job.aspx">Create a Job</a>
+                        <a href="../Pages/Create/Create_Sponsor.aspx">Create a Sponsor</a>
+                        <a href="../Pages/Create/Create_Persona.aspx">Create a Persona</a>
                     </div>
                 </div>
 
@@ -70,6 +71,10 @@
                         <a href="../Pages/Edit/edit_Simulation.aspx">Edit Simulation</a>
                         <a href="../Pages/Edit/edit_school.aspx">Edit School</a>
                         <a href="../Pages/Edit/edit_teacher.aspx">Edit Teacher</a>
+                        <a href="../Pages/Edit/Edit_Job.aspx">Edit Jobs</a>
+                        <a href="../Pages/Edit/Edit_Question.aspx">Edit Questions</a>
+                        <a href="../Pages/Edit/Edit_Sponsor.aspx">Edit Sponsors</a>
+                        <a href="../Pages/Edit/Edit_Persona.aspx">Edit Persona</a>
                     </div>
                 </div>
 

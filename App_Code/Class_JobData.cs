@@ -24,29 +24,50 @@ public class Class_JobData
         ConnectionString = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
     }
 
-    public object LoadBusinessDDL(DropDownList businessNameDDL)
+    public object LoadJobsDDL(DropDownList jobsDDL)
     {
         // Clear out teacher and school DDLs
-        businessNameDDL.Items.Clear();
+        jobsDDL.Items.Clear();
 
         // Populate school DDL from entered visit date
             con.ConnectionString = ConnectionString;
             con.Open();
-            cmd.CommandText = "SELECT DISTINCT businessName FROM businessInfoFP ORDER BY businessName ASC";
+            cmd.CommandText = "SELECT jobTitle FROM jobsFP ORDER BY jobTitle ASC";
             cmd.Connection = con;
             dr = cmd.ExecuteReader();
 
             while (dr.Read())
             {
-                businessNameDDL.Items.Add(dr[0].ToString());
+                jobsDDL.Items.Add(dr[0].ToString());
             }
 
-            businessNameDDL.Items.Insert(0, "");
+            jobsDDL.Items.Insert(0, "");
 
             cmd.Dispose();
             con.Close();
 
-        return businessNameDDL.Items;
+        return jobsDDL.Items;
+    }
+
+    public object GetJobIDFromTitle(string Title)
+    {
+        string JobID = "0";
+
+        con.ConnectionString = ConnectionString;
+        con.Open();
+        cmd.CommandText = "SELECT id FROM jobsFP WHERE jobTitle='" + Title + "'";
+        cmd.Connection = con;
+        dr = cmd.ExecuteReader();
+
+        while (dr.Read())
+        {
+            JobID = dr["id"].ToString();
+        }
+      
+        cmd.Dispose();
+        con.Close();
+
+        return JobID;
     }
 
 }

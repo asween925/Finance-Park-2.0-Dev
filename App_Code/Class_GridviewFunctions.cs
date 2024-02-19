@@ -23,6 +23,7 @@ public class Class_GridviewFunctions
         ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
     }
 
+    //Gets all the school names in the schoolInfoFP and inserts them into a DDL
     public void SchoolNames(DropDownList ddlSchool, string lblSchool)
     {
         ddlSchool.DataSource = GetData("SELECT ID, schoolName FROM schoolInfoFP ORDER BY schoolName");
@@ -41,10 +42,124 @@ public class Class_GridviewFunctions
         }
     }
 
-    //public object BusinessNames(DropDownList ddlBusiness, string lblBusiness)
-    //{
-    //    return;
-    //}
+
+    //Gets all the business names in the businessInfoFP and inserts them into a DDL
+    public void BusinessNames(DropDownList ddlBusiness, string lblBusiness)
+    {
+        ddlBusiness.DataSource = GetData("SELECT ID, businessName FROM businessInfoFP ORDER BY businessName");
+        ddlBusiness.DataTextField = "businessName";
+        ddlBusiness.DataValueField = "id";
+        ddlBusiness.DataBind();
+        ddlBusiness.Items.Insert(0, "");
+
+        if (lblBusiness == "")
+        {
+            ddlBusiness.Items.FindByText("").Selected = true;
+        }
+        else if (lblBusiness == "0")
+        {
+            ddlBusiness.SelectedIndex = 0;
+        }
+        else
+        {
+            ddlBusiness.Items.FindByValue(lblBusiness).Selected = true;
+        }
+    }
+
+
+    //Gets all numbers of the order in the questionsFP and inserts them into a DDL
+    public void QuestionOrder(DropDownList ddlQOrder, string lblQOrder)
+    {
+        ddlQOrder.DataSource = GetData("SELECT DISTINCT questionOrder FROM questionsFP ORDER BY questionOrder ASC");
+        ddlQOrder.DataTextField = "questionOrder";
+        ddlQOrder.DataBind();
+        ddlQOrder.Items.Insert(0, "");
+
+        if (lblQOrder == "")
+        {
+            ddlQOrder.Items.FindByText("").Selected = true;
+        }
+        else
+        {
+            ddlQOrder.Items.FindByValue(lblQOrder).Selected = true;
+        }
+    }
+
+
+    //Gets all answer types in the questionsFP and inserts them into a DDL
+    public void AnswerTypes(DropDownList ddlType, string lblType)
+    {
+        ddlType.DataSource = GetData("SELECT DISTINCT answerType FROM questionsFP ORDER BY answerType ASC");
+        ddlType.DataTextField = "answerType";
+        ddlType.DataBind();
+        ddlType.Items.Insert(0, "");
+
+        if (lblType == "")
+        {
+            ddlType.Items.FindByText("").Selected = true;
+        }
+        else
+        {
+            ddlType.Items.FindByValue(lblType).Selected = true;
+        }
+    }
+
+
+    //Gets all question category in the questionsFP and inserts them into a DDL
+    public void QuestionCategory(DropDownList ddlCat, string lblCat)
+    {
+        ddlCat.DataSource = GetData("SELECT DISTINCT questionCategory FROM questionsFP ORDER BY questionCategory ASC");
+        ddlCat.DataTextField = "questionCategory";
+        ddlCat.DataBind();
+        ddlCat.Items.Insert(0, "");
+
+        if (lblCat == "")
+        {
+            ddlCat.Items.FindByText("").Selected = true;
+        }
+        else
+        {
+            ddlCat.Items.FindByValue(lblCat).Selected = true;
+        }
+    }
+
+
+    //Gets all questions short in the questionsFP and inserts them into a DDL
+    public void QuestionShort(DropDownList ddlShort, string lblShort)
+    {
+        ddlShort.DataSource = GetData("SELECT DISTINCT questionShort FROM questionsFP ORDER BY questionShort ASC");
+        ddlShort.DataTextField = "questionShort";
+        ddlShort.DataBind();
+        ddlShort.Items.Insert(0, "");
+
+        if (lblShort == "")
+        {
+            ddlShort.Items.FindByText("").Selected = true;
+        }
+        else
+        {
+            ddlShort.Items.FindByValue(lblShort).Selected = true;
+        }
+    }
+
+    //Gets all questions short in the questionsFP and inserts them into a DDL
+    public void JobTitle(DropDownList ddlJobTitle, string lblJobTitle)
+    {
+        ddlJobTitle.DataSource = GetData("SELECT DISTINCT id, jobTitle FROM jobsFP ORDER BY jobTitle ASC");
+        ddlJobTitle.DataTextField = "jobTitle";
+        ddlJobTitle.DataValueField = "id";
+        ddlJobTitle.DataBind();
+        ddlJobTitle.Items.Insert(0, "");
+
+        if (lblJobTitle == "0")
+        {
+            ddlJobTitle.Items.FindByText("").Selected = true;
+        }
+        else
+        {
+            ddlJobTitle.Items.FindByValue(lblJobTitle).Selected = true;
+        }
+    }
 
     private DataSet GetData(string query)
     {
