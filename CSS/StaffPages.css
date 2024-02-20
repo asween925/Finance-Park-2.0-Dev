@@ -50,11 +50,12 @@ body {
     border-radius: 15px;
     border: 1px solid gray;
     text-align: left;
-    padding: 1px;
     padding-left: 6px;
     font-size: 14px;
-    height: 20px;
     font-family: 'Franklin Gothic Book', sans-serif;
+    padding-right: 1px;
+    padding-top: 1px;
+    padding-bottom: 1px;
 }
 
     .textbox:hover {
@@ -218,29 +219,8 @@ body {
     text-transform: uppercase;
 }
 
-.button2 {
-    background-color: #8452b9;
-    border-radius: 10px;
-    border-style: initial;
-    color: white;
-    padding: 5px 10px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    -webkit-transition-duration: 0.4s; /* Safari */
-    transition-duration: 0.2s;
-}
-
-    .button2:hover {
-        background-color: #311b47;
-    }
-
-.transfer_savings_btn {
-    background-color: #00a632; /*light green*/
-    border-style: initial;
+.buttonReset {
+    background-color: #afafaf;
     border-radius: 10px;
     color: white;
     padding: 7px 12px;
@@ -255,78 +235,11 @@ body {
     margin-left: 2px;
     margin-right: 2px;
     margin-bottom: 4px;
+    border: none;
 }
 
-    .transfer_savings_btn:hover {
-        background-color: #004515;
-        color: white;
-    }
-
-.button_grid {
-    text-align: center;
-    display: grid;
-    grid-template-columns: auto auto auto auto;
-    padding: 10px;
-}
-
-.button_grid_home {
-    text-align: center;
-    display: grid;
-    grid-template-columns: auto auto;
-    padding: 10px;
-}
-
-.button_grid_inv {
-    text-align: center;
-    display: grid;
-    grid-template-columns: auto auto auto auto;
-    padding: 10px;
-}
-
-.button_item {
-    padding: 10px;
-    font-size: 15px;
-    text-align: center;
-    border: 2px solid black;
-    border-radius: 25px;
-    margin: 10px;
-    background-color: white;
-    box-shadow: 0px 7px 3px rgba(50, 50, 50, 0.50);
-}
-
-.button_item2 {
-    padding: 10px;
-    font-size: 15px;
-    text-align: center;
-}
-
-.button_item3 {
-    padding: 10px;
-    font-size: 15px;
-    margin-left: 10%;
-}
-
-.button_inv_home {
-    background-color: #116bfa;
-    border-style: initial;
-    border-radius: 10px;
-    color: white;
-    padding: 7px 12px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 35px;
-    cursor: pointer;
-    -webkit-transition-duration: 0.4s; /* Safari */
-    transition-duration: 0.2s;
-    /*box-shadow: 1px 2px 10px 0px rgba(0,0,0,0.24),0 17px 500px 0 rgba(0,0,0,0.19);*/
-    margin-left: 2px;
-    margin-right: 2px;
-    margin-bottom: 4px;
-}
-
-    .button_inv_home:hover {
-        background-color: #1e2c73;
+    .buttonReset:hover {
+        background-color: #858585;
     }
 
 /*-----Buttons End-----*/
@@ -1099,119 +1012,6 @@ nav {
 }
 
 /*-----Login Page End-----*/
-
-
-
-/*-----Town Hall Powerpoint-----*/
-
-#Bus1 {
-    display: none;
-}
-
-#Bus2 {
-    display: none;
-}
-
-#Bus3 {
-    display: none;
-}
-
-#Bus4 {
-    display: none;
-}
-
-#Bus5 {
-    display: none;
-}
-
-#Bus6 {
-    display: none;
-}
-
-#Bus7 {
-    display: none;
-}
-
-#Bus8 {
-    display: none;
-}
-
-#Bus9 {
-    display: none;
-}
-
-#Bus10 {
-    display: none;
-}
-
-#Bus11 {
-    display: none;
-}
-
-#Bus12 {
-    display: none;
-}
-
-#Bus13 {
-    display: none;
-}
-
-#Bus14 {
-    display: none;
-}
-
-#Bus15 {
-    display: none;
-}
-
-#Bus16 {
-    display: none;
-}
-
-#Bus17 {
-    display: none;
-}
-
-#Message {
-    visibility: visible;
-    display: inline-block
-}
-
-.Heading1 {
-    font-size: calc(90px + 2vw);
-    font-weight: 700
-}
-
-.Heading2 {
-    font-size: calc(70px + 2vw);
-}
-
-
-/*-----Town Hall Powerpoint Ends-----*/
-
-
-
-/*-----Magic Computer-----*/
-
-.transactions_dgv_table {
-    position: relative;
-    bottom: 370px;
-    left: 450px;
-    overflow-x: scroll;
-    width: 200px;
-}
-
-/*-----Magic Computer End-----*/
-
-
-
-/*-----EMS------*/
-
-.print_dgv {
-    display: none;
-}
-
-/*-----EMS End-----*/
 
 
 

@@ -75,6 +75,7 @@
                         <a href="../Pages/Edit/Edit_Question.aspx">Edit Questions</a>
                         <a href="../Pages/Edit/Edit_Sponsor.aspx">Edit Sponsors</a>
                         <a href="../Pages/Edit/Edit_Persona.aspx">Edit Persona</a>
+                        <a href="../Pages/Edit/Edit_Taxes.aspx">Edit Taxes</a>
                     </div>
                 </div>
 
