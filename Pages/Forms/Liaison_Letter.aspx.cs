@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Web;
 using System.Web.UI;
-using Microsoft.VisualBasic.CompilerServices;
 
-public partial class Liason_Letter : Page
+public partial class Liaison_Letter : Page
 {
     private string SQLServer = ConfigurationManager.AppSettings["FP_sfp"].ToString();
     private string SQLDatabase = ConfigurationManager.AppSettings["FP_DB"].ToString();
@@ -19,10 +19,11 @@ public partial class Liason_Letter : Page
     private Class_SchoolData SchoolData = new Class_SchoolData();
     private Class_SchoolHeader SchoolHeader = new Class_SchoolHeader();
     private Class_GridviewFunctions Gridviews = new Class_GridviewFunctions();
+    private Class_Schedule Schedule = new Class_Schedule();
 
-    public Liason_Letter()
+    public Liaison_Letter()
     {
-        connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
+        ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
         Load += Page_Load;
     }
 
@@ -37,90 +38,51 @@ public partial class Liason_Letter : Page
         if (!IsPostBack)
         {
             // Populating school header
-            headerSchoolName_lbl.Text = (SchoolHeader.GetSchoolHeader()).ToString();
+           headerSchoolName_lbl.Text = (SchoolHeader.GetSchoolHeader()).ToString();
         }
 
     }
 
     public void LoadData()
     {
-        DateTime VisitDate = visitDate_tb.Text;
-        DateTime VTrainingTime;
-        DateTime ReplyBy;
+        var VisitDate = DateTime.Parse(visitDate_tb.Text);
+        var VArrivalTime = DateTime.Parse(Schedule.GetVolArrivalTime(VisitData.LoadVisitInfoFromDate(VisitDate.ToString(), "vTrainingTime").ToString()).ToString());
         string SchoolName = schoolName_ddl.SelectedValue;
-        string SchoolID = Conversions.ToString(SchoolData.GetSchoolID(SchoolName));
-        string VMin;
-        string VMax;
-        var LiaisonName = default(string);
-        DateTime DismissalTime;
+        string LiaisonName;
+        var DismissalTime = DateTime.Parse(Schedule.GetDismissalTime(VArrivalTime.ToString()).ToString());
 
-        info_div.Visible = true;
+        //Reveal divs
         print_btn.Visible = true;
+        letter_div.Visible = true;
 
         // Get volunteer count, training time, and reply by
-        VMin = SchoolData.GetVolunteerRange(Conversions.ToString(VisitDate), SchoolID).VMin;
-        VMax = SchoolData.GetVolunteerRange(Conversions.ToString(VisitDate), SchoolID).VMax;
-        // VMin = VisitData.LoadVisitInfoFromDate(VisitDate, "vMinCount")
-        // VMax = VisitData.LoadVisitInfoFromDate(VisitDate, "vMaxCount")
-        VTrainingTime = Conversions.ToDate(VisitData.LoadVisitInfoFromDate(Conversions.ToString(VisitDate), "vTrainingTime"));
-        ReplyBy = Conversions.ToDate(VisitData.LoadVisitInfoFromDate(Conversions.ToString(VisitDate), "replyBy"));
-        DismissalTime = Conversions.ToDate(SchoolScheduleData.GetDismissalTime(Conversions.ToString(VTrainingTime)));
+        //VMin = SchoolData.GetVolunteerRange(VisitDate, SchoolID).VMin;
+        //VMax = SchoolData.GetVolunteerRange(VisitDate, SchoolID).VMax;
 
         // Get liaison information
-        try
-        {
-            con.ConnectionString = connection_string;
-            con.Open();
-            cmd.CommandText = @"SELECT liaisonName
-								FROM schoolInfo
-								WHERE schoolName='" + schoolName_ddl.SelectedValue + "'";
-            cmd.Connection = con;
-            dr = cmd.ExecuteReader();
-
-            while (dr.Read())
-                LiaisonName = dr["liaisonName"].ToString();
-
-            cmd.Dispose();
-            con.Close();
-        }
-        catch
-        {
-            error_lbl.Text = "Error in loaddata(). Could not get liaison information.";
-            cmd.Dispose();
-            con.Close();
-            return;
-        }
-
+        LiaisonName = SchoolData.LoadSchoolInfoFromSchool(SchoolName, "liaisonName").ToString();
+        
         // Assign labels
         schoolName_lbl.Text = SchoolName;
-        visitDate_lbl.Text = VisitDate.ToShortDateString();
-        visitDate2_lbl.Text = VisitDate.ToShortDateString();
-        volunteerTime_lbl.Text = VTrainingTime.ToString("h:mm");
-        replyBy_lbl.Text = ReplyBy.ToShortDateString();
+        visitDate_lbl.Text = VisitDate.ToString("D");
         liaison_lbl.Text = LiaisonName;
-        vMinCount_lbl.Text = VMin;
-        vMaxCount_lbl.Text = VMax;
-        volunteerDismisal_lbl.Text = DismissalTime.ToString("h:mm");
+        arrivalTime_lbl.Text = VArrivalTime.ToString("t");
+        volunteerDismisal_lbl.Text = DismissalTime.ToString("t");
 
     }
+
+
 
     protected void visitDate_tb_TextChanged(object sender, EventArgs e)
     {
-        if (visitDate_tb.Text != default)
+        if (visitDate_tb.Text != "")
         {
+            //Reveal school DDL
             schoolName_ddl.Visible = true;
             school_p.Visible = true;
 
-            SchoolData.LoadVisitDateSchoolsDDL(visitDate_tb.Text, schoolName_ddl);
-
-        }
-    }
-
-    protected void schoolName_ddl_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        if (schoolName_ddl.SelectedIndex != 0)
-        {
-            LoadData();
+            //Load school name DDL
+            SchoolData.LoadVisitingSchoolsDDL(visitDate_tb.Text, schoolName_ddl);
         }
         else
         {
@@ -129,9 +91,17 @@ public partial class Liason_Letter : Page
         }
     }
 
+    protected void schoolName_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (schoolName_ddl.SelectedIndex != 0) 
+        {
+            LoadData();        
+        }
+    }
+
     protected void print_btn_Click(object sender, EventArgs e)
     {
-        EVLogo_img.Visible = true;
-        Page.ClientScript.RegisterStartupScript(GetType(), "Print", "PrintBadges();", true);
+        FPLogo_img.Visible = true;
+        Page.ClientScript.RegisterStartupScript(GetType(), "Print", "window.print();", true);
     }
 }

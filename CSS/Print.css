@@ -1,0 +1,55 @@
+﻿@charset "utf-8";
+
+* {
+  box-sizing: border-box;
+}
+
+body{
+    margin:0;
+    padding:0;
+    font-family: Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", "serif";
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    -webkit-print-color-adjust: exact !important;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+
+@media print {
+
+    .no-print, .no-print * {
+        display: none !important;
+    }
+
+    .FP_logo_print {
+        margin-left: 42%;
+        width: 130px;
+        height: 70px;
+        position: fixed;
+        bottom: 0px;
+    }
+
+}
+
+@media (min-width:1001px) {
+
+}
+
+
+
+
+
+
+
+
+
+

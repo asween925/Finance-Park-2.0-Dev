@@ -1,4 +1,4 @@
-﻿<%@ Page Language="c#" AutoEventWireup="false" CodeFile="Liason_Letter.aspx.vb" Inherits="Enterprise_Village_2._0.Liason_Letter" %>
+﻿<%@ Page Language="C#" AutoEventWireup="false" CodeFile="Liaison_Letter.aspx.cs" Inherits="Liaison_Letter" %>
 
 <!doctype html>
 <html>
@@ -8,10 +8,10 @@
 
     <title>FP 2.0 - Family & Community Liaison Information</title>
 
-    <link href="css/Styles.updated.css" rel="stylesheet" media="screen" type="text/css">
-    <link href="css/Styles.Print.css" rel="stylesheet" media="print" type="text/css">
+    <link href="../../CSS/Print.css" rel="stylesheet" media="print" type="text/css" />
+    <link href="../../CSS/StaffPages.css" rel="stylesheet" media="screen" type="text/css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-    <link rel="shortcut icon" type="image/png" href="media/EV_favicon_2.png" />
+    <link rel="shortcut icon" type="image/png" href="../../Media/FP_favicon_2.png" />
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 </head>
 
@@ -21,36 +21,36 @@
         <%--Header information--%>
         <header class="headerTop no-print"><a style="float: left; padding-top: 2px;">Finance Park 2.0</a><a style="float: right; padding-right: 30px; padding-top: 2px;"><asp:Label ID="headerSchoolName_lbl" Text="School Name Here" runat="server"></asp:Label></a></header>
 
-    <%--Navigation bar--%>
+        <%--Navigation bar--%>
         <div id="nav-placeholder">
-
         </div>
 
         <script>
             $(function () {
-                $("#nav-placeholder").load("nav.html");
+                $("#nav-placeholder").load("../../nav.html");
             });
-        </script>     
+        </script>   
 
         <%--Content--%>
         <div class="content">
             <h2 class="h2 no-print">Family & Community Liaison Information</h2>
             <h3 class="no-print">This page is to print out a PDF of visit information for the volunteer liaison for the school.</h3>          
             <p class="no-print">Visit Date:</p>
-            <asp:TextBox ID="visitDate_tb" runat="server" TextMode="Date" AutoPostBack="true" CssClass="textbox no-print"></asp:TextBox>&emsp;<asp:Label runat="server" ID="error_lbl" Font-Size="X-Large" ForeColor="Red" CssClass="no-print"></asp:Label>
-            
+            <asp:TextBox ID="visitDate_tb" runat="server" TextMode="Date" AutoPostBack="true" CssClass="textbox no-print" OnTextChanged="visitDate_tb_TextChanged"></asp:TextBox>&emsp;<asp:Label runat="server" ID="error_lbl" Font-Size="X-Large" ForeColor="Red" CssClass="no-print"></asp:Label>
+            <p id="school_p" runat="server" visible="false" class="no-print">School Name:</p>
+            <asp:DropDownList ID="schoolName_ddl" runat="server" AutoPostBack="true" Visible="false" CssClass="ddl no-print" OnSelectedIndexChanged="schoolName_ddl_SelectedIndexChanged"></asp:DropDownList>
+            <br class="no-print" /><br class="no-print" />
+
             <%--Letter--%>
             <div id="letter_div" runat="server" visible="false">
-                <p>School Name:</p>
-                <asp:DropDownList ID="schoolName_ddl" runat="server" AutoPostBack="true" CssClass="ddl no-print"></asp:DropDownList>
-                <br class="no-print" /><br class="no-print" />
-                <asp:Button ID="print_btn" runat="server" Text="Print" CssClass="button no-print" />
-
-                <div id="info_div" runat="server" visible="false">
+                <asp:Button ID="print_btn" runat="server" Text="Print" CssClass="button no-print" OnClick="print_btn_Click" />
+                <br />
+                <div id="info_div" runat="server" visible="true">
                     <h3 style="text-align: center;">Enterprise Village Family & Community Liaison Information</h3>
                     <br />
                     <p>School: <asp:Label ID="schoolName_lbl" runat="server" Font-Bold="true"></asp:Label>&emsp; Liaison: <asp:Label ID="liaison_lbl" runat="server" Font-Bold="true"></asp:Label></p>
                     <p>From: <a style="font-weight: bold;">Karen Brighton, Community Liaison, Stavros Institute</a></p>
+                    <p>&nbsp;</p>
                     <p>Your school is scheduled to visit Finance Park on: <asp:Label ID="visitDate_lbl" runat="server" Font-Bold="true"></asp:Label>.</p>
                     <p>Volunteer training for your school will be held on that day.</p>
                     <p style="font-weight: bold;">Volunteers need to only be Level I approved. They will be asked to present a driver's license or legal government ID on arrival.</p>
@@ -63,10 +63,8 @@
                 </div>
             </div>
             
-            
-
-            <%--EV Logo for Printing--%>        
-            <%--<asp:Image ID="EVLogo_img" runat="server" ImageUrl="~\media\EnterpriseVillage.png" ImageAlign="bottom" CssClass="EV_logo_print" Visible="false" />--%>
+            <%--FP Logo for Printing--%>        
+            <asp:Image ID="FPLogo_img" runat="server" ImageUrl="../../Media/FP_SI_Logo.png" AlternateText="Finance Park Logo" ImageAlign="bottom" CssClass="FP_logo_print" Visible="true" />
         </div>
 
         <asp:HiddenField ID="visitdate_hf" runat="server" />

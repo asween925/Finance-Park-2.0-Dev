@@ -95,6 +95,75 @@ h3 {
     margin-top: 40px;
 }
 
+.blurArea {
+    transition: 0.5s;
+}
+
+.blurArea#blur.active {
+    filter: blur(20px);
+    pointer-events: none;
+    user-select: none;
+}
+
+.directionsBlock {
+    margin-top: 10px;
+    font-size: 1.5vw;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.directions {
+    float: left;
+    color: white;
+    font-weight: bold;
+    width: 50%;
+}
+
+.unlocked {
+    float: right;
+    color: black;
+}
+
+#popup {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 30vw;
+    padding: 50px;
+    box-shadow: 0 5px 30px rgba(0,0,0, .30);
+    background: #fff;
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.5s;
+    border: 2px solid black;
+    border-radius: 25px;
+    text-align: center;
+}
+
+    #popup.active {
+        top: 50%;
+        visibility: visible;
+        opacity: 1;
+        transition: 0.5s;
+    }
+
+.popup_textbox {
+    border-radius: 15px;
+    border: 1px solid gray;
+    text-align: center;
+    padding: 1px;
+    padding-left: 6px;
+    font-size: 24px;
+    height: 40px;
+    width: 60px;
+    font-family: 'Franklin Gothic Book', sans-serif;
+}
+
+    .popup_textbox:hover {
+        border: 1px solid #34911e;
+    }
+
 /*-----End Main Classes-----*/
 
 
@@ -121,19 +190,32 @@ h3 {
     background: white;
     border-bottom-left-radius: 25px;
     border-bottom-right-radius: 25px;
+    margin-left: 10px;
+    margin-right: 10px;
+    box-shadow: 0px 5px 10px -1px #515151;
+    height: 10%;
+    position: relative;
 }
 
-    .header img {
-        height: 35%;
-        width: 35%;
-        object-fit: scale-down;
-        transform: scale(.9,.9);
-        display: block;
-        margin-left: 10px;
-        margin-top: 0px;
-        max-width: 70%;
-        padding: 10px;
-    }
+.headerFPLogo {
+    width: 100%;
+    max-width: 20%;
+    height: 100%;
+    object-fit: scale-down;
+    transform: scale(.8,.8);
+    display: block;
+    float: right;
+}
+
+.headerTitle {
+    font-size: calc(15px + 2vw);
+    font-weight: bold;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+}
 
 /*-----End Headers-----*/
 
@@ -332,21 +414,84 @@ h3 {
     background-repeat: no-repeat;
     background-position: left;
     text-align: right;
-    max-width: 50%;
+    width: 160px;
     padding-left: 50px;
     padding-top: 10px;
     padding-bottom: 10px;
     font-weight: bold;
-    max-height: 40%;
-    margin: 10px;
+    font-size: 10px;
+    height: 50px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    cursor: pointer;
 }
+
+    .Sim_Research_Button:active {
+        background-color: #bababa;
+    }
 
 .Sim_Research_Table {
     margin-left: auto;
     margin-right: auto;
 }
 
+.Sim_Research_Popup_Header {
+    font-size: 18px;
+    text-align: center;
+    padding: 0px;
+    font-weight: bold;
+}
+
 /*-----Sim Research End-----*/
+
+
+
+
+
+
+
+/*-----Sim Business-----*/
+
+.Sim_Business_Content {
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 40px;
+}
+
+.Sim_Business_Script {
+    border: 1px solid gray;
+    border-radius: 10px;
+    background: white;
+    float: right;
+    width: 80%;
+    height: 50vh;
+    padding: 10px;
+}
+
+.Sim_Business_Sponsor {
+    border: 1px solid gray;
+    border-radius: 10px;
+    background: white;
+    width: 15%;
+    float: left;
+    position: relative;
+    height: 10vh;
+}
+
+.Sim_Business_Sponsor_Header {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    border-bottom: 1px solid gray;
+    font-size: calc(3px + .8vw);
+}
+
+/*-----Sim Business End-----*/
 
 /************************ SPECIFIC PAGES CLASSES END *************************/
 
