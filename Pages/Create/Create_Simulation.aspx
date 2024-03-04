@@ -47,7 +47,9 @@
             <p>Approximate Student Count:</p>
             <asp:TextBox TextMode="Number" ID="studentCount_tb" Width="45px" runat="server" CssClass="textbox"></asp:TextBox>
             <p>Volunteer Training Start Time:</p>
-            <asp:TextBox ID="volunteerTime_tb" Width="40px" runat="server" CssClass="textbox" Text="7:05" Placeholder="00:00"></asp:TextBox>
+            <asp:TextBox ID="volunteerTime_tb" runat="server" CssClass="textbox" TextMode="Time" ></asp:TextBox>
+            <p>Volunteer Names / Business Assignment Sheets Due By:</p>
+            <asp:TextBox ID="dueBy_tb" runat="server" TextMode="Date" CssClass="textbox"></asp:TextBox>
 
             <%--Select Schools and teachers--%>
             <p>School #1 (Required): &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp; <a id="teacher1_a" runat="server" visible="false">Teachers for School #1:</a></p>

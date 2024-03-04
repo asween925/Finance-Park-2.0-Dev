@@ -70,6 +70,7 @@ public partial class Create_Simulation : System.Web.UI.Page
         string visitTime = visitTime_ddl.SelectedValue;
         string studentCount = studentCount_tb.Text;
         string vTrainingStart = volunteerTime_tb.Text;
+        string dueBy = dueBy_tb.Text;
         string school1;
         string school2 = schools2_ddl.SelectedValue;
         string school3 = schools3_ddl.SelectedValue;
@@ -104,16 +105,21 @@ public partial class Create_Simulation : System.Web.UI.Page
             vTrainingStart = "00:00";
         }
 
+        if (dueBy_tb.Text == "")
+        {
+            dueBy = visitDate_tb.Text;
+        }
+
         // Inserting new visit date into DB
         try
         {
             using (SqlConnection con = new SqlConnection(connection_string))
             {
-                using (SqlCommand cmd = new SqlCommand(@"INSERT INTO visitInfoFP(school, vTrainingTime, visitDate, studentCount, school2, school3, school4, visitTime, school5)
+                using (SqlCommand cmd = new SqlCommand(@"INSERT INTO visitInfoFP(school, vTrainingTime, visitDate, studentCount, school2, school3, school4, visitTime, school5, dueBy)
 										            
                                                         SELECT (SELECT ID FROM schoolInfoFP WHERE schoolname = @schoolname), @vTrainingTime, @visitdate, @studentcount
                                                         , (SELECT ID FROM schoolInfoFP WHERE schoolname = @schoolname2), (SELECT ID FROM schoolInfoFP WHERE schoolname = @schoolname3)
-                                                        , (SELECT ID FROM schoolInfoFP WHERE schoolname = @schoolname4), @visittime, (SELECT ID FROM schoolInfoFP WHERE schoolname = @schoolname5)"))
+                                                        , (SELECT ID FROM schoolInfoFP WHERE schoolname = @schoolname4), @visittime, (SELECT ID FROM schoolInfoFP WHERE schoolname = @schoolname5), @dueBy"))
                 {
 
                     cmd.Parameters.Add("@visitdate", SqlDbType.Date).Value = visitDate;
@@ -125,6 +131,7 @@ public partial class Create_Simulation : System.Web.UI.Page
                     cmd.Parameters.Add("@visittime", SqlDbType.Time).Value = visitTime;
                     cmd.Parameters.Add("@vTrainingTime", SqlDbType.Time).Value = vTrainingStart;
                     cmd.Parameters.Add("@studentcount", SqlDbType.Int).Value = studentCount;
+                    cmd.Parameters.Add("@dueBy", SqlDbType.Date).Value = dueBy;
                     cmd.Connection = con;
                     con.Open();
                     cmd.ExecuteNonQuery();

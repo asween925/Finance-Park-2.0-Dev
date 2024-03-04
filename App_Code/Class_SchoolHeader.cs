@@ -23,9 +23,9 @@ public partial class Class_SchoolHeader
     public Class_SchoolHeader()
     {
         Visit = VisitID.GetVisitID();
-        schoolHeader = "SELECT s.SchoolName FROM Schoolinfo s INNER JOIN visitInfoFP v on s.ID = v.School WHERE v.id='" + Visit + "'";
-        schoolHeader2 = "SELECT s.SchoolName FROM Schoolinfo s INNER JOIN visitInfoFP v on s.ID = v.School2 WHERE v.id='" + Visit + "'";
-        schoolHeader3 = "SELECT s.SchoolName FROM Schoolinfo s INNER JOIN visitInfoFP v on s.ID = v.School3 WHERE v.id='" + Visit + "'";
+        schoolHeader = "SELECT s.SchoolName FROM schoolinfoFP s INNER JOIN visitInfoFP v on s.ID = v.School WHERE v.id='" + Visit + "'";
+        schoolHeader2 = "SELECT s.SchoolName FROM schoolinfoFP s INNER JOIN visitInfoFP v on s.ID = v.School2 WHERE v.id='" + Visit + "'";
+        schoolHeader3 = "SELECT s.SchoolName FROM schoolinfoFP s INNER JOIN visitInfoFP v on s.ID = v.School3 WHERE v.id='" + Visit + "'";
         connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
     }
 

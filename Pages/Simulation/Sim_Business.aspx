@@ -20,7 +20,7 @@
             <%--Header--%>
             <div id="header_div" runat="server" class="header">
                 <div id="nav-placeholder"></div>
-                <a class="headerTitle" >Title</a>
+                <a class="headerTitle" >Business Information</a>
                 <a><asp:Image ID="startLogo_img" runat="server" ImageUrl="~/Media/FP_Logo.png" CssClass="headerFPLogo" /></a>               
             </div>
 
@@ -58,7 +58,7 @@
           
             <%--Popup--%>
             <div id="popup">
-                <p class="Sim_Research_Popup_Header"></p>
+                <p class="popup_header"></p>
                 <p><asp:Label ID="popupText_lbl" runat="server"></asp:Label></p>
                 <br /><br />
                 <button onclick="toggle(); return false;" class="button">Okay</button>

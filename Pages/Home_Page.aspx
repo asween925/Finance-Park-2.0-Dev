@@ -10,7 +10,7 @@
     <title>FP 2.0 - Home</title>
 
     <link href="../CSS/StaffPages.css" rel="stylesheet" media="screen" type="text/css">
-    <link rel="shortcut icon" type="image/png" href="../Media/faviconFP.png" />
+    <link rel="shortcut icon" type="image/png" href="../Media/FP_favicon_2.png" />
 </head>
 
 <body>
@@ -83,14 +83,7 @@
                 <div class="Home_Page_Drop_Down_Menu">
                     <button class="Home_Page_Drop_Down_Btn">Tools ▼</button>
                     <div class="Home_Page_Drop_Down_Content">
-                        <a href="profit_display.aspx">Town Hall Powerpoint</a>
                         <a href="School_Visit_Checklist.aspx">School Visit Checklist</a>
-                        <a href="Kit_Inventory.aspx">Kit Inventory</a>
-                        <a href="Upload_Move_Articles.aspx">Upload / Move Articles</a>
-                        <a href="School_Notes.aspx">School Notes</a>
-                        <a href="Schedule_request_form_checklist.aspx">Schedule Request Form Checklist</a>
-                        <a href="volunteer_database.aspx">Volunteer Database</a>
-                        <a href="Requested_Features.aspx">Requested Features and Bug Reports</a>
                     </div>
                 </div>
 
@@ -109,16 +102,10 @@
                     <button class="Home_Page_Drop_Down_Btn">Forms and Letters ▼</button>
                     <div class="Home_Page_Drop_Down_Content">
                         <a href="../Pages/Forms/Liaison_Letter.aspx">Family and Community Liason Information Forms</a>
-                        <a href="Teacher_Letter.aspx">Teacher Letter</a>
-                        <a href="Parent_Letter.aspx">Parent Letter</a>
-                        <a href="FP_Daily_Forms.aspx">FP Daily Forms</a>
-                        <a href="FP_Lunch_Forms.aspx">FP Lunch Forms</a>
-                        <a href="Staff_List.aspx">Staff List</a>
-                        <a href="Break_Schedules.aspx">Break Schedules</a>
-                        <a href="Bus_transportation.aspx">Bus Transportation</a>
-                        <a href="school_schedule.aspx">School Schedule</a>
-                        <a href="closed_business_checks.aspx">Closed Business Checks</a>
-                        <a href="visit_calendar.aspx">Visit Calendar</a>
+                        <a href="../Pages/Forms/Teacher_Reminders.aspx">Teacher Reminders</a>
+                        <a href="../Pages/Forms/Bookkeeper_Guidelines.aspx">Bookkeeper Guidelines</a>
+                        <a href="../Pages/Forms/Daily_Totals.aspx">Daily Totals</a>
+                        <a href="../Pages/Forms/Delivery_Ticket.aspx">Delivery Ticket</a>
                     </div>
                 </div>
                 <br />

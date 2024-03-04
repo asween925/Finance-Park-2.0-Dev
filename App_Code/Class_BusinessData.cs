@@ -215,4 +215,29 @@ public partial class Class_BusinessData
         return ReturnID;
     }
 
+
+
+    //Get total number of businesses
+    public object GetTotalBusinesses()
+    {
+        string ReturnCount = "";
+
+        // Get job ID from job title
+        con.ConnectionString = ConnectionString;
+        con.Open();
+        cmd.CommandText = "SELECT COUNT(businessName) FROM businessInfoFP";
+        cmd.Connection = con;
+        dr = cmd.ExecuteReader();
+
+        while (dr.Read())
+        {
+            ReturnCount = dr["businessName"].ToString();
+        }
+
+        cmd.Dispose();
+        con.Close();
+
+        return ReturnCount;
+    }
+
 }

@@ -4,10 +4,10 @@
   box-sizing: border-box;
 }
 
-body{
-    margin:0;
-    padding:0;
-    font-family: Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", "serif";
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Franklin Gothic Book', sans-serif;
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -37,6 +37,63 @@ input[type=number] {
         position: fixed;
         bottom: 0px;
     }
+
+    /*-----Letter-----*/
+
+    .letter_title {
+        margin-left: 0px;
+        margin-right: 0px;
+        text-align: center;
+        text-decoration: underline;
+        font-size: 24px;
+    }
+
+    .letter_p {
+        font-weight: bold;
+    }
+
+    .letter_logo_bottom {
+        /*margin-left: 42%;*/
+        width: 400px;
+        height: 70px;
+        position: fixed;
+        left: 25%;
+        right: 65%;
+        bottom: 0px;
+    }
+
+    .letter_l {
+        float: left;
+    }
+
+    .letter_r {
+        float: right;
+    }
+
+    /*---Letter End---*/
+
+
+
+    /************************ SPECIFIC PAGES CLASSES *************************/
+
+    /*-----Teacher Reminders-----*/
+
+    .Teacher_Reminders_Section {
+        font-size: 13px;
+    }   
+
+    .Teacher_Reminders_L {
+        float: left;
+    }
+
+    .Teacher_Reminders_R {
+        float: right;
+    }
+
+    /*---Teacher Reminders End---*/
+
+    /************************ SPECIFIC PAGES CLASSES END *********************/
+
 
 }
 

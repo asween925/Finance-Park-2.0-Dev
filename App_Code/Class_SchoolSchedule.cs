@@ -90,12 +90,42 @@ public partial class Class_SchoolSchedule
         {
             con.ConnectionString = connection_string;
             con.Open();
-            cmd.CommandText = "SELECT CONVERT(VARCHAR(5), timeVolArrive, 108) as timeVolArrive FROM schoolScheduleFP WHERE schoolSchedule = '" + VisitTime + "'";
+            cmd.CommandText = "SELECT CONVERT(VARCHAR(5), volArrive, 108) as volArrive FROM schoolScheduleFP WHERE schoolSchedule = '" + VisitTime + "'";
             cmd.Connection = con;
             dr = cmd.ExecuteReader();
 
             while (dr.Read())
-                VolArrivalTime = dr["timeVolArrive"].ToString();
+                VolArrivalTime = dr["volArrive"].ToString();
+
+            cmd.Dispose();
+            con.Close();
+        }
+        catch
+        {
+            errorString = "Error in visitTime. Could not get school schedule times.";
+            return errorString;
+        }
+
+        return VolArrivalTime;
+    }
+
+    //Get student arrival time from visit time
+    public object GetArrivalTime(string VisitTime)
+    {
+        string errorString;
+        var VolArrivalTime = default(string);
+
+        // Populate visit time DDL
+        try
+        {
+            con.ConnectionString = connection_string;
+            con.Open();
+            cmd.CommandText = "SELECT CONVERT(VARCHAR(5), stuArrive, 108) as stuArrive FROM schoolScheduleFP WHERE schoolSchedule = '" + VisitTime + "'";
+            cmd.Connection = con;
+            dr = cmd.ExecuteReader();
+
+            while (dr.Read())
+                VolArrivalTime = dr["stuArrive"].ToString();
 
             cmd.Dispose();
             con.Close();
@@ -110,7 +140,7 @@ public partial class Class_SchoolSchedule
     }
 
     // Get volunteer dismissal time from visit time
-    public object GetDismissalTime(string ArrivalTime)
+    public object GetDismissalTime(string VisitTime)
     {
         string errorString;
         var DismissalTime = default(string);
@@ -120,12 +150,12 @@ public partial class Class_SchoolSchedule
         {
             con.ConnectionString = connection_string;
             con.Open();
-            cmd.CommandText = "SELECT CONVERT(VARCHAR(5), leaveEV, 108) as leaveEV FROM schoolScheduleFP WHERE timeVolArrive = '" + ArrivalTime + "'";
+            cmd.CommandText = "SELECT CONVERT(VARCHAR(5), leave, 108) as leave FROM schoolScheduleFP WHERE schoolSchedule = '" + VisitTime + "'";
             cmd.Connection = con;
             dr = cmd.ExecuteReader();
 
             while (dr.Read())
-                DismissalTime = dr["leaveEV"].ToString();
+                DismissalTime = dr["leave"].ToString();
 
             cmd.Dispose();
             con.Close();

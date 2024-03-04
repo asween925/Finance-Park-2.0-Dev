@@ -20,11 +20,13 @@ public partial class Template_Student : System.Web.UI.Page
     private Class_VisitData VisitData = new Class_VisitData();
     private Class_SchoolData SchoolData = new Class_SchoolData();
     private Class_SchoolHeader SchoolHeader = new Class_SchoolHeader();
+    private Class_BusinessData BusinessData = new Class_BusinessData();
     private int VisitID;
 
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        //Get total businesses
+        totalBusiness_lbl.Text = BusinessData.GetTotalBusinesses().ToString();
     }
 
 }

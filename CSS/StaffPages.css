@@ -438,6 +438,45 @@ nav {
 
 
 
+/*-----Letters-----*/
+
+.letter {
+    margin-left: 10px;
+    margin-right: 10px;
+    max-width: 60%;
+}
+
+.letter_title {
+    margin-left: 0px;
+    margin-right: 0px;
+    text-align: center;
+    text-decoration: underline;
+    font-size: 24px;
+}
+
+.letter_p {
+    font-weight: bold;
+}
+
+.letter_logo_bottom {
+    padding: 30px;
+    height: 70px;
+    width: 240px;
+    bottom: 0px;
+    position: absolute;
+}
+
+.letter_l {
+    float: left;
+}
+
+.letter_r {
+    float: right;
+}
+
+/*-----Letters End-----*/
+
+
 /************************ SPECIFIC PAGES CLASSES *************************/
 
 
@@ -1042,7 +1081,18 @@ nav {
 
 
 
+/*-----Teacher Reminders-----*/
+
+.Teacher_Reminders_Section {
+    font-size: 13px;
+}
+
+/*-----Teacher Reminders End-----*/
+
+
+
 /************************ SPECIFIC PAGES CLASSES END *************************/
+
 
 
 /* Add animation (fade in the popup) */

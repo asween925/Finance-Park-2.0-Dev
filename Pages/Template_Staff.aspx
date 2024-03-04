@@ -9,6 +9,7 @@
     <title>FP 2.0 - Title</title>
 
     <link href="../../CSS/StaffPages.css" rel="stylesheet" media="screen" type="text/css">
+    <link href="../../CSS/Print.css" rel="stylesheet" media="print" type="text/css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link rel="shortcut icon" type="image/png" href="../../Media/faviconFP.png" />
 
@@ -33,8 +34,8 @@
 
         <%--Content--%>
         <div class="content">
-            <h2 class="h2">Header</h2>
-            <h3>Instructions go here.
+            <h2 class="h2 no-print">Header</h2>
+            <h3 class="no-print">Instructions go here.
                 <br />
                 <br />
                 More instructions go here.

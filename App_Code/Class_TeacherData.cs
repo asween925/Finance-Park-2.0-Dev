@@ -20,14 +20,14 @@ public partial class Class_TeacherData
     }
 
     // Gets the contact teacher name
-    public object GetContactTeacher(string schoolName)
+    public object GetContactTeacher(string schoolID)
     {
         string returnData = "";
 
         // Get school info from school name
         con.ConnectionString = connection_string;
         con.Open();
-        cmd.CommandText = "SELECT TRIM(firstName) + ' ' + TRIM(lastName) as teacherName FROM teacherInfoFP WHERE schoolName = '" + schoolName + "' AND isContact=1";
+        cmd.CommandText = "SELECT TRIM(firstName) + ' ' + TRIM(lastName) as teacherName FROM teacherInfoFP WHERE schoolID = '" + schoolID + "' AND contact=1";
         cmd.Connection = con;
         dr = cmd.ExecuteReader();
 
@@ -140,5 +140,46 @@ public partial class Class_TeacherData
         cmd.ExecuteNonQuery();
         cmd.Dispose();
         con.Close();
+    }
+
+
+    //Loads a DDL with the teachers of a visit ID
+    public object LoadTeacherNamesFromVID(int VisitID, int SchoolID, DropDownList DDL)
+    {
+        con.ConnectionString = connection_string;
+        con.Open();
+        cmd.CommandText = "SELECT firstName, lastName FROM teacherInfoFP WHERE schoolID='" + SchoolID + "' AND currVisitID='" + VisitID + "'";
+        cmd.Connection = con;
+        dr = cmd.ExecuteReader();
+
+        while (dr.Read())
+            DDL.Items.Add(dr[0].ToString() + " " + dr[1].ToString());
+
+        //DDL.Items.Insert(0, "");
+
+        cmd.Dispose();
+        con.Close();
+
+        return DDL;
+    }
+
+
+    public object GetTeacherEmail(int TID)
+    {
+        string email = "";
+        
+        con.ConnectionString = connection_string;
+        con.Open();
+        cmd.CommandText = "SELECT email FROM teacherInfoFP WHERE id='" + TID + "'";
+        cmd.Connection = con;
+        dr = cmd.ExecuteReader();
+
+        while (dr.Read())
+            email = dr[0].ToString();
+
+        cmd.Dispose();
+        con.Close();
+
+        return email;
     }
 }

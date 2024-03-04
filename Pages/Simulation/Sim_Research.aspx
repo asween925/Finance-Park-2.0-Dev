@@ -108,7 +108,7 @@
 
             <%--Popup--%>
             <div id="popup">
-                <p class="Sim_Research_Popup_Header">
+                <p class="popup_header">
                     <asp:Label ID="popupText_lbl" runat="server" Text="Please enter the Business ID to proceed:"></asp:Label></p>
                 <asp:TextBox ID="businessID_tb" runat="server" CssClass="popup_textbox" TextMode="Number"></asp:TextBox>
                 <br />
