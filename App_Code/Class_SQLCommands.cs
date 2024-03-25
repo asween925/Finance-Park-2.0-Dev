@@ -20,6 +20,8 @@ public partial class Class_SQLCommands
         connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
     }
 
+
+    //Inserts a new row into the kit inventory table
     public object InsertIntoKitInventory(string kitNumber, string schoolName, string category, string dateOut, string notes)
     {
         string connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
@@ -98,6 +100,8 @@ public partial class Class_SQLCommands
         return successReturn;
     }
 
+
+    //Loads the kit inventory table
     public object LoadKitInventory(string searchTerm = "", string searchBy = "id", string columnSort = "id", string orderSort = "ASC")
     {
         string connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
@@ -138,6 +142,8 @@ public partial class Class_SQLCommands
 
     }
 
+
+    //Loads the school notes table
     public object LoadSchoolNotes(string schoolName, string columnSort = "id", string orderSort = "DESC")
     {
         string connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
@@ -169,6 +175,8 @@ public partial class Class_SQLCommands
 
     }
 
+
+    //Gets the job of an admin 
     public object GetUserJob(string Username)
     {
         string returnJob = "";
@@ -189,6 +197,8 @@ public partial class Class_SQLCommands
 
     }
 
+
+    //Updates a row in a gridview
     public void UpdateRow(int ID, string Field, string Value, string Table)
     {
         string SQLStatement = "UPDATE " + Table + " SET " + Field + "=@" + Field + " WHERE ID=@Id";  
@@ -207,6 +217,8 @@ public partial class Class_SQLCommands
         }
     }
 
+
+    //Deletes a row in a gridview
     public void DeleteRow(int ID, string Table)
     {
         using (SqlConnection con = new SqlConnection(connection_string))
@@ -218,6 +230,25 @@ public partial class Class_SQLCommands
                 con.Open();
                 cmd.ExecuteNonQuery();
                 con.Close();
+            }
+        }
+    }
+
+
+    //Executes a non query from a passed string
+    public void ExecuteSQL(string SQL)
+    {
+        string connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
+
+        using (SqlConnection con = new SqlConnection(connection_string))
+        {
+            using (SqlCommand cmd = new SqlCommand(SQL))
+            {
+                    cmd.Connection = con;
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                
             }
         }
     }

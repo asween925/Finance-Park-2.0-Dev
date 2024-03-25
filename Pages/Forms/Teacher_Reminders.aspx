@@ -41,7 +41,7 @@
                 Select either public or private and click the print button.
             </h3>
             <p class="no-print">Visit Date:</p>
-            <asp:TextBox ID="visitDate_tb" runat="server" TextMode="Date" CssClass="textbox no-print" AutoPostBack="true" OnTextChanged="visitDate_tb_TextChanged"></asp:TextBox>
+            <asp:TextBox ID="visitDate_tb" runat="server" TextMode="Date" CssClass="textbox no-print" AutoPostBack="true" OnTextChanged="visitDate_tb_TextChanged"></asp:TextBox>&ensp;<asp:Label ID="error_lbl" runat="server" Font-Bold="true" Font-Size="X-Large" ForeColor="Red"></asp:Label>
 
             <%--School Name DDL--%>
             <div id="schoolName_div" runat="server" visible="false">
@@ -61,8 +61,10 @@
                 <asp:DropDownList ID="letterType_ddl" runat="server" AutoPostBack="true" CssClass="ddl no-print" OnSelectedIndexChanged="letterType_ddl_SelectedIndexChanged">
                     <asp:ListItem>Public</asp:ListItem>
                     <asp:ListItem>Private</asp:ListItem>
-                </asp:DropDownList><a class="no-print">&ensp;</a><asp:Label ID="error_lbl" runat="server" Font-Bold="true" Font-Size="X-Large" ForeColor="Red"></asp:Label>
-                <br class="no-print"/>
+                    <asp:ListItem>Home Schooled</asp:ListItem>
+                    <asp:ListItem>3 Days</asp:ListItem>
+                </asp:DropDownList><a class="no-print">&ensp;</a>
+                <br class="no-print"/><br class="no-print"/>
                 <asp:Button ID="print_btn" runat="server" Text="Print" CssClass="button no-print" OnClick="print_btn_Click" />
             </div>
             
@@ -109,6 +111,11 @@
                         <li>Send home the Finance Park Information Letter which introduces the program and basic procedures. (Found in your Instructor’s Guide on page 7.)</li>
                         <li>Please have students dress conducive to sitting on the floor during the day.</li>
                     </ul>
+                    <ul id="genDay_ul" runat="server" visible="false">
+                        <li>Finance Park teaching materials and workbooks should already be in your school. If you do not have these materials, please call Finance Park to arrange pick up or delivery.</li>
+                        <li>Send home the <a style="font-weight: bold;">Finance Park Information Letter</a>, found in the Teacher Guide, to provide visit information including lunch cost and procedure.</li>
+                        <li>Please have students dress conducive to sitting on the floor during the day.</li>
+                    </ul>
                 </div>
 
                 <%--Business Assignment Sheets--%>
@@ -142,7 +149,15 @@
                         <li>Please inform them of their arrival time of <asp:Label ID="stuArrivalLetterPri_lbl" runat="server"></asp:Label></li>
                         <li>Send a list of all approved volunteers to Finance Park (brightonk@pcsb.org) by <asp:Label ID="dueByLetterPri_lbl" runat="server"></asp:Label></li>
                         <li>As we are unable to verify the Approval Status of your volunteers, ALL changes or additions must be forwarded to us.</li>
-                        <li>The volunteers will pay for their lunches upon arrival at the Stavros Institute. Please do not allow them to prepay at school.</li>
+                        <li>The volunteers will pay for their lunches upon arrival at the Stavros Institute. Please do not allow them to prepay.</li>
+                    </ul>
+                    <ul id="volDay_ul" runat="server" visible="false">
+                        <li>Volunteers are necessary for a successful visit day for your students. Volunteers MUST show a Photo ID.</li>
+                        <li>Please note the number of volunteers needed for your visit day(s), found above.</li>
+                        <li>All volunteers must be registered, approved and active. Level 2 clearance is NOT required.</li>
+                        <li>Send home the <a style="font-weight: bold;">Finance Park Training Information Letter</a>.</li>
+                        <li>Send a list of all approved volunteers to Finance Park (brightonk@pcsb.org) by <asp:Label ID="dueByLetterDay_lbl" runat="server"></asp:Label></li>
+                        <li>The volunteers will pay for their lunches upon arrival at the Stavros Institute. Please do not allow them to prepay.</li>
                     </ul>
                 </div>
 
@@ -161,10 +176,16 @@
                         <li>Salads are no longer available.</li>
                         <li>Staff lunches are $3.00, cash or credit, paid upon arrival at the Stavros Institute.</li>
                     </ul>
+                    <ul id="lunchHome_ul" runat="server" visible="false">                        
+                        <li>Each McDonald’s lunch includes a burger and chicken nuggets, a snack and soda.</li>
+                        <li>Only student lunches are included in the $12.00 per student price of your school’s visit.</li>
+                        <li>Salads are no longer available.</li>
+                        <li>Staff lunches are $3.00, cash or credit, paid upon arrival at the Stavros Institute.</li>
+                    </ul>
                 </div>
 
                 <%--Transportation--%>
-                <div class="Teacher_Reminders_Section">
+                <div id="tran_div" runat="server" visible="false" class="Teacher_Reminders_Section">
                     <p class="letter_p">Transportation</p>
                     <ul id="transportPub_ul" runat="server" visible="false">
                         <li>We provide transportation for students and staff. Please let us know if you need a wheelchair bus.</li>

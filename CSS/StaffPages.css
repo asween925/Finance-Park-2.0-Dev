@@ -1062,12 +1062,30 @@ nav {
     padding-bottom: 7px;
 }
 
+.SVC_Section_Title {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.SVC_p {
+    font-weight: bold;
+}
+
+.SVC_Section_Line {
+    border-top: 1px solid gray;
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+.SVC_Letter_Width {
+    max-width: 700px;
+}
+
 /*-----School Visit Checklist End-----*/
 
 
 
 /*-----Teacher Home-----*/
-
 .teacher_home_stavros_logo {
     padding: 30px;
     height: 70px;

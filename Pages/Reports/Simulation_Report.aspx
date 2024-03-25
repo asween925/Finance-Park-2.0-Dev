@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0; maximum-scale=2.0; user-scalable=0;">
 
-    <title>FP 2.0 - Visit Report</title>
+    <title>FP 2.0 - Simulation Report</title>
 
     <link href="../../CSS/StaffPages.css" rel="stylesheet" media="screen" type="text/css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
@@ -74,10 +74,7 @@
                         <asp:BoundField DataField="studentCount" HeaderText="Student Count" ReadOnly="true" Visible="true" />
                         <asp:BoundField DataField="vTrainingTime" HeaderText="Volunteer Training Start" ReadOnly="true" Visible="true" />
                         <asp:BoundField DataField="vMinCount" HeaderText="Volunteer Min Count" ReadOnly="true" Visible="true" />
-                        <asp:BoundField DataField="vMaxCount" HeaderText="Volunteer Max Count" ReadOnly="true" Visible="true" />
-                        <asp:BoundField DataField="replyBy" HeaderText="Reply By" ReadOnly="true" Visible="true" DataFormatString="{0: MM-dd-yyyy }" />                       
-                        <asp:BoundField DataField="teacherCompleted" HeaderText="Teacher Submitted?" ReadOnly="true" Visible="true" />
-                        <asp:BoundField DataField="lastEdited" HeaderText="Last Edited by Teacher" ReadOnly="true" Visible="true" />                       
+                        <asp:BoundField DataField="vMaxCount" HeaderText="Volunteer Max Count" ReadOnly="true" Visible="true" />                    
                     </Columns>
                 </asp:GridView>
             </div>

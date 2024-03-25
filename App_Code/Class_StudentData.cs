@@ -10,8 +10,8 @@ public partial class Class_StudentData
     private SqlConnection con = new SqlConnection();
     private SqlCommand cmd = new SqlCommand();
     private SqlDataReader dr;
-    private string sqlserver = System.Configuration.ConfigurationManager.AppSettings["EV_sfp"].ToString();
-    private string sqldatabase = System.Configuration.ConfigurationManager.AppSettings["EV_DB"].ToString();
+    private string sqlserver = System.Configuration.ConfigurationManager.AppSettings["FP_sfp"].ToString();
+    private string sqldatabase = System.Configuration.ConfigurationManager.AppSettings["FP_DB"].ToString();
     private string sqluser = System.Configuration.ConfigurationManager.AppSettings["db_user"].ToString();
     private string sqlpassword = System.Configuration.ConfigurationManager.AppSettings["db_password"].ToString();
     private string connection_string;
@@ -272,4 +272,27 @@ public partial class Class_StudentData
     }
 
 
+    //Loads a table with all lunch tickets for a visit
+    public object LoadLunchesTable(int VisitID)
+    {
+        con.ConnectionString = connection_string;
+        con.Open();
+        cmd = new SqlCommand();
+        cmd.Connection = con;
+        cmd.CommandText = @"SELECT s.id, a.pin, s.lunchServed, s.lunchTicket 
+                              FROM studentInfoFP s
+                                JOIN accountNumsFP a
+                                ON a.accountNum = s.accountNum
+                              WHERE s.visitID='" + VisitID + "'";
+
+        var da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        var dt = new DataTable();
+        da.Fill(dt);
+
+        cmd.Dispose();
+        con.Close();
+
+        return dt;
+    }
 }

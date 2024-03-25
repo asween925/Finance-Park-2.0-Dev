@@ -7,7 +7,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class Template_Staff : Page
+public partial class Delivery_Ticket : Page
 {
     private string SQLServer = ConfigurationManager.AppSettings["FP_sfp"].ToString();
     private string SQLDatabase = ConfigurationManager.AppSettings["FP_DB"].ToString();
@@ -24,8 +24,9 @@ public partial class Template_Staff : Page
     private Class_GridviewFunctions Gridviews = new Class_GridviewFunctions();
     private Class_TeacherData TeacherData = new Class_TeacherData();
     private int VisitID;
+    private string URL = HttpContext.Current.Request.Url.ToString();
 
-    public Template_Staff()
+    public Delivery_Ticket()
     {
         ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
         VisitID = VisitData.GetVisitID();
@@ -50,6 +51,28 @@ public partial class Template_Staff : Page
 
             // Populating school header
             headerSchoolName_lbl.Text = (SchoolHeader.GetSchoolHeader()).ToString();
+
+            //if coming from SVC, automatically load the visit date and school name
+            if (URL.Contains("b=")) {
+
+                //get Date from visit id
+                string VisitID = Request["b"];
+
+                //Assign visit date to text box
+                visitDate_tb.Text = DateTime.Parse(VisitData.GetVisitDateFromID(VisitID).ToString()).ToString("yyyy-MM-dd");
+
+                //Load data
+                LoadData();
+
+                //Get school name from id
+                string SchoolID = Request["c"];
+
+                //Assign school to ddl
+                schoolName_ddl.SelectedValue = SchoolData.GetSchoolNameFromID(SchoolID).ToString();
+
+                //Load data again
+                LoadData();
+            }
         }
     }
 

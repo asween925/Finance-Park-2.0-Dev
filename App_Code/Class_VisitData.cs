@@ -86,6 +86,7 @@ public partial class Class_VisitData
 
     public object GetVisitDateFromID(string VisitID)
     {
+        string connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
         string dateSQL = "SELECT visitDate FROM visitInfoFP WHERE id = '" + VisitID + "'";
         var returnValue = default(string);
 
@@ -142,12 +143,12 @@ public partial class Class_VisitData
     public object LoadVisitInfoTable(string SQLWhereVisitDate = null, string SQLWhereSchool = null, string SQLWhereMonth = null, string SQLWhereNot = null)
     {
         string connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
-        string SQLStatement = @"SELECT v.id, IIF(s.id='505', s.schoolName, CONCAT(s.schoolName, ' (', s.id, ')')) as 'School #1',
-		                                    IIF(s2.id='505', s2.schoolName, CONCAT(s2.schoolName, ' (', s2.id, ')')) as 'School #2', 
-                                             IIF(s3.id='505', s3.schoolName, CONCAT(s3.schoolName, ' (', s3.id, ')')) as 'School #3', 
-                                             IIF(s4.id='505', s4.schoolName, CONCAT(s4.schoolName, ' (', s4.id, ')')) as 'School #4', 
-                                             IIF(s5.id='505', s5.schoolName, CONCAT(s5.schoolName, ' (', s5.id, ')')) as 'School #5',
-                                            v.vTrainingTime, v.vMinCount, v.vMaxCount, v.replyBy, v.visitDate, v.studentCount, v.visitTime, v.teacherCompleted, v.lastEdited
+        string SQLStatement = @"SELECT v.id, IIF(s.id IS NULL, '', CONCAT(s.schoolName, ' (', s.id, ')')) as 'School #1',
+		                                    IIF(s2.id IS NULL, '', CONCAT(s2.schoolName, ' (', s2.id, ')')) as 'School #2', 
+                                             IIF(s3.id IS NULL, '', CONCAT(s3.schoolName, ' (', s3.id, ')')) as 'School #3', 
+                                             IIF(s4.id IS NULL, '', CONCAT(s4.schoolName, ' (', s4.id, ')')) as 'School #4', 
+                                             IIF(s5.id IS NULL, '', CONCAT(s5.schoolName, ' (', s5.id, ')')) as 'School #5',
+                                            v.vTrainingTime, v.vMinCount, v.vMaxCount, v.visitDate, v.studentCount, v.visitTime
                                             FROM visitInfoFP v 
                                             LEFT JOIN schoolInfoFP s ON s.ID = v.school
                                             LEFT JOIN schoolInfoFP s2 ON s2.ID = v.school2

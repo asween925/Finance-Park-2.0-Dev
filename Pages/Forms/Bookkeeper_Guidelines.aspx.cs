@@ -46,8 +46,38 @@ public partial class Bookkeeper_Guidelines : Page
         }
     }
 
+    public void LoadData()
+    {
+        //Load public or home school
+        if (letterType_ddl.SelectedIndex == 0) 
+        {
+            letterTopPub_p.Visible = true;
+            tablePub_div.Visible = true;
+            letterPayPub_p.Visible = true;
+
+            letterTopHome_p.Visible = false;
+            tableHome_div.Visible = false;
+            letterPayHome_p.Visible = false;
+        }
+        else
+        {
+            letterTopPub_p.Visible = false;
+            tablePub_div.Visible = false;
+            letterPayPub_p.Visible = false;
+
+            letterTopHome_p.Visible = true;
+            tableHome_div.Visible = true;
+            letterPayHome_p.Visible = true;
+        }
+    }
+
     protected void print_btn_Click(object sender, EventArgs e)
     {
         Page.ClientScript.RegisterStartupScript(GetType(), "Print", "print();", true);
+    }
+
+    protected void letterType_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        LoadData();
     }
 }

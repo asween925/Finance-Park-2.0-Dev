@@ -42,7 +42,6 @@
 
                 <%--Header Links--%>
                 <asp:LinkButton ID="LinkButton9" runat="server" PostBackUrl="/Pages/Simulation/Sim_Start.aspx" Font-Size="Large" CssClass="button1">SIMULATION START</asp:LinkButton>
-                <asp:LinkButton ID="LinkButton13" runat="server" PostBackUrl="/Pages/Simulation/Sim_Directory.aspx" Font-Size="Large" CssClass="button1">SIMULATION DIRECTORY</asp:LinkButton>
                 <asp:LinkButton ID="LinkButton33" runat="server" PostBackUrl="/inventory_home.aspx" Font-Size="Large" CssClass="button1">INVENTORY</asp:LinkButton>
                 <asp:LinkButton ID="LinkButton27" runat="server" PostBackUrl="/Help_page.aspx" Font-Size="Large" CssClass="button1">HELP</asp:LinkButton>
                 <asp:LinkButton ID="LinkButton24" runat="server" PostBackUrl="/default.aspx" Font-Size="Large" CssClass="button1">LOG OUT</asp:LinkButton>
@@ -83,7 +82,8 @@
                 <div class="Home_Page_Drop_Down_Menu">
                     <button class="Home_Page_Drop_Down_Btn">Tools ▼</button>
                     <div class="Home_Page_Drop_Down_Content">
-                        <a href="School_Visit_Checklist.aspx">School Visit Checklist</a>
+                        <a href="../Pages/Tools/School_Visit_Checklist.aspx">School Visit Checklist</a>
+                        <a href="../Pages/Tools/Lunch_System.aspx">Lunch System</a>
                     </div>
                 </div>
 
@@ -91,7 +91,7 @@
                 <div class="Home_Page_Drop_Down_Menu">
                     <button class="Home_Page_Drop_Down_Btn">Reports ▼</button>
                     <div class="Home_Page_Drop_Down_Content">
-                        <a href="../Pages/Reports/Simulation_Report.aspx">Visit Report</a>
+                        <a href="../Pages/Reports/Simulation_Report.aspx">Simulation Report</a>
                         <a href="../Pages/Reports/School_Report.aspx">School Report</a>                      
                         <a href="../Pages/Reports/Teacher_Report.aspx">Teacher Report</a>
                     </div>
@@ -101,11 +101,22 @@
                 <div class="Home_Page_Drop_Down_Menu">
                     <button class="Home_Page_Drop_Down_Btn">Forms and Letters ▼</button>
                     <div class="Home_Page_Drop_Down_Content">
-                        <a href="../Pages/Forms/Liaison_Letter.aspx">Family and Community Liason Information Forms</a>
-                        <a href="../Pages/Forms/Teacher_Reminders.aspx">Teacher Reminders</a>
                         <a href="../Pages/Forms/Bookkeeper_Guidelines.aspx">Bookkeeper Guidelines</a>
                         <a href="../Pages/Forms/Daily_Totals.aspx">Daily Totals</a>
                         <a href="../Pages/Forms/Delivery_Ticket.aspx">Delivery Ticket</a>
+                        <a href="../Pages/Forms/Liaison_Letter.aspx">Family and Community Liason Information Forms</a>
+                        <a href="../Pages/Forms/Teacher_Reminders.aspx">Teacher Reminders</a>                      
+                    </div>
+                </div>
+
+                <%--Simulation Directory--%>
+                <div class="Home_Page_Drop_Down_Menu">
+                    <button class="Home_Page_Drop_Down_Btn">Simulation ▼</button>
+                    <div class="Home_Page_Drop_Down_Content">
+                        <a href="../Pages/Simulation/Sim_Start.aspx">Start</a>
+                        <a href="../Pages/Simulation/Sim_Login.aspx">Login</a>
+                        <a href="../Pages/Simulation/Sim_Life_Style.aspx">Life Style Questions</a>
+                        <a href="../Pages/Simulation/Sim_Research.aspx">Research</a>                     
                     </div>
                 </div>
                 <br />
@@ -180,7 +191,6 @@
                         Latest Updates
                         <div class="popuptext" id="myPopup">
                             <span>Last Updated: 1/11/2023 (v2.2.20)</span>                           
-
                         </div>
                     </div>
                     |

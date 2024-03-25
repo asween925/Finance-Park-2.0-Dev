@@ -92,6 +92,17 @@ input[type=number] {
 
     /*---Teacher Reminders End---*/
 
+
+    /*-----School Visit Checklist-----*/
+
+    .SVC_Section_Line {
+        border-top: 1px solid gray;
+        padding-top: 7px;
+        padding-bottom: 7px;
+    }
+
+    /*-----School Visit Checklist End-----*/
+
     /************************ SPECIFIC PAGES CLASSES END *********************/
 
 

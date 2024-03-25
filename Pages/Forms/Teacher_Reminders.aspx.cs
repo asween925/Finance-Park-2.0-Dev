@@ -54,8 +54,36 @@ public partial class Teacher_Reminders : Page
         string VisitDate = visitDate_tb.Text;
         string SchoolName = schoolName_ddl.SelectedValue;
         string TeacherName = teacherName_ddl.SelectedValue;
-        string VisitTime = VisitData.LoadVisitInfoFromDate(VisitDate, "visitTime").ToString();
-        string DueBy = VisitData.LoadVisitInfoFromDate(VisitDate, "dueBy").ToString();
+        string VisitTime;
+        string DueBy;
+
+        //Clear error
+        error_lbl.Text = "";
+
+        //Check if visit date exists
+        if (VisitData.GetVisitIDFromDate(VisitDate).ToString() == "0")
+        {
+            error_lbl.Text = "No visit scheduled for selected date.";
+            return;
+        }
+
+        //Assign VisitTime and DueBy dates
+        VisitTime = VisitData.LoadVisitInfoFromDate(VisitDate, "visitTime").ToString();
+        DueBy = VisitData.LoadVisitInfoFromDate(VisitDate, "dueBy").ToString();
+
+        //Make all inivisible
+        genPub_ul.Visible = false;
+        genPri_ul.Visible = false;
+        genDay_ul.Visible = false;
+        volPub_ul.Visible = false;
+        volPri_ul.Visible = false;
+        volDay_ul.Visible = false;
+        tran_div.Visible = false;
+        transportPub_ul.Visible = false;
+        transportPri_ul.Visible = false;
+        lunchPub_ul.Visible = false;
+        lunchPri_ul.Visible = false;
+        lunchHome_ul.Visible = false;
 
         //Check if letter type is public or private and make it visible
         if (letterType_ddl.SelectedValue == "Public")
@@ -63,28 +91,32 @@ public partial class Teacher_Reminders : Page
             genPub_ul.Visible = true;
             volPub_ul.Visible = true;
             lunchPub_ul.Visible = true;
+            tran_div.Visible = true;
             transportPub_ul.Visible = true;
-
-            //Make private invisible
-            genPri_ul.Visible = false;
-            volPri_ul.Visible = false;
-            lunchPri_ul.Visible = false;
-            transportPri_ul.Visible = false;
-            paymentPri_div.Visible = false;
         }
-        else
+        else if (letterType_ddl.SelectedValue == "Private")
         {
             genPri_ul.Visible = true;
             volPri_ul.Visible = true;
             lunchPri_ul.Visible = true;
+            tran_div.Visible = true;
             transportPri_ul.Visible = true;
+            paymentPri_div.Visible = true;     
+        }
+        else if (letterType_ddl.SelectedValue == "Home Schooled")
+        {
+            genPri_ul.Visible = true;
+            volPri_ul.Visible = true;
             paymentPri_div.Visible = true;
-
-            //Make public invisible
-            genPub_ul.Visible = false;
-            volPub_ul.Visible = false;
-            lunchPub_ul.Visible = false;
-            transportPub_ul.Visible = false;           
+            lunchPri_ul.Visible = true;
+        }
+        else
+        {
+            genDay_ul.Visible = true;
+            volDay_ul.Visible = true;
+            tran_div.Visible = true;
+            transportPub_ul.Visible = true;
+            lunchPub_ul.Visible = true;
         }
 
         //Load visit info
@@ -97,10 +129,13 @@ public partial class Teacher_Reminders : Page
         dueByLetter_lbl.Text = DateTime.Parse(DueBy).ToString("d");
         dueByLetterPri_lbl.Text = DateTime.Parse(DueBy).ToString("d");
         dueByLetter2Pub_lbl.Text = DateTime.Parse(DueBy).ToString("d");
+        dueByLetterDay_lbl.Text = DateTime.Parse(DueBy).ToString("d");
         volArrive_lbl.Text = DateTime.Parse(SchoolSchedule.GetVolArrivalTime(VisitTime).ToString()).ToString("t");
         stuArrive_lbl.Text = DateTime.Parse(SchoolSchedule.GetArrivalTime(VisitTime).ToString()).ToString("t") + " /";
         stuDismiss_lbl.Text = DateTime.Parse(SchoolSchedule.GetDismissalTime(VisitTime).ToString()).ToString("t");
     }   
+
+
 
     protected void visitDate_tb_TextChanged(object sender, EventArgs e)
     {
@@ -126,7 +161,6 @@ public partial class Teacher_Reminders : Page
             
         }
     }
-
 
     protected void schoolName_ddl_SelectedIndexChanged(object sender, EventArgs e)
     {
