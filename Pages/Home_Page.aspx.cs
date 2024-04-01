@@ -2,6 +2,7 @@
 using System;
 using System.Activities.Expressions;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
@@ -9,16 +10,20 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class _Home_Page : System.Web.UI.Page
+public partial class Home_Page : System.Web.UI.Page
 {
-    string sqlserver = System.Configuration.ConfigurationManager.AppSettings["FP_sfp"];
-    string sqldatabase = System.Configuration.ConfigurationManager.AppSettings["FP_DB"];
-    string sqluser = System.Configuration.ConfigurationManager.AppSettings["db_user"];
-    string sqlpassword = System.Configuration.ConfigurationManager.AppSettings["db_password"];
-    string connection_string;
-    SqlDataReader dr;
+    private string SQLServer = ConfigurationManager.AppSettings["FP_sfp"].ToString();
+    private string SQLDatabase = ConfigurationManager.AppSettings["FP_DB"].ToString();
+    private string SQLUser = ConfigurationManager.AppSettings["db_user"].ToString();
+    private string SQLPassword = ConfigurationManager.AppSettings["db_password"].ToString();
+    private SqlConnection con = new SqlConnection();
+    private SqlCommand cmd = new SqlCommand();
+    private SqlDataReader dr;
+    private string ConnectionString;
     Class_VisitData VisitData = new Class_VisitData();
-    
+    Class_SchoolData SchoolData = new Class_SchoolData();
+    Class_SchoolHeader SchoolHeader = new Class_SchoolHeader();
+
     //Dim SchoolData As New Class_SchoolData
     //Dim SQL As New Class_SQLCommands
     //Dim StudentData As New Class_StudentData
@@ -32,8 +37,22 @@ public partial class _Home_Page : System.Web.UI.Page
     //Dim ThursdayVisitDate = DateTime.Today.AddDays(4 - dayOfWeek);
     //Dim FridayVisitDate = DateTime.Today.AddDays(5 - dayOfWeek);
 
+    public Home_Page()
+    {
+        ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
+        Load += Page_Load;
+    }
+
     protected void Page_Load(object sender, EventArgs e)
     {       
-       visitID_lbl.Text = (VisitData.GetVisitID()).ToString();
+       lblVisitID.Text = VisitData.GetVisitID().ToString();
+
+        //Load header data
+        lblTodayDate.Text = DateTime.Now.ToShortDateString();
+        lblStudentCount.Text = VisitData.LoadVisitInfoFromDate(DateTime.Now.ToShortDateString(), "studentCount").ToString();
+        lblSchoolName.Text = SchoolHeader.GetSchoolHeader().ToString();
+
+        // Populating school header
+        lblHeaderSchoolName.Text = SchoolHeader.GetSchoolHeader().ToString();
     }
 }

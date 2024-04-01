@@ -18,14 +18,14 @@
         <div id="Site_Wrap_Fullscreen">
 
             <%--Logo--%>
-            <div id="startLogo_div" runat="server" class="header">
-                <asp:Image ID="startLogo_img" runat="server" ImageUrl="~/Media/FP_SI_Logo.png" />
+            <div id="divStartLogo" runat="server" class="header">
+                <asp:Image ID="imgStartLogo" runat="server" ImageUrl="~/Media/FP_SI_Logo.png" />
             </div>
             <br />
                 
             <%--Question 1--%>
             <div class="content_div">
-                <h3 class="underline"><asp:Label ID="q1_lbl" runat="server"></asp:Label></h3>
+                <h3 class="underline"><asp:Label ID="lblQ1" runat="server"></asp:Label></h3>
                 
                 <%--Questions--%>
                 <%--Going to do radio buttons so the kids only select 1 answer--%>

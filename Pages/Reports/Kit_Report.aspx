@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Lunch_System.aspx.cs" MaintainScrollPositionOnPostback="true" Inherits="Lunch_System" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Kit_Report.aspx.cs" Inherits="Kit_Report" %>
 
 <!doctype html>
 <html>
@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0; maximum-scale=2.0; user-scalable=0;">
 
-    <title>FP 2.0 - Lunch System</title>
+    <title>FP 2.0 - Kit Report</title>
 
     <link href="../../CSS/StaffPages.css" rel="stylesheet" media="screen" type="text/css">
     <link href="../../CSS/Print.css" rel="stylesheet" media="print" type="text/css">
@@ -34,27 +34,29 @@
 
         <%--Content--%>
         <div class="content">
-            <h2 class="h2 no-print">Lunch System</h2>
-            <h3 class="no-print">This page allows you to control the lunch system for Finance Park.
+            <h2 class="h2 no-print">Kit Report</h2>
+            <h3 class="no-print">This page allows you to view all kit numbers assigned to a school.
                 <br />
                 <br />
-                Enter a date of the simulation to see the students account numbers and pin numbers and check of if a student has received their lunch.
+                Select a school name from the drop down menu to view kits from that school. Click Print to print out a list. Kit numbers can be assigned via the School Visit Checklist found under Tools.
             </h3>
-            <p>Visit Date:</p>
-            <asp:TextBox ID="tbVisitDate" runat="server" TextMode="Date" CssClass="textbox" AutoPostBack="true" OnTextChanged="tbVisitDate_TextChanged"></asp:TextBox>&ensp;<asp:Label ID="lblError" runat="server" Font-Bold="true" Font-Size="X-Large" ForeColor="Red"></asp:Label>
+            <p>School Name:</p>
+            <asp:DropDownList ID="ddlSchoolName" runat="server" CssClass="ddl" AutoPostBack="true" OnSelectedIndexChanged="ddlSchoolName_SelectedIndexChanged"></asp:DropDownList>&ensp;<asp:Label ID="lblError" runat="server" Font-Bold="true" Font-Size="X-Large" ForeColor="Red"></asp:Label>
+            <br />
+            <br />
+            <asp:Button ID="btnPrint" runat="server" Text="Print" CssClass="button no-print" OnClick="btnPrint_Click" />
             <br /><br />
 
             <%--Optional Gridview--%>
-            <div id="divLunches" runat="server" visible="true">
-                <asp:GridView ID="dgvLunches" runat="server" AutoGenerateColumns="False" AutoGenerateEditButton="true" DataKeyNames="ID" CellPadding="5" Height="50" AllowPaging="True" ShowHeaderWhenEmpty="True" Font-Size="Medium"  OnRowEditing="dgvLunches_RowEditing" OnRowCancelingEdit="dgvLunches_RowCancelingEdit" OnRowUpdating="dgvLunches_RowUpdating" OnPageIndexChanging="dgvLunches_PageIndexChanging" PagerStyle-CssClass="pager" HeaderStyle-CssClass="header" RowStyle-CssClass="rows" Visible="true"> 
+            <div id="divKits" runat="server" visible="true">                
+                <asp:GridView ID="dgvKits" runat="server" AutoGenerateColumns="False" DataKeyNames="ID" CellPadding="5" Height="50" PageSize="15" AllowPaging="True" ShowHeaderWhenEmpty="True" Font-Size="Medium" OnPageIndexChanging="dgvKits_PageIndexChanging" PagerStyle-CssClass="pager" HeaderStyle-CssClass="header" RowStyle-CssClass="rows" Visible="true"> 
                     <Columns>
                         <asp:BoundField DataField="ID" HeaderText="ID" Visible="false" />
-                        <asp:BoundField DataField="pin" HeaderText="Pin #" Visible="true" readonly="true"/>
-                        <asp:TemplateField HeaderText="Lunch<br />Served">
-                            <ItemTemplate>
-                               <asp:CheckBox ID="chkLunchServedDGV" runat="server" Checked='<%#Bind("lunchServed") %>'></asp:CheckBox>
-                            </ItemTemplate>
-                        </asp:TemplateField>
+                        <asp:BoundField DataField="visitDate" HeaderText="Visit Date" Visible="true" DataFormatString="{0: MM/dd/yyyy }" />
+                        <asp:BoundField DataField="schoolName" HeaderText="School Name" Visible="true" />
+                        <asp:BoundField DataField="workbooks" HeaderText="Workbooks" Visible="true" />
+                        <asp:BoundField DataField="kitTotal" HeaderText="Number of Kits Sent" Visible="true" />
+                        <asp:BoundField DataField="kits" HeaderText="Kit Numbers" Visible="true" />
                     </Columns>
                 </asp:GridView>
             </div>

@@ -21,22 +21,22 @@ public partial class Sim_Login : System.Web.UI.Page
         if (VisitData.GetVisitID().ToString() != "")
         {
             //Load schools in DDL from today's date
-            SchoolData.LoadVisitDateSchoolsDDL(DateTime.Now.ToShortDateString(), schoolName_ddl);
+            SchoolData.LoadVisitDateSchoolsDDL(DateTime.Now.ToShortDateString(), ddlSchoolName);
         }
         else
         {
-            error_lbl.Text = "No simulation active for today!";
+            lblError.Text = "No simulation active for today!";
             return;
         }
     }
 
-    protected void reset_btn_Click(object sender, EventArgs e)
+    protected void btnReset_Click(object sender, EventArgs e)
     {
         //Refresh page
         Response.Redirect("Sim_Login.aspx");
     }
 
-    protected void enter_btn_Click(object sender, EventArgs e)
+    protected void btnEnter_Click(object sender, EventArgs e)
     {       
         //Check if PIN matches account number
 
@@ -49,51 +49,51 @@ public partial class Sim_Login : System.Web.UI.Page
 
     }
 
-    protected void cancel_btn_Click(object sender, EventArgs e)
+    protected void btnCancel_Click(object sender, EventArgs e)
     {
         //Refresh page
         Response.Redirect("Sim_Login.aspx");
     }
 
-    protected void schoolName_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlSchoolName_SelectedIndexChanged(object sender, EventArgs e)
     {       
         //Get school ID from selected value
-        if (schoolName_ddl.SelectedIndex != 0 )
+        if (ddlSchoolName.SelectedIndex != 0 )
         {
-            int SchoolID = (Int16.Parse(SchoolData.GetSchoolID(schoolName_ddl.SelectedValue).ToString()));
+            int SchoolID = (Int16.Parse(SchoolData.GetSchoolID(ddlSchoolName.SelectedValue).ToString()));
 
             //Load teachers name
-            TeacherData.LoadTeacherNamesFromVID(VisitID, SchoolID, teacher_ddl);
+            TeacherData.LoadTeacherNamesFromVID(VisitID, SchoolID, ddlTeacher);
         }
         
     }
 
-    protected void login_btn_Click(object sender, EventArgs e)
+    protected void btnLogin_Click(object sender, EventArgs e)
     {
         //Check if all fields are entered
-        if (acctNum_tb.Text == "")
+        if (tbAcctNum.Text == "")
         {
-            error_lbl.Text = "Please enter an account number.";
+            lblError.Text = "Please enter an account number.";
             return;
         }
-        else if (firstName_tb.Text == "")
+        else if (tbFirstName.Text == "")
         {
-            error_lbl.Text = "Please enter your first name.";
+            lblError.Text = "Please enter your first name.";
             return;
         }
-        else if (lastName_tb.Text == "")
+        else if (tbLastName.Text == "")
         {
-            error_lbl.Text = "Please enter your last name.";
+            lblError.Text = "Please enter your last name.";
             return;
         }
-        else if (schoolName_ddl.SelectedIndex == 0)
+        else if (ddlSchoolName.SelectedIndex == 0)
         {
-            error_lbl.Text = "Please select your school.";
+            lblError.Text = "Please select your school.";
             return;
         }
-        else if (grade_tb.Text == "")
+        else if (tbGrade.Text == "")
         {
-            error_lbl.Text = "Please enter your grade.";
+            lblError.Text = "Please enter your grade.";
             return;
         }
 

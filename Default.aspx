@@ -22,7 +22,7 @@
             Finance Park 2.0
         </div>
         <div id="header-e3">
-            <asp:Label ID="headerSchoolName_lbl" Text="Login" runat="server"></asp:Label>
+            <asp:Label ID="lblHeaderSchoolName" Text="Login" runat="server"></asp:Label>
         </div>
         <div id="header-e2">
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -33,26 +33,26 @@
             <h2 class="h2">FP 2.0 Login</h2>
             <br />
             <p>Email</p>
-            <asp:TextBox ID="email_tb" runat="server" TextMode="SingleLine" Width="200px" CssClass="textbox" OnTextChanged="email_tb_TextChanged"></asp:TextBox>
+            <asp:TextBox ID="tbEmail" runat="server" TextMode="SingleLine" Width="200px" CssClass="textbox" OnTextChanged="tbEmail_TextChanged"></asp:TextBox>
             <p>Password</p>
             <asp:TextBox ID="password_tb" runat="server" TextMode="Password" Width="150px" CssClass="textbox"></asp:TextBox>
             <br />
             <br />
-            <asp:Button ID="login_btn" runat="server" Text="Login" CssClass="button" OnClick="login_btn_Click" />
+            <asp:Button ID="btnLogin" runat="server" Text="Login" CssClass="button" OnClick="btnLogin_Click" />
             <br />
             <br />
             <br />
             <p><a href="mailto:sweeneya@pcsb.org?subject=Login">Click here to ask for assistance</a> (or email sweeneya@pcsb.org)</p>
             <br />
-            <asp:Label ID="error_lbl" runat="server" ForeColor="Red" />
+            <asp:Label ID="lblError" runat="server" ForeColor="Red" />
             <asp:Label ID="error2_lbl" runat="server" />
         </div>
 
-        <asp:Label ID="schoolName_lbl" runat="server" Visible="false"></asp:Label><asp:Label ID="schoolID_lbl" runat="server" Visible="false"></asp:Label><asp:Label ID="visitID_lbl" runat="server" Visible="false"></asp:Label>
+        <asp:Label ID="lblSchoolName" runat="server" Visible="false"></asp:Label><asp:Label ID="schoolID_lbl" runat="server" Visible="false"></asp:Label><asp:Label ID="lblVisitID" runat="server" Visible="false"></asp:Label>
 
         <asp:HiddenField ID="schoolName_hf" runat="server" />
-        <asp:HiddenField ID="schoolID_hf" runat="server" />
-        <asp:HiddenField ID="visitID_hf" runat="server" />
+        <asp:HiddenField ID="hfSchoolID" runat="server" />
+        <asp:HiddenField ID="hfVisitID" runat="server" />
         <asp:HiddenField ID="clientName_hf" runat="server" />
         <asp:HiddenField ID="teacherID_hf" runat="server" />
 

@@ -34,7 +34,7 @@ public partial class _Default : Page
 
     protected void Login()
     {
-        string email = email_tb.Text;
+        string email = tbEmail.Text;
         string[] username = email.Split('@');
         string password = password_tb.Text;
         connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
@@ -46,11 +46,11 @@ public partial class _Default : Page
         SqlCommand cmd = new SqlCommand(connection_string, con);
         SqlDataReader dr;
 
-        //Checks if email_tb is a proper email address (contains both a '@' and a '.'
+        //Checks if tbEmail is a proper email address (contains both a '@' and a '.'
         if (!(email.Contains("@")) && (!(email.Contains('.'))))
         {
             //email is not a valid address, show error, exit method
-            error_lbl.Text = "Not a valid email address.";
+            lblError.Text = "Not a valid email address.";
             return;
         }
 
@@ -113,11 +113,11 @@ public partial class _Default : Page
 
                             while (dr.Read())
                             {
-                                schoolName_lbl.Text = dr["schoolName"].ToString();
+                                lblSchoolName.Text = dr["schoolName"].ToString();
 
-                                if (dr.HasRows == false || schoolName_lbl.Text == "")
+                                if (dr.HasRows == false || lblSchoolName.Text == "")
                                 {
-                                    error_lbl.Text = "We do not have a school associated with your email. Please use the link above to email us about this issue.";
+                                    lblError.Text = "We do not have a school associated with your email. Please use the link above to email us about this issue.";
                                     return;
                                 }
                             }
@@ -127,7 +127,7 @@ public partial class _Default : Page
                         }
                         catch
                         {
-                            error_lbl.Text = "Error code 1. Please use the link above to email us about this issue.";
+                            lblError.Text = "Error code 1. Please use the link above to email us about this issue.";
                             return;
                         }
 
@@ -135,17 +135,17 @@ public partial class _Default : Page
                         {
                             con.ConnectionString = connection_string;
                             con.Open();
-                            cmd.CommandText = "SELECT DISTINCT id FROM schoolInfoFP WHERE schoolName = '" + schoolName_lbl.Text + "' AND NOT id=505";
+                            cmd.CommandText = "SELECT DISTINCT id FROM schoolInfoFP WHERE schoolName = '" + lblSchoolName.Text + "' AND NOT id=505";
                             cmd.Connection = con;
                             dr = cmd.ExecuteReader();
 
                             while (dr.Read())
                             {
-                                schoolID_hf.Value = dr["id"].ToString();
+                                hfSchoolID.Value = dr["id"].ToString();
 
-                                if (schoolID_hf.Value == "" || schoolID_hf.Value == null)
+                                if (hfSchoolID.Value == "" || hfSchoolID.Value == null)
                                 {
-                                    error_lbl.Text = "Error code 22. Please use the link above to email us about this issue.";
+                                    lblError.Text = "Error code 22. Please use the link above to email us about this issue.";
                                     cmd.Dispose();
                                     con.Close();
                                     return;
@@ -154,7 +154,7 @@ public partial class _Default : Page
                         }
                         catch
                         {
-                            error_lbl.Text = "Error code 2. Please use the link above to email us about this issue.";
+                            lblError.Text = "Error code 2. Please use the link above to email us about this issue.";
                             cmd.Dispose( );
                             con.Close( );
                             return;
@@ -167,20 +167,20 @@ public partial class _Default : Page
                             con.Open();
 
                             //CHANGE THIS CODE HERE AFTER EACH SCHOOL YEAR:     CHANGE THE YEAR BETWEEN AT THE END OF THIS LINE TO 8-10-(Current Year) AND 6-10(Next Year)
-                            cmd.CommandText = "SELECT id FROM (SELECT id, visitDate FROM visitInfoFP WHERE school = '" + schoolID_hf.Value + "' OR school2 = '" + schoolID_hf.Value + "' OR school3 = '" + schoolID_hf.Value + "' OR school4 = '" + schoolID_hf.Value + "' OR school5 = '" + schoolID_hf.Value + "') as x WHERE visitDate BETWEEN '07-01-2023' AND '07-01-2024' AND NOT id = 505";
+                            cmd.CommandText = "SELECT id FROM (SELECT id, visitDate FROM visitInfoFP WHERE school = '" + hfSchoolID.Value + "' OR school2 = '" + hfSchoolID.Value + "' OR school3 = '" + hfSchoolID.Value + "' OR school4 = '" + hfSchoolID.Value + "' OR school5 = '" + hfSchoolID.Value + "') as x WHERE visitDate BETWEEN '07-01-2023' AND '07-01-2024' AND NOT id = 505";
                             cmd.Connection = con;
                             dr = cmd.ExecuteReader();
 
                             if (dr.HasRows == true)
                             {
-                                var URLEnd = schoolID_hf.Value;
+                                var URLEnd = hfSchoolID.Value;
 
                                 Session.Add("isAdmin", "False");
                                 Response.Redirect("input_student_information.aspx?b=" + URLEnd);
                             }
                             else
                             {
-                                error_lbl.Text = "We do not have a record of an upcoming visit for you. Please use the link above to email us about this issue.";
+                                lblError.Text = "We do not have a record of an upcoming visit for you. Please use the link above to email us about this issue.";
                                 return;
                             }
 
@@ -189,7 +189,7 @@ public partial class _Default : Page
                         }
                         catch
                         {
-                            error_lbl.Text = "Error code 3. Please use the link above to email us about this issue.";
+                            lblError.Text = "Error code 3. Please use the link above to email us about this issue.";
                             return;
                         }
                     }
@@ -197,14 +197,14 @@ public partial class _Default : Page
                 else
                 {
                     //Warn about invalid credentials. 
-                    error_lbl.Text = "Invalid PCSB credentials. Email or password is incorrect.";
+                    lblError.Text = "Invalid PCSB credentials. Email or password is incorrect.";
                     return;
                 }
 
             }
             catch
             {
-                error_lbl.Text = "Error code 5. Please use the link above to email us about this issue.";
+                lblError.Text = "Error code 5. Please use the link above to email us about this issue.";
                 cmd.Dispose();
                 con.Close();
                 return;
@@ -230,23 +230,23 @@ public partial class _Default : Page
                     {
                         if (password_tb.Text == null || password_tb.Text == "")
                         {
-                            error_lbl.Text = "Please enter your password.";
+                            lblError.Text = "Please enter your password.";
                             return;
                         }
                         else if (password_tb.Text == dr["password"].ToString())
                         {
-                            error_lbl.Text = dr["password"].ToString();
+                            lblError.Text = dr["password"].ToString();
                             return;
                         }   
                         else
                         {
-                            error_lbl.Text = "Invalid password. Please use the password provided in your email.";
+                            lblError.Text = "Invalid password. Please use the password provided in your email.";
                             return;
                         }                           
                     }
                     else
                     {
-                        error_lbl.Text = "We do not have a school associated with your email. Please use the link above to email us about this issue.";
+                        lblError.Text = "We do not have a school associated with your email. Please use the link above to email us about this issue.";
                         return;
                     }                        
                 }
@@ -265,18 +265,18 @@ public partial class _Default : Page
 
                     while (dr.Read())
                     {
-                        schoolName_lbl.Text = dr["schoolName"].ToString();
+                        lblSchoolName.Text = dr["schoolName"].ToString();
                         teacherID_hf.Value = dr["id"].ToString();
 
-                        if (schoolName_lbl.Text == "")
+                        if (lblSchoolName.Text == "")
                         {
-                            error_lbl.Text = "We do not have a school associated with your email. Please use the link above to email us about this issue.";
+                            lblError.Text = "We do not have a school associated with your email. Please use the link above to email us about this issue.";
                             return;
                         }
 
                         if (dr.HasRows != true)
                         {
-                            error_lbl.Text = "We do not have a school associated with your email. Please use the link above to email us about this issue.";
+                            lblError.Text = "We do not have a school associated with your email. Please use the link above to email us about this issue.";
                         }                           
                     }
 
@@ -285,8 +285,8 @@ public partial class _Default : Page
                 }
                 catch
                 {
-                    error_lbl.Text = "Error code 6. Please use the link above to email us about this issue.";
-                    //error2_lbl.Text = schoolID_hf.Value & "/" & schoolName_lbl.Text;
+                    lblError.Text = "Error code 6. Please use the link above to email us about this issue.";
+                    //error2_lbl.Text = hfSchoolID.Value & "/" & lblSchoolName.Text;
                     return;
                 } 
                 
@@ -295,17 +295,17 @@ public partial class _Default : Page
                 {
                     con.ConnectionString = connection_string;
                     con.Open();
-                    cmd.CommandText = "SELECT DISTINCT id FROM schoolInfoFP WHERE schoolName = '" + schoolName_lbl.Text + "' AND NOT id='505'";
+                    cmd.CommandText = "SELECT DISTINCT id FROM schoolInfoFP WHERE schoolName = '" + lblSchoolName.Text + "' AND NOT id='505'";
                     cmd.Connection = con;
                     dr = cmd.ExecuteReader();
 
                     while (dr.Read())
                     {
-                        schoolID_hf.Value = dr["id"].ToString();
+                        hfSchoolID.Value = dr["id"].ToString();
 
-                        if (schoolID_hf.Value == "" || schoolID_hf.Value == null)
+                        if (hfSchoolID.Value == "" || hfSchoolID.Value == null)
                         {
-                            error_lbl.Text = "Error code 22. Please use the link above to email us about this issue.";
+                            lblError.Text = "Error code 22. Please use the link above to email us about this issue.";
                             cmd.Dispose();
                             con.Close();
                         }                            
@@ -316,8 +316,8 @@ public partial class _Default : Page
                 }
                 catch
                 {
-                    error_lbl.Text = "Error code 7. Please use the link above to email us about this issue.";
-                    //error2_lbl.Text = schoolID_hf.Value & "/" & schoolName_lbl.Text;
+                    lblError.Text = "Error code 7. Please use the link above to email us about this issue.";
+                    //error2_lbl.Text = hfSchoolID.Value & "/" & lblSchoolName.Text;
                     return;
                 }                   
 
@@ -328,13 +328,13 @@ public partial class _Default : Page
                     con.Open();
 
                     //CHANGE THE YEAR BETWEEN AT THE END OF THIS LINE TO 8-10-(Current Year) AND 6-10(Next Year)
-                    cmd.CommandText = "SELECT id FROM (SELECT id, visitDate FROM visitInfoFP WHERE school = '" + schoolID_hf.Value + "' OR school2 = '" + schoolID_hf.Value + "' OR school3 = '" + schoolID_hf.Value + "' OR school4 = '" + schoolID_hf.Value + "' OR school5 = '" + schoolID_hf.Value + "') as x WHERE visitDate BETWEEN '07-01-2023' AND '07-01-2024'";
+                    cmd.CommandText = "SELECT id FROM (SELECT id, visitDate FROM visitInfoFP WHERE school = '" + hfSchoolID.Value + "' OR school2 = '" + hfSchoolID.Value + "' OR school3 = '" + hfSchoolID.Value + "' OR school4 = '" + hfSchoolID.Value + "' OR school5 = '" + hfSchoolID.Value + "') as x WHERE visitDate BETWEEN '07-01-2023' AND '07-01-2024'";
                     cmd.Connection = con;
                     dr = cmd.ExecuteReader();
 
                     if (dr.HasRows == true)
                     {
-                        string schoolIDURL = schoolID_hf.Value;
+                        string schoolIDURL = hfSchoolID.Value;
                         string teacherIDURL = teacherID_hf.Value;
 
                         Session.Add("isAdmin", "False");
@@ -344,7 +344,7 @@ public partial class _Default : Page
                     }
                     else
                     {
-                        error_lbl.Text = "We do not have a record of a visit with your school (non-PCSB) in our system. Please use the link above to email us about this issue.";
+                        lblError.Text = "We do not have a record of a visit with your school (non-PCSB) in our system. Please use the link above to email us about this issue.";
                         return;
                     }
 
@@ -353,14 +353,14 @@ public partial class _Default : Page
                 }   
                 catch
                 {
-                    error_lbl.Text = "Error code 8. Please use the link above to email us about this issue.";
-                    //error2_lbl.Text = schoolID_hf.Value & "/" & schoolName_lbl.Text
+                    lblError.Text = "Error code 8. Please use the link above to email us about this issue.";
+                    //error2_lbl.Text = hfSchoolID.Value & "/" & lblSchoolName.Text
                     return;
                 }                    
             }
             catch
             {
-                error_lbl.Text = "Error code 9. Please use the link above to email us about this issue.";
+                lblError.Text = "Error code 9. Please use the link above to email us about this issue.";
                 return;
             }
         }
@@ -386,12 +386,12 @@ public partial class _Default : Page
         return (Success);
     }
 
-    protected void login_btn_Click(object sender, EventArgs e)
+    protected void btnLogin_Click(object sender, EventArgs e)
     {
         Login();
     }
 
-    protected void email_tb_TextChanged(object sender, EventArgs e)
+    protected void tbEmail_TextChanged(object sender, EventArgs e)
     {
 
     }

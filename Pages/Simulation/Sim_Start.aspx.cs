@@ -12,7 +12,7 @@ public partial class Sim_Start : System.Web.UI.Page
 
     }
 
-    protected void startSim_btn_Click(object sender, EventArgs e)
+    protected void btnStartSim_Click(object sender, EventArgs e)
     {
         Response.Redirect("Sim_Login.aspx");
     }

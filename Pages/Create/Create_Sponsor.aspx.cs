@@ -29,7 +29,7 @@ public partial class Create_Sponsor : Page
     public Create_Sponsor()
     {
         ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
-        VisitID = VisitData.GetVisitID();
+        
         Load += Page_Load;
     }
 
@@ -44,13 +44,13 @@ public partial class Create_Sponsor : Page
         if (!IsPostBack)
         {
             //Load business name DDLs
-            BusinessData.LoadBusinessNamesDDL(businessName1_ddl);
-            BusinessData.LoadBusinessNamesDDL(businessName2_ddl);
-            BusinessData.LoadBusinessNamesDDL(businessName3_ddl);
-            BusinessData.LoadBusinessNamesDDL(businessName4_ddl);
+            BusinessData.LoadBusinessNamesDDL(ddlBusinessName1);
+            BusinessData.LoadBusinessNamesDDL(ddlBusinessName2);
+            BusinessData.LoadBusinessNamesDDL(ddlBusinessName3);
+            BusinessData.LoadBusinessNamesDDL(ddlBusinessName4);
 
             // Populating school header
-            headerSchoolName_lbl.Text = SchoolHeader.GetSchoolHeader().ToString();
+            lblHeaderSchoolName.Text = SchoolHeader.GetSchoolHeader().ToString();
         }
     }
 
@@ -63,39 +63,39 @@ public partial class Create_Sponsor : Page
         string BID4 = "0";
 
         //Check if required fields are not blank
-        if (sponsorName_tb.Text == "")
+        if (tbSponsorName.Text == "")
         {
-            error_lbl.Text = "Please enter a sponsor name before submitting.";
+            lblError.Text = "Please enter a sponsor name before submitting.";
             return;
         }
-        else if (businessName1_ddl.SelectedIndex == 0)
+        else if (ddlBusinessName1.SelectedIndex == 0)
         {
-            error_lbl.Text = "Please select a business name before submitting.";
+            lblError.Text = "Please select a business name before submitting.";
             return;
         }
 
         //Get business IDs from names
-        BID1 = BusinessData.GetBusinessID(businessName1_ddl.SelectedValue).ToString();
+        BID1 = BusinessData.GetBusinessID(ddlBusinessName1.SelectedValue).ToString();
 
-        if (businessName2_ddl.SelectedIndex != 0)
+        if (ddlBusinessName2.SelectedIndex != 0)
         {
-            BID2 = BusinessData.GetBusinessID(businessName2_ddl.SelectedValue).ToString();
+            BID2 = BusinessData.GetBusinessID(ddlBusinessName2.SelectedValue).ToString();
         }
 
-        if (businessName3_ddl.SelectedIndex != 0)
+        if (ddlBusinessName3.SelectedIndex != 0)
         {
-            BID3 = BusinessData.GetBusinessID(businessName3_ddl.SelectedValue).ToString();
+            BID3 = BusinessData.GetBusinessID(ddlBusinessName3.SelectedValue).ToString();
         }
 
-        if (businessName4_ddl.SelectedIndex != 0)
+        if (ddlBusinessName4.SelectedIndex != 0)
         {
-            BID4 = BusinessData.GetBusinessID(businessName4_ddl.SelectedValue).ToString();
+            BID4 = BusinessData.GetBusinessID(ddlBusinessName4.SelectedValue).ToString();
         }
 
         //If file is being uploaded, run uploadfile()
-        if (logo_fu.HasFile == true)
+        if (fuLogo.HasFile == true)
         {
-            Logo = logo_fu.FileName;
+            Logo = fuLogo.FileName;
             UploadFile();
         }
 
@@ -108,7 +108,7 @@ public partial class Create_Sponsor : Page
 										                 VALUES (@sponsorName, @logoPath, @businessID, @businessID2, @businessID3, @businessID4)"))
                 {
 
-                    cmd.Parameters.Add("@sponsorName", SqlDbType.VarChar).Value = sponsorName_tb.Text;
+                    cmd.Parameters.Add("@sponsorName", SqlDbType.VarChar).Value = tbSponsorName.Text;
                     cmd.Parameters.Add("@logoPath", SqlDbType.VarChar).Value = Logo;
                     cmd.Parameters.Add("@businessID", SqlDbType.Int).Value = BID1;
                     cmd.Parameters.Add("@businessID2", SqlDbType.Int).Value = BID2;
@@ -123,7 +123,7 @@ public partial class Create_Sponsor : Page
         }
         catch
         {
-            error_lbl.Text = "Error in Submit(). Cannot submit new sponsor.";
+            lblError.Text = "Error in Submit(). Cannot submit new sponsor.";
             return;
         }
 
@@ -132,15 +132,15 @@ public partial class Create_Sponsor : Page
         meta.HttpEquiv = "Refresh";
         meta.Content = "4;url=create_sponsor.aspx";
         this.Page.Controls.Add(meta);
-        error_lbl.Text = "Submission Successful! Refreshing page...";
+        lblError.Text = "Submission Successful! Refreshing page...";
     }
 
     public void UploadFile()
     {
         string LogoFolderPath = Server.MapPath(@"~\Media\Sponsor Logos\");
-        var fi = new FileInfo(logo_fu.FileName);
+        var fi = new FileInfo(fuLogo.FileName);
         string ext = fi.Extension;
-        string FileName = logo_fu.FileName;
+        string FileName = fuLogo.FileName;
         int Count = 2;
 
         // Start uploading
@@ -165,24 +165,24 @@ public partial class Create_Sponsor : Page
                     }
 
                 //Save the File to the Directory(Folder).
-                logo_fu.SaveAs(LogoFolderPath + Path.GetFileName(FileName));
+                fuLogo.SaveAs(LogoFolderPath + Path.GetFileName(FileName));
                 }
                 else
                 {
-                    error_lbl.Text = "File not uploaded. File must be a jpg or png.";
+                    lblError.Text = "File not uploaded. File must be a jpg or png.";
                     return;
                 }
         }
         catch
         {
-            error_lbl.Text = "Error in uploading. Please try again or click the link under the 'Log Out' button to ask for help.";
+            lblError.Text = "Error in uploading. Please try again or click the link under the 'Log Out' button to ask for help.";
             return;
         }
 
 
     }
 
-    protected void submit_btn_Click(object sender, EventArgs e)
+    protected void btnSubmit_Click(object sender, EventArgs e)
     {
         Submit();
     }

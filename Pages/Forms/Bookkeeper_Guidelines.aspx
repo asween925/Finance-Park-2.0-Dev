@@ -20,7 +20,7 @@
     <form id="EMS_Form" runat="server">
 
         <%--Header information--%>
-        <header class="headerTop no-print"><a style="float: left; padding-top: 2px;">Finance Park 2.0</a><a style="float: right; padding-right: 30px; padding-top: 2px;"><asp:Label ID="headerSchoolName_lbl" Text="School Name Here" runat="server"></asp:Label></a></header>
+        <header class="headerTop no-print"><a style="float: left; padding-top: 2px;">Finance Park 2.0</a><a style="float: right; padding-right: 30px; padding-top: 2px;"><asp:Label ID="lblHeaderSchoolName" Text="School Name Here" runat="server"></asp:Label></a></header>
 
         <%--Navigation bar--%>
         <div id="nav-placeholder">
@@ -38,32 +38,32 @@
             <h3 class="no-print">Use this form to print out the bookkeeper guidelines.
             </h3>
             <p class="no-print">Letter Type</p>
-            <asp:DropDownList ID="letterType_ddl" runat="server" CssClass="ddl no-print" OnSelectedIndexChanged="letterType_ddl_SelectedIndexChanged" AutoPostBack="true">
+            <asp:DropDownList ID="ddlLetterType" runat="server" CssClass="ddl no-print" OnSelectedIndexChanged="ddlLetterType_SelectedIndexChanged" AutoPostBack="true">
                 <asp:ListItem>Public / Private</asp:ListItem>
                 <asp:ListItem>Home Schooled</asp:ListItem>
             </asp:DropDownList>
             <br class="no-print"/><br class="no-print"/>
-            <asp:Button ID="print_btn" runat="server" Text="Print" CssClass="button no-print" OnClick="print_btn_Click" />
+            <asp:Button ID="btnPrint" runat="server" Text="Print" CssClass="button no-print" OnClick="btnPrint_Click" />
 
             <%--Letter--%> 
-            <div id="letter_div" runat="server" class="letter">
+            <div id="divLetter" runat="server" class="letter">
                 <h4 class="letter_title" style="font-size: 23px;">Bookkeeper Guidelines for Finance Park</h4>
 
                 <%--Top of Letter For Public / Private--%>
-                <p id="letterTopPub_p" runat="server" visible="true">The fee for students attending Finance Park is $18.00 per child. <a style="font-weight: bold;">Please note that Teacher and
+                <p id="pLetterTopPub" runat="server" visible="true">The fee for students attending Finance Park is $18.00 per child. <a style="font-weight: bold;">Please note that Teacher and
                     volunteer lunches are not included in the $18.00.</a> This fee <a style="font-weight: bold;">does not</a> include transportation costs.
                     <a style="color: red;">If your school needs transportation, please log onto our website-www.stavrosinstitute.org. Click on
                     Educators, Finance Park, Other School Resources and then Transportation Information.</a> To assist
                     you in preparing for your school’s visit to Finance Park, please use the following guidelines.</p>
 
                 <%--Home Schooled--%>
-                <p id="letterTopHome_p" runat="server" visible="false">The fee for students attending Finance Park is $10.00 per child. As we attempt to maintain the $10 student fee, 
+                <p id="pLetterTopHome" runat="server" visible="false">The fee for students attending Finance Park is $10.00 per child. As we attempt to maintain the $10 student fee, 
                     we had to make some changes regarding our payment guidelines. <a style="font-weight: bold;">Please note that 
                     volunteer lunches will no longer be included.</a></p>
                 <br />
 
                 <%--Guidelines For Public / Private--%>
-                <table id="tablePub_div" runat="server" visible="true">                    
+                <table id="divTablePub" runat="server" visible="true">                    
                     <tr>
                         <td class="letter_p" style="text-align: center;">Curriculum Use</td>
                         <td class="letter_p" style="text-align: center;">Transportation</td>
@@ -96,7 +96,7 @@
                 </table>
 
                 <%--Home Schooled--%>
-                <table id="tableHome_div" runat="server" visible="false">
+                <table id="divTableHome" runat="server" visible="false">
                     <tr>
                         <td class="letter_p" style="text-align: center;">Curriculum Use</td>
                     </tr>
@@ -117,25 +117,25 @@
                 <p class="letter_p" style="text-align: center;">Payment</p>
 
                 <%--Payment for Public / Private--%>
-                <p id="letterPayPub_p" runat="server" visible="true">You will be invoiced <a style="font-weight: bold;">after</a> your visit date for the number of students who participate and shipping
+                <p id="pLetterPayPub" runat="server" visible="true">You will be invoiced <a style="font-weight: bold;">after</a> your visit date for the number of students who participate and shipping
                     fees, if applicable. If your school contracted and received materials for more students than actually
                     attended, you may return all unused workbooks on the day of the visit or you will be invoiced $3.00
                     for each workbook not returned. All checks must be made payable to <a style="font-weight: bold;">The Gus A. Stavros Institute,</a>
                     not to Finance Park. Payment is expected within 30 days of receiving your invoice.</p>
 
                 <%--Home Schooled--%>
-                <p id="letterPayHome_p" runat="server" visible="false">You will be invoiced <a style="font-weight: bold;">after</a> 
+                <p id="pLetterPayHome" runat="server" visible="false">You will be invoiced <a style="font-weight: bold;">after</a> 
                     your visit date for the number of students who participated. If your school contracted and recived materials for more students
                     than actually attended, you may return all unused workbooks on the day of the visit or you will be invoiced $3.00 for each workbook not
                     returned. You must also return your Teacher Kit(s) on the day of your visit or you will be billed $350.</p>
                 <br />
-                <asp:Image ID="stavrosLogo_img" runat="server" ImageUrl="~/Media/FP_SI_Logo.png" CssClass="letter_logo_bottom" />
+                <asp:Image ID="imgStavrosLogo" runat="server" ImageUrl="~/Media/FP_SI_Logo.png" CssClass="letter_logo_bottom" />
             </div>
 
             
         </div>
 
-        <asp:HiddenField ID="currentVisitID_hf" runat="server" />
+        <asp:HiddenField ID="hfCurrentVisitID" runat="server" />
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="Scripts.js"></script>

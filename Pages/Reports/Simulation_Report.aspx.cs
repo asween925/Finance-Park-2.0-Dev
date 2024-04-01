@@ -26,7 +26,7 @@ public partial class Simulation_Report : Page
     public Simulation_Report()
     {
         ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
-        VisitID = VisitData.GetVisitID();
+        
         Load += Page_Load;
     }
 
@@ -41,10 +41,10 @@ public partial class Simulation_Report : Page
         if (!IsPostBack)
         {
             //Populate School DDL
-            SchoolData.LoadSchoolsDDL(schoolName_ddl);
+            SchoolData.LoadSchoolsDDL(ddlSchoolName);
 
             // Populating school header
-            headerSchoolName_lbl.Text = (SchoolHeader.GetSchoolHeader()).ToString();
+            lblHeaderSchoolName.Text = (SchoolHeader.GetSchoolHeader()).ToString();
 
             //Load data
             LoadData();
@@ -61,25 +61,25 @@ public partial class Simulation_Report : Page
         int SelectedMonth = 0;
 
         //Clear visit table
-        visit_dgv.DataSource = null;
-        visit_dgv.DataBind();
+        dgvVisit.DataSource = null;
+        dgvVisit.DataBind();
 
         //Check if visit date 
-        if (visitDate_tb.Text != "")
+        if (tbVisitDate.Text != "")
         {
-            SQLWhereVisitDate = " WHERE v.visitDate='" + visitDate_tb.Text + "' AND NOT v.school=1 ORDER BY v.visitDate DESC";
+            SQLWhereVisitDate = " WHERE v.visitDate='" + tbVisitDate.Text + "' AND NOT v.school=1 ORDER BY v.visitDate DESC";
         }
 
         //Check if school name is selected
-        if (schoolName_ddl.SelectedIndex != 0)
+        if (ddlSchoolName.SelectedIndex != 0)
         {
-            SQLWhereSchoolName = " WHERE s.schoolName='" + schoolName_ddl.SelectedValue + "' OR s2.schoolName='" + schoolName_ddl.SelectedValue + "' OR s3.schoolName='" + schoolName_ddl.SelectedValue + "' OR s4.schoolName='" + schoolName_ddl.SelectedValue + "' OR s5.schoolName='" + schoolName_ddl.SelectedValue + "' AND NOT v.school=1 ORDER BY v.visitDate DESC";
+            SQLWhereSchoolName = " WHERE s.schoolName='" + ddlSchoolName.SelectedValue + "' OR s2.schoolName='" + ddlSchoolName.SelectedValue + "' OR s3.schoolName='" + ddlSchoolName.SelectedValue + "' OR s4.schoolName='" + ddlSchoolName.SelectedValue + "' OR s5.schoolName='" + ddlSchoolName.SelectedValue + "' AND NOT v.school=1 ORDER BY v.visitDate DESC";
         }
 
         //Check if month is selected
-        if (month_ddl.SelectedIndex != 0) 
+        if (ddlMonth.SelectedIndex != 0) 
         {
-            switch(month_ddl.SelectedValue) 
+            switch(ddlMonth.SelectedValue) 
             {
                 case "January":
                     SelectedMonth = 1;
@@ -121,11 +121,11 @@ public partial class Simulation_Report : Page
 
             SQLWhereMonth = " WHERE DATEPART(MONTH, v.visitDate) = '" + SelectedMonth + "' AND DATEPART(YEAR, v.visitDate) = '" + CurrentYear + "' ORDER BY v.visitDate";
 
-            visit_dgv.PageSize = 31;
+            dgvVisit.PageSize = 31;
         }
 
         //Check if school name or visit date or month are blank
-        if ((schoolName_ddl.SelectedIndex == 0) && (visitDate_tb.Text == "") && (month_ddl.SelectedIndex == 0)) 
+        if ((ddlSchoolName.SelectedIndex == 0) && (tbVisitDate.Text == "") && (ddlMonth.SelectedIndex == 0)) 
         {
             SQLWhereNot = " WHERE NOT v.school=1 ORDER BY v.visitDate DESC";
         }
@@ -135,12 +135,12 @@ public partial class Simulation_Report : Page
         {
             con.ConnectionString = ConnectionString;
             con.Open();
-            visit_dgv.DataSource = VisitData.LoadVisitInfoTable(SQLWhereVisitDate, SQLWhereSchoolName, SQLWhereMonth, SQLWhereNot);
-            visit_dgv.DataBind();
+            dgvVisit.DataSource = VisitData.LoadVisitInfoTable(SQLWhereVisitDate, SQLWhereSchoolName, SQLWhereMonth, SQLWhereNot);
+            dgvVisit.DataBind();
         }
         catch
         {
-            error_lbl.Text = "Error in LoadData. Cannot load data.";
+            lblError.Text = "Error in LoadData. Cannot load data.";
             return;
         }
 
@@ -148,45 +148,45 @@ public partial class Simulation_Report : Page
 
 
 
-    protected void visit_dgv_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    protected void dgvVisit_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
-        visit_dgv.PageIndex = e.NewPageIndex;
+        dgvVisit.PageIndex = e.NewPageIndex;
         LoadData();
     }
 
 
 
-    protected void refresh_btn_Click(object sender, EventArgs e)
+    protected void btnRefresh_Click(object sender, EventArgs e)
     {
         Response.Redirect("visit_report.aspx");
     }
 
-    protected void month_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlMonth_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (month_ddl.SelectedIndex != 0)
+        if (ddlMonth.SelectedIndex != 0)
         {
-            visitDate_tb.Text = "";
-            schoolName_ddl.SelectedIndex = schoolName_ddl.Items.IndexOf(schoolName_ddl.Items.FindByValue(""));
+            tbVisitDate.Text = "";
+            ddlSchoolName.SelectedIndex = ddlSchoolName.Items.IndexOf(ddlSchoolName.Items.FindByValue(""));
             LoadData();
         }
     }
 
-    protected void schoolName_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlSchoolName_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (schoolName_ddl.SelectedIndex != 0)
+        if (ddlSchoolName.SelectedIndex != 0)
         {
-            visitDate_tb.Text = "";
-            month_ddl.SelectedIndex = month_ddl.Items.IndexOf(month_ddl.Items.FindByValue(""));
+            tbVisitDate.Text = "";
+            ddlMonth.SelectedIndex = ddlMonth.Items.IndexOf(ddlMonth.Items.FindByValue(""));
             LoadData();
         }
     }
 
-    protected void visitDate_tb_TextChanged(object sender, EventArgs e)
+    protected void tbVisitDate_TextChanged(object sender, EventArgs e)
     {
-        if (visitDate_tb.Text != "")
+        if (tbVisitDate.Text != "")
         {
-            schoolName_ddl.SelectedIndex = schoolName_ddl.Items.IndexOf(schoolName_ddl.Items.FindByValue(""));
-            month_ddl.SelectedIndex = month_ddl.Items.IndexOf(month_ddl.Items.FindByValue(""));
+            ddlSchoolName.SelectedIndex = ddlSchoolName.Items.IndexOf(ddlSchoolName.Items.FindByValue(""));
+            ddlMonth.SelectedIndex = ddlMonth.Items.IndexOf(ddlMonth.Items.FindByValue(""));
             LoadData();
         }
     }

@@ -38,22 +38,22 @@ public partial class Liaison_Letter : Page
         if (!IsPostBack)
         {
             // Populating school header
-           headerSchoolName_lbl.Text = (SchoolHeader.GetSchoolHeader()).ToString();
+           lblHeaderSchoolName.Text = (SchoolHeader.GetSchoolHeader()).ToString();
         }
 
     }
 
     public void LoadData()
     {
-        var VisitDate = DateTime.Parse(visitDate_tb.Text);
+        var VisitDate = DateTime.Parse(tbVisitDate.Text);
         var VArrivalTime = DateTime.Parse(Schedule.GetVolArrivalTime(VisitData.LoadVisitInfoFromDate(VisitDate.ToString(), "vTrainingTime").ToString()).ToString());
-        string SchoolName = schoolName_ddl.SelectedValue;
+        string SchoolName = ddlSchoolName.SelectedValue;
         string LiaisonName;
         var DismissalTime = DateTime.Parse(Schedule.GetDismissalTime(VArrivalTime.ToString()).ToString());
 
         //Reveal divs
-        print_btn.Visible = true;
-        letter_div.Visible = true;
+        btnPrint.Visible = true;
+        divLetter.Visible = true;
 
         // Get volunteer count, training time, and reply by
         //VMin = SchoolData.GetVolunteerRange(VisitDate, SchoolID).VMin;
@@ -63,45 +63,45 @@ public partial class Liaison_Letter : Page
         LiaisonName = SchoolData.LoadSchoolInfoFromSchool(SchoolName, "liaisonName").ToString();
         
         // Assign labels
-        schoolName_lbl.Text = SchoolName;
-        visitDate_lbl.Text = VisitDate.ToString("D");
-        liaison_lbl.Text = LiaisonName;
-        arrivalTime_lbl.Text = VArrivalTime.ToString("t");
-        volunteerDismisal_lbl.Text = DismissalTime.ToString("t");
+        lblSchoolName.Text = SchoolName;
+        lblVisitDate.Text = VisitDate.ToString("D");
+        lblLiaison.Text = LiaisonName;
+        lblArrivalTime.Text = VArrivalTime.ToString("t");
+        lblVolunteerDismissal.Text = DismissalTime.ToString("t");
 
     }
 
 
 
-    protected void visitDate_tb_TextChanged(object sender, EventArgs e)
+    protected void tbVisitDate_TextChanged(object sender, EventArgs e)
     {
-        if (visitDate_tb.Text != "")
+        if (tbVisitDate.Text != "")
         {
             //Reveal school DDL
-            schoolName_ddl.Visible = true;
+            ddlSchoolName.Visible = true;
             school_p.Visible = true;
 
             //Load school name DDL
-            SchoolData.LoadVisitingSchoolsDDL(visitDate_tb.Text, schoolName_ddl);
+            SchoolData.LoadVisitingSchoolsDDL(tbVisitDate.Text, ddlSchoolName);
         }
         else
         {
-            info_div.Visible = false;
-            print_btn.Visible = false;
+            divInfo.Visible = false;
+            btnPrint.Visible = false;
         }
     }
 
-    protected void schoolName_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlSchoolName_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (schoolName_ddl.SelectedIndex != 0) 
+        if (ddlSchoolName.SelectedIndex != 0) 
         {
             LoadData();        
         }
     }
 
-    protected void print_btn_Click(object sender, EventArgs e)
+    protected void btnPrint_Click(object sender, EventArgs e)
     {
-        FPLogo_img.Visible = true;
+        imgFPLogo.Visible = true;
         Page.ClientScript.RegisterStartupScript(GetType(), "Print", "window.print();", true);
     }
 }

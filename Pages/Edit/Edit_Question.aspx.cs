@@ -40,7 +40,7 @@ public partial class Edit_Question : Page
         if (!IsPostBack)
         {
             // Populating school header
-            headerSchoolName_lbl.Text = (SchoolHeader.GetSchoolHeader()).ToString();
+            lblHeaderSchoolName.Text = (SchoolHeader.GetSchoolHeader()).ToString();
 
             //Load data
             LoadData();
@@ -58,8 +58,8 @@ public partial class Edit_Question : Page
             con.Open();
             Review_sds.ConnectionString = ConnectionString;
             Review_sds.SelectCommand = SQLStatement;
-            questions_dgv.DataSource = Review_sds;
-            questions_dgv.DataBind();
+            dgvQuestions.DataSource = Review_sds;
+            dgvQuestions.DataBind();
 
             cmd.Dispose();
             con.Close();
@@ -67,14 +67,14 @@ public partial class Edit_Question : Page
         }
         catch
         {
-            error_lbl.Text = "Error in LoadData(). Cannot load questions table.";
+            lblError.Text = "Error in LoadData(). Cannot load questions table.";
             return;
         }
 
         // Highlight row being edited
-        foreach (GridViewRow row in questions_dgv.Rows)
+        foreach (GridViewRow row in dgvQuestions.Rows)
         {
-            if (row.RowIndex == questions_dgv.EditIndex)
+            if (row.RowIndex == dgvQuestions.EditIndex)
             {
                 row.BackColor = ColorTranslator.FromHtml("#ebe534");
                 row.BorderWidth = 2;
@@ -84,21 +84,21 @@ public partial class Edit_Question : Page
 
 
 
-    protected void questions_dgv_RowUpdating(object sender, GridViewUpdateEventArgs e)
+    protected void dgvQuestions_RowUpdating(object sender, GridViewUpdateEventArgs e)
     {
-        int ID = Convert.ToInt32(questions_dgv.DataKeys[e.RowIndex].Values[0]); // Gets id number
-        string QuestionOrder = ((DropDownList)questions_dgv.Rows[e.RowIndex].FindControl("questionOrderDGV_ddl")).SelectedValue;
-        string QuestionText = ((TextBox)questions_dgv.Rows[e.RowIndex].FindControl("questionTextDGV_tb")).Text;
-        string AnswerType = ((DropDownList)questions_dgv.Rows[e.RowIndex].FindControl("answerTypeDGV_ddl")).SelectedValue;
-        string QuestionCategory = ((DropDownList)questions_dgv.Rows[e.RowIndex].FindControl("questionCategoryDGV_ddl")).SelectedValue;
-        bool EndOfSim = ((CheckBox)questions_dgv.Rows[e.RowIndex].FindControl("endOfSimDGV_chk")).Checked;
-        string QuestionShort = ((DropDownList)questions_dgv.Rows[e.RowIndex].FindControl("questionShortDGV_ddl")).SelectedValue;
-        bool Active = ((CheckBox)questions_dgv.Rows[e.RowIndex].FindControl("activeDGV_chk")).Checked;
-        string Option1 = ((TextBox)questions_dgv.Rows[e.RowIndex].FindControl("option1DGV_tb")).Text;
-        string Option2 = ((TextBox)questions_dgv.Rows[e.RowIndex].FindControl("option2DGV_tb")).Text;
-        string Option3 = ((TextBox)questions_dgv.Rows[e.RowIndex].FindControl("option3DGV_tb")).Text;
-        string Option4 = ((TextBox)questions_dgv.Rows[e.RowIndex].FindControl("option4DGV_tb")).Text;
-        string Option5 = ((TextBox)questions_dgv.Rows[e.RowIndex].FindControl("option5DGV_tb")).Text;
+        int ID = Convert.ToInt32(dgvQuestions.DataKeys[e.RowIndex].Values[0]); // Gets id number
+        string QuestionOrder = ((DropDownList)dgvQuestions.Rows[e.RowIndex].FindControl("ddlQuestionOrderDGV")).SelectedValue;
+        string QuestionText = ((TextBox)dgvQuestions.Rows[e.RowIndex].FindControl("tbQuestionTextDGV")).Text;
+        string AnswerType = ((DropDownList)dgvQuestions.Rows[e.RowIndex].FindControl("ddlAnswerTypeDGV")).SelectedValue;
+        string QuestionCategory = ((DropDownList)dgvQuestions.Rows[e.RowIndex].FindControl("ddlQuestionCategoryDGV")).SelectedValue;
+        bool EndOfSim = ((CheckBox)dgvQuestions.Rows[e.RowIndex].FindControl("chkEndOfSimDGV")).Checked;
+        string QuestionShort = ((DropDownList)dgvQuestions.Rows[e.RowIndex].FindControl("ddlQuestionShortDGV")).SelectedValue;
+        bool Active = ((CheckBox)dgvQuestions.Rows[e.RowIndex].FindControl("chkActiveDGV")).Checked;
+        string Option1 = ((TextBox)dgvQuestions.Rows[e.RowIndex].FindControl("tbOption1DGV")).Text;
+        string Option2 = ((TextBox)dgvQuestions.Rows[e.RowIndex].FindControl("tbOption2DGV")).Text;
+        string Option3 = ((TextBox)dgvQuestions.Rows[e.RowIndex].FindControl("tbOption3DGV")).Text;
+        string Option4 = ((TextBox)dgvQuestions.Rows[e.RowIndex].FindControl("tbOption4DGV")).Text;
+        string Option5 = ((TextBox)dgvQuestions.Rows[e.RowIndex].FindControl("tbOption5DGV")).Text;
 
         //Update questionsFP
         try
@@ -116,65 +116,65 @@ public partial class Edit_Question : Page
             SQL.UpdateRow(ID, "option4", Option4, "questionsFP");
             SQL.UpdateRow(ID, "option5", Option5, "questionsFP");
 
-            questions_dgv.EditIndex = -1;       // reset the grid after editing
+            dgvQuestions.EditIndex = -1;       // reset the grid after editing
             LoadData();
         }
         catch
         {
-            error_lbl.Text = "Error in rowUpdating. Cannot update row.";
+            lblError.Text = "Error in rowUpdating. Cannot update row.";
             return;
         }
     }
 
-    protected void questions_dgv_RowDeleting(object sender, GridViewDeleteEventArgs e)
+    protected void dgvQuestions_RowDeleting(object sender, GridViewDeleteEventArgs e)
     {
-        int ID = Convert.ToInt32(questions_dgv.DataKeys[e.RowIndex].Values[0]); // Gets id number
+        int ID = Convert.ToInt32(dgvQuestions.DataKeys[e.RowIndex].Values[0]); // Gets id number
 
         try
         {
             SQL.DeleteRow(ID, "questionsInfoFP");
 
-            questions_dgv.EditIndex = -1;       // reset the grid after editing
+            dgvQuestions.EditIndex = -1;       // reset the grid after editing
             LoadData();
         }
         catch
         {
-            error_lbl.Text = "Error in rowDeleting. Cannot delete row.";
+            lblError.Text = "Error in rowDeleting. Cannot delete row.";
             return;
         }
     }
 
-    protected void questions_dgv_RowEditing(object sender, GridViewEditEventArgs e)
+    protected void dgvQuestions_RowEditing(object sender, GridViewEditEventArgs e)
     {
-        questions_dgv.EditIndex = e.NewEditIndex;
+        dgvQuestions.EditIndex = e.NewEditIndex;
         LoadData();
     }
 
-    protected void questions_dgv_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+    protected void dgvQuestions_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
     {
-        questions_dgv.EditIndex = -1;
+        dgvQuestions.EditIndex = -1;
         LoadData();
     }
 
-    protected void questions_dgv_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    protected void dgvQuestions_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
-        questions_dgv.PageIndex = e.NewPageIndex;
+        dgvQuestions.PageIndex = e.NewPageIndex;
         LoadData();
     }
 
-    protected void questions_dgv_RowDataBound(object sender, GridViewRowEventArgs e)
+    protected void dgvQuestions_RowDataBound(object sender, GridViewRowEventArgs e)
     {
         if ((e.Row.RowType == DataControlRowType.DataRow))
         {
-            string lblQOrder = (e.Row.FindControl("questionOrderDGV_lbl") as Label).Text;
-            string lblType = (e.Row.FindControl("answerTypeDGV_lbl") as Label).Text;
-            string lblCat = (e.Row.FindControl("questionCategoryDGV_lbl") as Label).Text;
-            string lblShort = (e.Row.FindControl("questionShortDGV_lbl") as Label).Text;
+            string lblQOrder = (e.Row.FindControl("lblQuestionOrderDGV") as Label).Text;
+            string lblType = (e.Row.FindControl("lblAnswerTypeDGV") as Label).Text;
+            string lblCat = (e.Row.FindControl("lblQuestionCategoryDGV") as Label).Text;
+            string lblShort = (e.Row.FindControl("lblQuestionShortDGV") as Label).Text;
 
-            DropDownList ddlQOrder = e.Row.FindControl("questionOrderDGV_ddl") as DropDownList;                    
-            DropDownList ddlType = e.Row.FindControl("answerTypeDGV_ddl") as DropDownList;
-            DropDownList ddlCat = e.Row.FindControl("questionCategoryDGV_ddl") as DropDownList;
-            DropDownList ddlShort = e.Row.FindControl("questionShortDGV_ddl") as DropDownList;
+            DropDownList ddlQOrder = e.Row.FindControl("ddlQuestionOrderDGV") as DropDownList;                    
+            DropDownList ddlType = e.Row.FindControl("ddlAnswerTypeDGV") as DropDownList;
+            DropDownList ddlCat = e.Row.FindControl("ddlQuestionCategoryDGV") as DropDownList;
+            DropDownList ddlShort = e.Row.FindControl("ddlQuestionShortDGV") as DropDownList;
 
 
             Gridviews.AnswerTypes(ddlType, lblType);

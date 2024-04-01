@@ -30,7 +30,6 @@ public partial class Create_Simulation : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
-        visit = VisitData.GetVisitID();
        
         //Check if user is logged in
         if (HttpContext.Current.Session["LoggedIn"] == null)
@@ -43,71 +42,71 @@ public partial class Create_Simulation : System.Web.UI.Page
             //Check if visit date exists for today
             if (visit != 0) 
             {
-                visitdateUpdate_hf.Value = visit.ToString();
+                hfVisitdateUpdate.Value = visit.ToString();
             }
 
             //Populating school header
-            headerSchoolName_lbl.Text = (SchoolHeader.GetSchoolHeader()).ToString();
+            lblHeaderSchoolName.Text = (SchoolHeader.GetSchoolHeader()).ToString();
 
             //Populate schools 1-5 DDL
-            SchoolData.LoadSchoolsDDL(schools_ddl);
-            SchoolData.LoadSchoolsDDL(schools2_ddl);
-            SchoolData.LoadSchoolsDDL(schools3_ddl);
-            SchoolData.LoadSchoolsDDL(schools4_ddl);
-            SchoolData.LoadSchoolsDDL(schools5_ddl);
+            SchoolData.LoadSchoolsDDL(ddlSchools);
+            SchoolData.LoadSchoolsDDL(ddlSchools2);
+            SchoolData.LoadSchoolsDDL(ddlSchools3);
+            SchoolData.LoadSchoolsDDL(ddlSchools4);
+            SchoolData.LoadSchoolsDDL(ddlSchools5);
 
             //Populate visit time DDL
-            SchoolSchedule.LoadVisitTimeDDL(visitTime_ddl);
+            SchoolSchedule.LoadVisitTimeDDL(ddlVisitTime);
 
             //Insert no school scheduled into first school DDL
-            schools_ddl.Items.Insert(1, "No School Scheduled");
+            ddlSchools.Items.Insert(1, "No School Scheduled");
         }
     }
 
     public void Submit()
     {
         string visitDate;
-        string visitTime = visitTime_ddl.SelectedValue;
-        string studentCount = studentCount_tb.Text;
-        string vTrainingStart = volunteerTime_tb.Text;
-        string dueBy = dueBy_tb.Text;
+        string visitTime = ddlVisitTime.SelectedValue;
+        string studentCount = tbStudentCount.Text;
+        string vTrainingStart = tbVolunteerTime.Text;
+        string dueBy = tbDueBy.Text;
         string school1;
-        string school2 = schools2_ddl.SelectedValue;
-        string school3 = schools3_ddl.SelectedValue;
-        string school4 = schools4_ddl.SelectedValue;
-        string school5 = schools5_ddl.SelectedValue;
+        string school2 = ddlSchools2.SelectedValue;
+        string school3 = ddlSchools3.SelectedValue;
+        string school4 = ddlSchools4.SelectedValue;
+        string school5 = ddlSchools5.SelectedValue;
         string newVisitID;
 
         // Check for empty fields
-        if (visitDate_tb.Text == "" || schools_ddl.SelectedIndex == 0)
+        if (tbVisitDate.Text == "" || ddlSchools.SelectedIndex == 0)
         {
-            success_lbl.Text = "Please enter a visit date and select a school.";
+            lblSuccess.Text = "Please enter a visit date and select a school.";
             return;
         }
         else
         {
-            visitDate = visitDate_tb.Text;
-            school1 = schools_ddl.SelectedValue;
+            visitDate = tbVisitDate.Text;
+            school1 = ddlSchools.SelectedValue;
         }
             
-        if (studentCount_tb.Text == "" )
+        if (tbStudentCount.Text == "" )
         {
             studentCount = "0";
         }            
         else if (int.Parse(studentCount) < 0)
         {
-            success_lbl.Text = "Please enter a student count 0 or higher.";
+            lblSuccess.Text = "Please enter a student count 0 or higher.";
             return;
         }
 
-        if (volunteerTime_tb.Text == "" )
+        if (tbVolunteerTime.Text == "" )
         {
             vTrainingStart = "00:00";
         }
 
-        if (dueBy_tb.Text == "")
+        if (tbDueBy.Text == "")
         {
-            dueBy = visitDate_tb.Text;
+            dueBy = tbVisitDate.Text;
         }
 
         // Inserting new visit date into DB
@@ -141,7 +140,7 @@ public partial class Create_Simulation : System.Web.UI.Page
         }
         catch
         {
-            success_lbl.Text = "Error in Submit(). Could not insert visit into table.";
+            lblSuccess.Text = "Error in Submit(). Could not insert visit into table.";
             return;
         }
 
@@ -156,7 +155,7 @@ public partial class Create_Simulation : System.Web.UI.Page
         }
         catch
         {
-            success_lbl.Text = "Error in Submit(). Could update current visit date on school table.";
+            lblSuccess.Text = "Error in Submit(). Could update current visit date on school table.";
             return;
         }
 
@@ -213,7 +212,7 @@ public partial class Create_Simulation : System.Web.UI.Page
         }
         catch
         {
-            success_lbl.Text = "Error in Submit(). Could not open businesses.";
+            lblSuccess.Text = "Error in Submit(). Could not open businesses.";
             return;
         }
 
@@ -226,33 +225,33 @@ public partial class Create_Simulation : System.Web.UI.Page
         meta.Content = "4;url=create_simulation.aspx";
         this.Page.Controls.Add(meta);
         //ScriptManager.RegisterStartupScript(Page, this.GetType(), "ScrollPage", "window.scroll(0,0);", true);
-        success_lbl.Text = "Submission Successful! Refreshing page...";      
+        lblSuccess.Text = "Submission Successful! Refreshing page...";      
     }
 
     public void UpdateTeachers(string VisitID)
     {
         //Check if school 1 has teachers
-        if (schools_ddl.SelectedIndex != 0)
+        if (ddlSchools.SelectedIndex != 0)
         {
-            if (teacher1_ddl.SelectedIndex != 0)
+            if (ddlTeacher1.SelectedIndex != 0)
             {
-                string[] t11 = teacher1_ddl.SelectedValue.Split(' ');
+                string[] t11 = ddlTeacher1.SelectedValue.Split(' ');
 
                 //Update the current visit ID in teacherInfoFP
                 TeacherData.UpdateCurrentVisit(TeacherData.GetTeacherIDFromName(t11[0], t11[1]).ToString(), VisitID);
             }
 
-            if (teacher12_ddl.SelectedIndex != 0)
+            if (ddlTeacher12.SelectedIndex != 0)
             {
-                string[] t12 = teacher12_ddl.SelectedValue.Split(' ');
+                string[] t12 = ddlTeacher12.SelectedValue.Split(' ');
 
                 //Update the current visit ID in teacherInfoFP
                 TeacherData.UpdateCurrentVisit(TeacherData.GetTeacherIDFromName(t12[0], t12[1]).ToString(), VisitID);
             }
 
-            if (teacher13_ddl.SelectedIndex != 0)
+            if (ddlTeacher13.SelectedIndex != 0)
             {
-               string[] t13 = teacher13_ddl.SelectedValue.Split(' ');
+               string[] t13 = ddlTeacher13.SelectedValue.Split(' ');
 
                 //Update the current visit ID in teacherInfoFP
                 TeacherData.UpdateCurrentVisit(TeacherData.GetTeacherIDFromName(t13[0], t13[1]).ToString(), VisitID);
@@ -260,25 +259,25 @@ public partial class Create_Simulation : System.Web.UI.Page
         }
 
         //Check if school 2 has teachers
-        if (schools2_ddl.SelectedIndex != 0)
+        if (ddlSchools2.SelectedIndex != 0)
         {
-            if (teacher2_ddl.SelectedIndex != 0)
+            if (ddlTeacher2.SelectedIndex != 0)
             {
-                string[] t21 = teacher2_ddl.SelectedValue.Split(' ');
+                string[] t21 = ddlTeacher2.SelectedValue.Split(' ');
 
                 //Update the current visit ID in teacherInfoFP
                 TeacherData.UpdateCurrentVisit(TeacherData.GetTeacherIDFromName(t21[0], t21[1]).ToString(), VisitID);
             }
-            if (teacher22_ddl.SelectedIndex != 0)
+            if (ddlTeacher22.SelectedIndex != 0)
             {
-                string[] t22 = teacher22_ddl.SelectedValue.Split(' ');
+                string[] t22 = ddlTeacher22.SelectedValue.Split(' ');
 
                 //Update the current visit ID in teacherInfoFP
                 TeacherData.UpdateCurrentVisit(TeacherData.GetTeacherIDFromName(t22[0], t22[1]).ToString(), VisitID);
             }
-            if (teacher23_ddl.SelectedIndex != 0)
+            if (ddlTeacher23.SelectedIndex != 0)
             {
-                string[] t23 = teacher23_ddl.SelectedValue.Split(' ');
+                string[] t23 = ddlTeacher23.SelectedValue.Split(' ');
 
                 //Update the current visit ID in teacherInfoFP
                 TeacherData.UpdateCurrentVisit(TeacherData.GetTeacherIDFromName(t23[0], t23[1]).ToString(), VisitID);
@@ -286,25 +285,25 @@ public partial class Create_Simulation : System.Web.UI.Page
         }
 
         //Check if school 3 has teachers
-        if (schools3_ddl.SelectedIndex != 0)
+        if (ddlSchools3.SelectedIndex != 0)
         {
-            if (teacher3_ddl.SelectedIndex != 0)
+            if (ddlTeacher3.SelectedIndex != 0)
             {
-                string[] t31 = teacher3_ddl.SelectedValue.Split(' ');
+                string[] t31 = ddlTeacher3.SelectedValue.Split(' ');
 
                 //Update the current visit ID in teacherInfoFP
                 TeacherData.UpdateCurrentVisit(TeacherData.GetTeacherIDFromName(t31[0], t31[1]).ToString(), VisitID);
             }
-            if (teacher32_ddl.SelectedIndex != 0)
+            if (ddlTeacher32.SelectedIndex != 0)
             {
-                string[] t32 = teacher32_ddl.SelectedValue.Split(' ');
+                string[] t32 = ddlTeacher32.SelectedValue.Split(' ');
 
                 //Update the current visit ID in teacherInfoFP
                 TeacherData.UpdateCurrentVisit(TeacherData.GetTeacherIDFromName(t32[0], t32[1]).ToString(), VisitID);
             }
-            if (teacher33_ddl.SelectedIndex != 0)
+            if (ddlTeacher33.SelectedIndex != 0)
             {
-                string[] t33 = teacher33_ddl.SelectedValue.Split(' ');
+                string[] t33 = ddlTeacher33.SelectedValue.Split(' ');
 
                 //Update the current visit ID in teacherInfoFP
                 TeacherData.UpdateCurrentVisit(TeacherData.GetTeacherIDFromName(t33[0], t33[1]).ToString(), VisitID);
@@ -312,25 +311,25 @@ public partial class Create_Simulation : System.Web.UI.Page
         }
 
         //Check if school 4 has teachers
-        if (schools4_ddl.SelectedIndex != 0)
+        if (ddlSchools4.SelectedIndex != 0)
         {
-            if (teacher4_ddl.SelectedIndex != 0)
+            if (ddlTeacher4.SelectedIndex != 0)
             {
-                string[] t41 = teacher4_ddl.SelectedValue.Split(' ');
+                string[] t41 = ddlTeacher4.SelectedValue.Split(' ');
 
                 //Update the current visit ID in teacherInfoFP
                 TeacherData.UpdateCurrentVisit(TeacherData.GetTeacherIDFromName(t41[0], t41[1]).ToString(), VisitID);
             }
-            if (teacher42_ddl.SelectedIndex != 0)
+            if (ddlTeacher42.SelectedIndex != 0)
             {
-                string[] t42 = teacher42_ddl.SelectedValue.Split(' ');
+                string[] t42 = ddlTeacher42.SelectedValue.Split(' ');
 
                 //Update the current visit ID in teacherInfoFP
                 TeacherData.UpdateCurrentVisit(TeacherData.GetTeacherIDFromName(t42[0], t42[1]).ToString(), VisitID);
             }
-            if (teacher43_ddl.SelectedIndex != 0)
+            if (ddlTeacher43.SelectedIndex != 0)
             {
-                string[] t43 = teacher43_ddl.SelectedValue.Split(' ');
+                string[] t43 = ddlTeacher43.SelectedValue.Split(' ');
 
                 //Update the current visit ID in teacherInfoFP
                 TeacherData.UpdateCurrentVisit(TeacherData.GetTeacherIDFromName(t43[0], t43[1]).ToString(), VisitID);
@@ -338,25 +337,25 @@ public partial class Create_Simulation : System.Web.UI.Page
         }
 
         //Check if school 5 has teachers
-        if (schools5_ddl.SelectedIndex != 0)
+        if (ddlSchools5.SelectedIndex != 0)
         {
-            if (teacher5_ddl.SelectedIndex != 0)
+            if (ddlTeacher5.SelectedIndex != 0)
             {
-                string[] t51 = teacher5_ddl.SelectedValue.Split(' ');
+                string[] t51 = ddlTeacher5.SelectedValue.Split(' ');
 
                 //Update the current visit ID in teacherInfoFP
                 TeacherData.UpdateCurrentVisit(TeacherData.GetTeacherIDFromName(t51[0], t51[1]).ToString(), VisitID);
             }
-            if (teacher52_ddl.SelectedIndex != 0)
+            if (ddlTeacher52.SelectedIndex != 0)
             {
-                string[] t52 = teacher52_ddl.SelectedValue.Split(' ');
+                string[] t52 = ddlTeacher52.SelectedValue.Split(' ');
 
                 //Update the current visit ID in teacherInfoFP
                 TeacherData.UpdateCurrentVisit(TeacherData.GetTeacherIDFromName(t52[0], t52[1]).ToString(), VisitID);
             }
-            if (teacher53_ddl.SelectedIndex != 0)
+            if (ddlTeacher53.SelectedIndex != 0)
             {
-                string[] t53 = teacher53_ddl.SelectedValue.Split(' ');
+                string[] t53 = ddlTeacher53.SelectedValue.Split(' ');
 
                 //Update the current visit ID in teacherInfoFP
                 TeacherData.UpdateCurrentVisit(TeacherData.GetTeacherIDFromName(t53[0], t53[1]).ToString(), VisitID);
@@ -366,19 +365,19 @@ public partial class Create_Simulation : System.Web.UI.Page
 
 
 
-    protected void visitTime_ddl_SelectedIndexChanged1(object sender, EventArgs e)
+    protected void ddlVisitTime_SelectedIndexChanged1(object sender, EventArgs e)
     {
-        volunteerTime_tb.Text = SchoolSchedule.GetVolArrivalTime(visitTime_ddl.SelectedValue).ToString();
+        tbVolunteerTime.Text = SchoolSchedule.GetVolArrivalTime(ddlVisitTime.SelectedValue).ToString();
     }
 
-    protected void Submit_btn_Click1(object sender, EventArgs e)
+    protected void btnSubmit_Click1(object sender, EventArgs e)
     {
         Submit();
     }
 
-    protected void openAll_btn_Click(object sender, EventArgs e)
+    protected void btnOpenAll_Click(object sender, EventArgs e)
     {
-        if (openAll_btn.Text == "Open All Businesses")
+        if (btnOpenAll.Text == "Open All Businesses")
         {
             //Check off all checkboxes
             Checkbox1.Checked = true;
@@ -411,7 +410,7 @@ public partial class Create_Simulation : System.Web.UI.Page
             Checkbox32.Checked = true;
 
             //Change text on button to close
-            openAll_btn.Text = "Close All Businesses";
+            btnOpenAll.Text = "Close All Businesses";
         }
         else
         {
@@ -446,152 +445,154 @@ public partial class Create_Simulation : System.Web.UI.Page
             Checkbox32.Checked = false;
 
             //Change text on button to open
-            openAll_btn.Text = "Open All Businesses";
+            btnOpenAll.Text = "Open All Businesses";
         }
     }
 
-    protected void visitDate_tb_TextChanged(object sender, EventArgs e)
+    protected void tbVisitDate_TextChanged(object sender, EventArgs e)
     {
-        if (visitDate_tb.Text != "")
+        if (tbVisitDate.Text != "")
         {
             //Clear error label
-            error_lbl.Text = "";
+            lblError.Text = "";
 
             // Check if visit date has already been created
             try
             {
-                if (VisitData.LoadVisitInfoFromDate(visitDate_tb.Text, "visitDate").ToString() != "")
+                if (VisitData.LoadVisitInfoFromDate(tbVisitDate.Text, "visitDate").ToString() != "")
                 {
-                    //error_lbl.Text = VisitData.LoadVisitInfoFromDate(visitDate_tb.Text, "visitDate").ToString();
-                    error_lbl.Text = "A visit date has already been created for that day, please go to the 'Edit Visit' page to edit the visit for your inputted date.";
+                    //lblError.Text = VisitData.LoadVisitInfoFromDate(tbVisitDate.Text, "visitDate").ToString();
+                    lblError.Text = "A visit date has already been created for that day, please go to the 'Edit Visit' page to edit the visit for your inputted date.";
                     return;
                 }
             }
             catch
             {
-                error_lbl.Text = "Error. Could not check if visit date has been created.";
+                lblError.Text = "Error. Could not check if visit date has been created.";
                 return;
             }
         }
     }
 
-    protected void schools_ddl_SelectedIndexChanged(object sender, EventArgs e)
+
+
+    protected void ddlSchools_SelectedIndexChanged(object sender, EventArgs e)
     {
         //Clear DDLs
-        teacher1_ddl.Items.Clear();
-        teacher12_ddl.Items.Clear();
-        teacher13_ddl.Items.Clear();
+        ddlTeacher1.Items.Clear();
+        ddlTeacher12.Items.Clear();
+        ddlTeacher13.Items.Clear();
 
-        if (schools_ddl.SelectedIndex != 0)
+        if (ddlSchools.SelectedIndex != 0)
         {
-            teacher1_a.Visible = true;
-            teachers1_div.Visible = true;
+            aTeacher1.Visible = true;
+            divTeachers1.Visible = true;
 
             //Load teacher DDLs
-            TeacherData.LoadTeacherNameDDLFromSchoolName(schools_ddl.SelectedValue, teacher1_ddl);
-            TeacherData.LoadTeacherNameDDLFromSchoolName(schools_ddl.SelectedValue, teacher12_ddl);
-            TeacherData.LoadTeacherNameDDLFromSchoolName(schools_ddl.SelectedValue, teacher13_ddl);
+            TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools.SelectedValue, ddlTeacher1);
+            TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools.SelectedValue, ddlTeacher12);
+            TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools.SelectedValue, ddlTeacher13);
         }
         else
         {
-            teacher1_a.Visible=false;
-            teachers1_div.Visible=false;
+            aTeacher1.Visible=false;
+            divTeachers1.Visible=false;
         }
     }
 
-    protected void schools2_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlSchools2_SelectedIndexChanged(object sender, EventArgs e)
     {
         //Clear DDLs
-        teacher2_ddl.Items.Clear();
-        teacher22_ddl.Items.Clear();
-        teacher23_ddl.Items.Clear();
+        ddlTeacher2.Items.Clear();
+        ddlTeacher22.Items.Clear();
+        ddlTeacher23.Items.Clear();
 
-        if (schools2_ddl.SelectedIndex != 0)
+        if (ddlSchools2.SelectedIndex != 0)
         {
-            teacher2_a.Visible = true;
-            teachers2_div.Visible = true;
+            aTeacher2.Visible = true;
+            divTeachers2.Visible = true;
 
             //Load teacher DDLs
-            TeacherData.LoadTeacherNameDDLFromSchoolName(schools2_ddl.SelectedValue, teacher2_ddl);
-            TeacherData.LoadTeacherNameDDLFromSchoolName(schools2_ddl.SelectedValue, teacher22_ddl);
-            TeacherData.LoadTeacherNameDDLFromSchoolName(schools2_ddl.SelectedValue, teacher23_ddl);
+            TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools2.SelectedValue, ddlTeacher2);
+            TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools2.SelectedValue, ddlTeacher22);
+            TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools2.SelectedValue, ddlTeacher23);
         }
         else
         {
-            teacher2_a.Visible = false;
-            teachers2_div.Visible = false;
+            aTeacher2.Visible = false;
+            divTeachers2.Visible = false;
         }
     }
 
-    protected void schools3_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlSchools3_SelectedIndexChanged(object sender, EventArgs e)
     {
         //Clear DDLs
-        teacher3_ddl.Items.Clear();
-        teacher32_ddl.Items.Clear();
-        teacher33_ddl.Items.Clear();
+        ddlTeacher3.Items.Clear();
+        ddlTeacher32.Items.Clear();
+        ddlTeacher33.Items.Clear();
 
-        if (schools3_ddl.SelectedIndex != 0)
+        if (ddlSchools3.SelectedIndex != 0)
         {
-            teacher3_a.Visible = true;
-            teachers3_div.Visible = true;
+            aTeacher3.Visible = true;
+            divTeachers3.Visible = true;
 
             //Load teacher DDLs
-            TeacherData.LoadTeacherNameDDLFromSchoolName(schools3_ddl.SelectedValue, teacher3_ddl);
-            TeacherData.LoadTeacherNameDDLFromSchoolName(schools3_ddl.SelectedValue, teacher32_ddl);
-            TeacherData.LoadTeacherNameDDLFromSchoolName(schools3_ddl.SelectedValue, teacher33_ddl);
+            TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools3.SelectedValue, ddlTeacher3);
+            TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools3.SelectedValue, ddlTeacher32);
+            TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools3.SelectedValue, ddlTeacher33);
         }
         else
         {
-            teacher3_a.Visible = false;
-            teachers3_div.Visible = false;
+            aTeacher3.Visible = false;
+            divTeachers3.Visible = false;
         }
     }
 
-    protected void schools4_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlSchools4_SelectedIndexChanged(object sender, EventArgs e)
     {
         //Clear DDLs
-        teacher4_ddl.Items.Clear();
-        teacher42_ddl.Items.Clear();
-        teacher43_ddl.Items.Clear();
+        ddlTeacher4.Items.Clear();
+        ddlTeacher42.Items.Clear();
+        ddlTeacher43.Items.Clear();
 
-        if (schools4_ddl.SelectedIndex != 0)
+        if (ddlSchools4.SelectedIndex != 0)
         {
-            teacher4_a.Visible = true;
-            teachers4_div.Visible = true;
+            aTeacher4.Visible = true;
+            divTeachers4.Visible = true;
 
             //Load teacher DDLs
-            TeacherData.LoadTeacherNameDDLFromSchoolName(schools4_ddl.SelectedValue, teacher4_ddl);
-            TeacherData.LoadTeacherNameDDLFromSchoolName(schools4_ddl.SelectedValue, teacher42_ddl);
-            TeacherData.LoadTeacherNameDDLFromSchoolName(schools4_ddl.SelectedValue, teacher43_ddl);
+            TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools4.SelectedValue, ddlTeacher4);
+            TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools4.SelectedValue, ddlTeacher42);
+            TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools4.SelectedValue, ddlTeacher43);
         }
         else
         {
-            teacher4_a.Visible = false;
-            teachers4_div.Visible = false;
+            aTeacher4.Visible = false;
+            divTeachers4.Visible = false;
         }
     }
 
-    protected void schools5_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlSchools5_SelectedIndexChanged(object sender, EventArgs e)
     {
         //Clear DDLs
-        teacher5_ddl.Items.Clear();
-        teacher52_ddl.Items.Clear();
-        teacher53_ddl.Items.Clear();
+        ddlTeacher5.Items.Clear();
+        ddlTeacher52.Items.Clear();
+        ddlTeacher53.Items.Clear();
 
-        if (schools5_ddl.SelectedIndex != 0)
+        if (ddlSchools5.SelectedIndex != 0)
         {
-            teacher5_a.Visible = true;
-            teachers5_div.Visible = true;
+            aTeacher5.Visible = true;
+            divTeachers5.Visible = true;
 
             //Load teacher DDLs
-            TeacherData.LoadTeacherNameDDLFromSchoolName(schools5_ddl.SelectedValue, teacher5_ddl);
-            TeacherData.LoadTeacherNameDDLFromSchoolName(schools5_ddl.SelectedValue, teacher52_ddl);
-            TeacherData.LoadTeacherNameDDLFromSchoolName(schools5_ddl.SelectedValue, teacher53_ddl);
+            TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools5.SelectedValue, ddlTeacher5);
+            TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools5.SelectedValue, ddlTeacher52);
+            TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools5.SelectedValue, ddlTeacher53);
         }
         else
         {
-            teacher5_a.Visible = false;
-            teachers5_div.Visible = false;
+            aTeacher5.Visible = false;
+            divTeachers5.Visible = false;
         }
     }
 

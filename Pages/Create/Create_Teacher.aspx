@@ -19,7 +19,7 @@
     <form id="EMS_Form" runat="server">
 
         <%--Header information--%>
-        <header class="headerTop no-print"><a style="float: left; padding-top: 2px;">Finance Park 2.0</a><a style="float: right; padding-right: 30px; padding-top: 2px;"><asp:Label ID="headerSchoolName_lbl" Text="School Name Here" runat="server"></asp:Label></a></header>
+        <header class="headerTop no-print"><a style="float: left; padding-top: 2px;">Finance Park 2.0</a><a style="float: right; padding-right: 30px; padding-top: 2px;"><asp:Label ID="lblHeaderSchoolName" Text="School Name Here" runat="server"></asp:Label></a></header>
 
         <%--Navigation bar--%>
         <div id="nav-placeholder">
@@ -39,23 +39,23 @@
                 Enter the teacher's first name, last name, school, school email, school county, and the approximate student count. Click 'Submit' when you are finished.
             </h3>
             <p>First Name:</p>
-            <asp:TextBox ID="firstName_tb" runat="server" CssClass="textbox"></asp:TextBox>&ensp;<asp:Label ID="error_lbl" runat="server" Font-Bold="true" Font-Size="X-Large" ForeColor="Red"></asp:Label>
+            <asp:TextBox ID="tbFirstName" runat="server" CssClass="textbox"></asp:TextBox>&ensp;<asp:Label ID="lblError" runat="server" Font-Bold="true" Font-Size="X-Large" ForeColor="Red"></asp:Label>
             <p>Last Name (Required): </p>
-            <asp:TextBox ID="lastName_tb" runat="server" CssClass="textbox"></asp:TextBox>
+            <asp:TextBox ID="tbLastName" runat="server" CssClass="textbox"></asp:TextBox>
             <p>School Name (Required):</p>
-            <asp:DropDownList ID="schoolName_ddl" runat="server" CssClass="ddl"></asp:DropDownList>
+            <asp:DropDownList ID="ddlSchoolName" runat="server" CssClass="ddl"></asp:DropDownList>
             <p>Teacher Email (Required):</p>
-            <asp:TextBox ID="email_tb" runat="server" CssClass="textbox"></asp:TextBox>
+            <asp:TextBox ID="tbEmail" runat="server" CssClass="textbox"></asp:TextBox>
             <p>Contact Teacher? (Checked is Yes)</p>
-            <asp:CheckBox ID="contact_chk" runat="server"/>
+            <asp:CheckBox ID="chkContact" runat="server"/>
             <br />
             <br />
-            <asp:Button ID="Submit_btn" runat="server" Text="Submit" CssClass="button" OnClick="Submit_btn_Click" />
+            <asp:Button ID="btnSubmit" runat="server" Text="Submit" CssClass="button" OnClick="btnSubmit_Click" />
             <br />
             <br />
         </div>
 
-        <asp:HiddenField ID="currentVisitID_hf" runat="server" />
+        <asp:HiddenField ID="hfCurrentVisitID" runat="server" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="Scripts.js"></script>
         <script>

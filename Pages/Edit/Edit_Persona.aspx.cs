@@ -28,7 +28,7 @@ public partial class Edit_Persona : Page
     public Edit_Persona()
     {
         ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
-        VisitID = VisitData.GetVisitID();
+        
         Load += Page_Load;
     }
 
@@ -43,10 +43,10 @@ public partial class Edit_Persona : Page
         if (!IsPostBack)
         {
             //Load job title ddl
-            Jobs.LoadJobsDDL(jobTitle_ddl);
+            Jobs.LoadJobsDDL(ddlJobTitle);
 
             // Populating school header
-            headerSchoolName_lbl.Text = (SchoolHeader.GetSchoolHeader()).ToString();
+            lblHeaderSchoolName.Text = (SchoolHeader.GetSchoolHeader()).ToString();
 
             //Load data
             LoadData();
@@ -58,16 +58,16 @@ public partial class Edit_Persona : Page
         string SQLStatement = "SELECT * FROM personasFP";
 
         //Clear error
-        error_lbl.Text = "";
+        lblError.Text = "";
 
         //Clear table
-        persona_dgv.DataSource = null;
-        persona_dgv.DataBind();
+        dgvPersona.DataSource = null;
+        dgvPersona.DataBind();
 
         //If loading by the DDL, add school name to search query
-        if (jobTitle_ddl.SelectedIndex != 0)
+        if (ddlJobTitle.SelectedIndex != 0)
         {
-            SQLStatement = SQLStatement + " WHERE jobID='" + Jobs.GetJobIDFromTitle(jobTitle_ddl.SelectedValue).ToString() + "'";
+            SQLStatement = SQLStatement + " WHERE jobID='" + Jobs.GetJobIDFromTitle(ddlJobTitle.SelectedValue).ToString() + "'";
         }
         else
         {
@@ -75,29 +75,29 @@ public partial class Edit_Persona : Page
         }
 
         //Load personasFP table
-        try
-        {
+        //try
+        //{
             con.ConnectionString = ConnectionString;
             con.Open();
             Review_sds.ConnectionString = ConnectionString;
             Review_sds.SelectCommand = SQLStatement;
-            persona_dgv.DataSource = Review_sds;
-            persona_dgv.DataBind();
+            dgvPersona.DataSource = Review_sds;
+            dgvPersona.DataBind();
 
             cmd.Dispose();
             con.Close();
 
-        }
-        catch
-        {
-            error_lbl.Text = "Error in LoadData(). Cannot load personas table.";
-            return;
-        }
+        //}
+        //catch
+        //{
+        //    lblError.Text = "Error in LoadData(). Cannot load personas table.";
+        //    return;
+        //}
 
         // Highlight row being edited
-        foreach (GridViewRow row in persona_dgv.Rows)
+        foreach (GridViewRow row in dgvPersona.Rows)
         {
-            if (row.RowIndex == persona_dgv.EditIndex)
+            if (row.RowIndex == dgvPersona.EditIndex)
             {
                 row.BackColor = ColorTranslator.FromHtml("#ebe534");
                 row.BorderWidth = 2;
@@ -105,30 +105,30 @@ public partial class Edit_Persona : Page
         }
     }
 
-    protected void persona_dgv_RowUpdating(object sender, GridViewUpdateEventArgs e)
+    protected void dgvPersona_RowUpdating(object sender, GridViewUpdateEventArgs e)
     {
-        int ID = Convert.ToInt32(persona_dgv.DataKeys[e.RowIndex].Values[0]); // Gets id number
-        string JobID = ((DropDownList)persona_dgv.Rows[e.RowIndex].FindControl("jobTitleDGV_ddl")).SelectedValue;
-        string JobType = ((DropDownList)persona_dgv.Rows[e.RowIndex].FindControl("jobTypeDGV_ddl")).SelectedValue;
-        string GAI = ((TextBox)persona_dgv.Rows[e.RowIndex].FindControl("gaiDGV_tb")).Text;
-        string Age = ((TextBox)persona_dgv.Rows[e.RowIndex].FindControl("ageDGV_tb")).Text;
-        string MaritalStatus = ((DropDownList)persona_dgv.Rows[e.RowIndex].FindControl("maritalStatusDGV_ddl")).SelectedValue;
-        string SpouseAge = ((TextBox)persona_dgv.Rows[e.RowIndex].FindControl("spouseAgeDGV_tb")).Text;
-        string NumOfChildren = ((DropDownList)persona_dgv.Rows[e.RowIndex].FindControl("numOfChildrenDGV_ddl")).SelectedValue;
-        string Child1Age = ((TextBox)persona_dgv.Rows[e.RowIndex].FindControl("child1AgeDGV_tb")).Text;
-        string Child2Age = ((TextBox)persona_dgv.Rows[e.RowIndex].FindControl("child2AgeDGV_tb")).Text;
-        string CreditScore = ((TextBox)persona_dgv.Rows[e.RowIndex].FindControl("creditScoreDGV_tb")).Text;
-        string NMI = ((TextBox)persona_dgv.Rows[e.RowIndex].FindControl("nmiDGV_tb")).Text;
-        string CCDebt = ((TextBox)persona_dgv.Rows[e.RowIndex].FindControl("ccDebtDGV_tb")).Text;
-        string FurnitureLimit = ((TextBox)persona_dgv.Rows[e.RowIndex].FindControl("furnitureLimitDGV_tb")).Text;
-        string HomeImpLimit = ((TextBox)persona_dgv.Rows[e.RowIndex].FindControl("homeImpLimitDGV_tb")).Text;
-        string LongSavings = ((TextBox)persona_dgv.Rows[e.RowIndex].FindControl("longSavingsDGV_tb")).Text;
-        string EmergFunds = ((TextBox)persona_dgv.Rows[e.RowIndex].FindControl("emergFundsDGV_tb")).Text;
-        string OtherSavings = ((TextBox)persona_dgv.Rows[e.RowIndex].FindControl("otherSavingsDGV_tb")).Text;
-        string AutoLoanAmnt = ((TextBox)persona_dgv.Rows[e.RowIndex].FindControl("autoLoanAmntDGV_tb")).Text;
-        string MortAmnt = ((TextBox)persona_dgv.Rows[e.RowIndex].FindControl("mortAmntDGV_tb")).Text;
-        string ThatsLifeAmnt  = ((TextBox)persona_dgv.Rows[e.RowIndex].FindControl("thatsLifeAmntDGV_tb")).Text;
-        string Description = ((TextBox)persona_dgv.Rows[e.RowIndex].FindControl("descriptionDGV_tb")).Text;
+        int ID = Convert.ToInt32(dgvPersona.DataKeys[e.RowIndex].Values[0]); // Gets id number
+        string JobID = ((DropDownList)dgvPersona.Rows[e.RowIndex].FindControl("ddlJobTitleDGV")).SelectedValue;
+        string JobType = ((DropDownList)dgvPersona.Rows[e.RowIndex].FindControl("ddlJobTypeDGV")).SelectedValue;
+        string GAI = ((TextBox)dgvPersona.Rows[e.RowIndex].FindControl("tbGAIDGV")).Text;
+        string Age = ((TextBox)dgvPersona.Rows[e.RowIndex].FindControl("tbAgeDGV")).Text;
+        string MaritalStatus = ((DropDownList)dgvPersona.Rows[e.RowIndex].FindControl("ddlMaritalStatusDGV")).SelectedValue;
+        string SpouseAge = ((TextBox)dgvPersona.Rows[e.RowIndex].FindControl("tbSpouseAgeDGV")).Text;
+        string NumOfChildren = ((DropDownList)dgvPersona.Rows[e.RowIndex].FindControl("ddlNumOfChildren")).SelectedValue;
+        string Child1Age = ((TextBox)dgvPersona.Rows[e.RowIndex].FindControl("tbChild1AgeDGV")).Text;
+        string Child2Age = ((TextBox)dgvPersona.Rows[e.RowIndex].FindControl("tbChild2AgeDGV")).Text;
+        string CreditScore = ((TextBox)dgvPersona.Rows[e.RowIndex].FindControl("tbCreditScoreDGV")).Text;
+        string NMI = ((TextBox)dgvPersona.Rows[e.RowIndex].FindControl("tbNMIDGV")).Text;
+        string CCDebt = ((TextBox)dgvPersona.Rows[e.RowIndex].FindControl("tbCCDebtDGV")).Text;
+        string FurnitureLimit = ((TextBox)dgvPersona.Rows[e.RowIndex].FindControl("tbFurnitureLimitDGV")).Text;
+        string HomeImpLimit = ((TextBox)dgvPersona.Rows[e.RowIndex].FindControl("tbHomeImpLimitDGV")).Text;
+        string LongSavings = ((TextBox)dgvPersona.Rows[e.RowIndex].FindControl("tbLongSavingsDGV")).Text;
+        string EmergFunds = ((TextBox)dgvPersona.Rows[e.RowIndex].FindControl("tbEmergFundsDGV")).Text;
+        string OtherSavings = ((TextBox)dgvPersona.Rows[e.RowIndex].FindControl("tbOtherSavingsDGV")).Text;
+        string AutoLoanAmnt = ((TextBox)dgvPersona.Rows[e.RowIndex].FindControl("tbAutoLoanAmntDGV")).Text;
+        string MortAmnt = ((TextBox)dgvPersona.Rows[e.RowIndex].FindControl("tbMortAmntDGV")).Text;
+        string ThatsLifeAmnt  = ((TextBox)dgvPersona.Rows[e.RowIndex].FindControl("tbThatsLifeAmntDGV")).Text;
+        string Description = ((TextBox)dgvPersona.Rows[e.RowIndex].FindControl("tbDescriptionDGV")).Text;
 
         //Update row
         try
@@ -169,66 +169,66 @@ public partial class Edit_Persona : Page
                 SQL.UpdateRow(ID, "child2Age", Child2Age, "personasFP");
             }
 
-            persona_dgv.EditIndex = -1;       // reset the grid after editing
+            dgvPersona.EditIndex = -1;       // reset the grid after editing
             LoadData();
         }
         catch
         {
-            error_lbl.Text = "Error in rowUpdating. Cannot update row.";
+            lblError.Text = "Error in rowUpdating. Cannot update row.";
             return;
         }
     }
 
-    protected void persona_dgv_RowDeleting(object sender, GridViewDeleteEventArgs e)
+    protected void dgvPersona_RowDeleting(object sender, GridViewDeleteEventArgs e)
     {
-        int ID = Convert.ToInt32(persona_dgv.DataKeys[e.RowIndex].Values[0]); // Gets id number
+        int ID = Convert.ToInt32(dgvPersona.DataKeys[e.RowIndex].Values[0]); // Gets id number
 
         try
         {
-            SQL.DeleteRow(ID, "persona_dgv");
+            SQL.DeleteRow(ID, "dgvPersona");
 
-            persona_dgv.EditIndex = -1;       // reset the grid after editing
+            dgvPersona.EditIndex = -1;       // reset the grid after editing
 
             LoadData();
         }
         catch
         {
-            error_lbl.Text = "Error in rowDeleting. Cannot delete row.";
+            lblError.Text = "Error in rowDeleting. Cannot delete row.";
             return;
         }
     }
 
-    protected void persona_dgv_RowEditing(object sender, GridViewEditEventArgs e)
+    protected void dgvPersona_RowEditing(object sender, GridViewEditEventArgs e)
     {
-        persona_dgv.EditIndex = e.NewEditIndex;
+        dgvPersona.EditIndex = e.NewEditIndex;
         LoadData();
     }
 
-    protected void persona_dgv_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+    protected void dgvPersona_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
     {
-        persona_dgv.EditIndex = -1;
+        dgvPersona.EditIndex = -1;
         LoadData();
     }
 
-    protected void persona_dgv_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    protected void dgvPersona_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
-        persona_dgv.PageIndex = e.NewPageIndex;
+        dgvPersona.PageIndex = e.NewPageIndex;
         LoadData();
     }
 
-    protected void persona_dgv_RowDataBound(object sender, GridViewRowEventArgs e)
+    protected void dgvPersona_RowDataBound(object sender, GridViewRowEventArgs e)
     {
         if ((e.Row.RowType == DataControlRowType.DataRow))
         {
-            string lblJobTitle = (e.Row.FindControl("jobTitleDGV_lbl") as Label).Text;
-            string lblJobType = (e.Row.FindControl("jobTypeDGV_lbl") as Label).Text;
-            string lblMaritalStatus = (e.Row.FindControl("maritalStatusDGV_lbl") as Label).Text;
-            string lblNumOfChild = (e.Row.FindControl("numOfChildrenDGV_lbl") as Label).Text;
+            string lblJobTitle = (e.Row.FindControl("lblJobTitleDGV") as Label).Text;
+            string lblJobType = (e.Row.FindControl("lblJobTypeDGV") as Label).Text;
+            string lblMaritalStatus = (e.Row.FindControl("lblMaritalStatusDGV") as Label).Text;
+            string lblNumOfChild = (e.Row.FindControl("lblNumOfChildren") as Label).Text;
 
-            DropDownList ddlJobTitle = e.Row.FindControl("jobTitleDGV_ddl") as DropDownList;
-            DropDownList ddlJobType = e.Row.FindControl("jobTypeDGV_ddl") as DropDownList;
-            DropDownList ddlMaritalStatus = e.Row.FindControl("maritalStatusDGV_ddl") as DropDownList;
-            DropDownList ddlNumOfChild = e.Row.FindControl("numOfChildrenDGV_ddl") as DropDownList;
+            DropDownList ddlJobTitle = e.Row.FindControl("ddlJobTitleDGV") as DropDownList;
+            DropDownList ddlJobType = e.Row.FindControl("ddlJobTypeDGV") as DropDownList;
+            DropDownList ddlMaritalStatus = e.Row.FindControl("ddlMaritalStatusDGV") as DropDownList;
+            DropDownList ddlNumOfChild = e.Row.FindControl("ddlNumOfChildren") as DropDownList;
 
             //Load gridview job DDLs with job title
             Gridviews.JobTitle(ddlJobTitle, lblJobTitle);
@@ -255,14 +255,14 @@ public partial class Edit_Persona : Page
     }
 
 
-    protected void refresh_btn_Click(object sender, EventArgs e)
+    protected void btnRefresh_Click(object sender, EventArgs e)
     {
         Response.Redirect("edit_persona.aspx");
     }
 
-    protected void jobTitle_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlJobTitle_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (jobTitle_ddl.SelectedIndex != 0)
+        if (ddlJobTitle.SelectedIndex != 0)
         {
             LoadData();
         }        

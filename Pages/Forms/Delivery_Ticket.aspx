@@ -20,7 +20,7 @@
     <form id="EMS_Form" runat="server">
 
         <%--Header information--%>
-        <header class="headerTop no-print"><a style="float: left; padding-top: 2px;">Finance Park 2.0</a><a style="float: right; padding-right: 30px; padding-top: 2px;"><asp:Label ID="headerSchoolName_lbl" Text="School Name Here" runat="server"></asp:Label></a></header>
+        <header class="headerTop no-print"><a style="float: left; padding-top: 2px;">Finance Park 2.0</a><a style="float: right; padding-right: 30px; padding-top: 2px;"><asp:Label ID="lblHeaderSchoolName" Text="School Name Here" runat="server"></asp:Label></a></header>
 
         <%--Navigation bar--%>
         <div id="nav-placeholder">
@@ -38,55 +38,55 @@
             <h3 class="no-print">Use this page to print out the delivery tickets for public and private schools. You can also print out the Kits Only ticket from here.
             </h3>
             <p class="no-print">Visit Date:</p>
-            <asp:TextBox ID="visitDate_tb" runat="server" TextMode="Date" CssClass="textbox no-print" AutoPostBack="true" OnTextChanged="visitDate_tb_TextChanged"></asp:TextBox>
+            <asp:TextBox ID="tbVisitDate" runat="server" TextMode="Date" CssClass="textbox no-print" AutoPostBack="true" OnTextChanged="tbVisitDate_TextChanged"></asp:TextBox>
 
             <%--School Name DDL--%>
-            <div id="schoolName_div" runat="server" visible="false">
+            <div id="divSchoolName" runat="server" visible="false">
                 <p class="no-print">School Name:</p>
-                <asp:DropDownList ID="schoolName_ddl" runat="server" CssClass="ddl no-print" AutoPostBack="true" OnSelectedIndexChanged="schoolName_ddl_SelectedIndexChanged"></asp:DropDownList>
+                <asp:DropDownList ID="ddlSchoolName" runat="server" CssClass="ddl no-print" AutoPostBack="true" OnSelectedIndexChanged="ddlSchoolName_SelectedIndexChanged"></asp:DropDownList>
             </div>
 
             <%--Teacher Name DDL--%>
-            <div id="teacherName_div" runat="server" visible="false">
+            <div id="divTeacherName" runat="server" visible="false">
                 <p class="no-print">Teacher Name:</p>
-                <asp:DropDownList ID="teacherName_ddl" runat="server" CssClass="ddl no-print" AutoPostBack="true" OnSelectedIndexChanged="teacherName_ddl_SelectedIndexChanged"></asp:DropDownList>
+                <asp:DropDownList ID="ddlTeacherName" runat="server" CssClass="ddl no-print" AutoPostBack="true" OnSelectedIndexChanged="ddlTeacherName_SelectedIndexChanged"></asp:DropDownList>
             </div>
 
             <%--Letter Type DDL--%>
-            <div id="letterType_div" runat="server" visible="false">
+            <div id="divLetterType" runat="server" visible="false">
                 <p class="no-print">Letter Type:</p>
-                <asp:DropDownList ID="letterType_ddl" runat="server" AutoPostBack="true" CssClass="ddl no-print" OnSelectedIndexChanged="letterType_ddl_SelectedIndexChanged">
+                <asp:DropDownList ID="ddlLetterType" runat="server" AutoPostBack="true" CssClass="ddl no-print" OnSelectedIndexChanged="ddlLetterType_SelectedIndexChanged">
                     <asp:ListItem>Public</asp:ListItem>
                     <asp:ListItem>Private</asp:ListItem>
                     <asp:ListItem>Kits Only</asp:ListItem>
-                </asp:DropDownList><a class="no-print">&ensp;</a><asp:Label ID="error_lbl" runat="server" Font-Bold="true" Font-Size="X-Large" ForeColor="Red"></asp:Label>
+                </asp:DropDownList><a class="no-print">&ensp;</a><asp:Label ID="lblError" runat="server" Font-Bold="true" Font-Size="X-Large" ForeColor="Red"></asp:Label>
                 <br class="no-print" />
                 <br class="no-print" />
-                <asp:Button ID="print_btn" runat="server" Text="Print" CssClass="button no-print" OnClick="print_btn_Click" />
+                <asp:Button ID="btnPrint" runat="server" Text="Print" CssClass="button no-print" OnClick="btnPrint_Click" />
             </div>
 
             <%--Letter--%>
-            <div id="letter_div" runat="server" visible="false" class="letter">
+            <div id="divLetter" runat="server" visible="false" class="letter">
                 <h4 class="letter_title">Delivery Ticket</h4>
                 <p class="letter_p">
                     School Name:
-                    <asp:Label ID="schoolName_lbl" runat="server"></asp:Label><a class="letter_r">Contact Person:
-                        <asp:Label ID="contact_lbl" runat="server"></asp:Label></a>
+                    <asp:Label ID="lblSchoolName" runat="server"></asp:Label><a class="letter_r">Contact Person:
+                        <asp:Label ID="lblContact" runat="server"></asp:Label></a>
                 </p>
                 <p class="letter_p">
                     Workbooks Delivered:
-                    <asp:Label ID="books_lbl" runat="server"></asp:Label><a class="letter_r">Kit Number(s):
-                        <asp:Label ID="kits_lbl" runat="server"></asp:Label></a>
+                    <asp:Label ID="lblBooks" runat="server"></asp:Label><a class="letter_r">Kit Number(s):
+                        <asp:Label ID="lblKits" runat="server"></asp:Label></a>
                 </p>
                 <p class="letter_p">
                     Stavros Times Delivered:
-                    <asp:Label ID="times_lbl" runat="server"></asp:Label><a class="letter_r">Teacher Name:
-                        <asp:Label ID="teacherName_lbl" runat="server"></asp:Label></a>
+                    <asp:Label ID="lblTimes" runat="server"></asp:Label><a class="letter_r">Teacher Name:
+                        <asp:Label ID="lblTeacherName" runat="server"></asp:Label></a>
                 </p>
                 <br />
 
                 <%--Public / Private--%>
-                <div id="pub_div" runat="server" visible="false">
+                <div id="divPub" runat="server" visible="false">
                     <p>Signature of Person receiving Finance Park Materials:<a class="letter_r">_______________________________________</a></p>
                     <br />
                     <br />
@@ -96,7 +96,7 @@
                 </div>
 
                 <%--Kits Only--%>
-                <div id="kit_div" runat="server" visible="false">
+                <div id="divKit" runat="server" visible="false">
                     <p>Kits are going to:</p>
                     <table>
                         <tr>
@@ -105,27 +105,27 @@
                         </tr>
                         <tr>
                             <td>
-                                <asp:Label ID="teacherNameKit1_lbl" runat="server"></asp:Label></td>
+                                <asp:Label ID="lblTeacherNameKit1" runat="server"></asp:Label></td>
                             <td>
-                                <asp:Label ID="kits1_lbl" runat="server"></asp:Label></td>
+                                <asp:Label ID="lblKits1" runat="server"></asp:Label></td>
                         </tr>
                         <tr>
                             <td>
-                                <asp:Label ID="teacherNameKit2_lbl" runat="server"></asp:Label></td>
+                                <asp:Label ID="lblTeacherNameKit2" runat="server"></asp:Label></td>
                             <td>
-                                <asp:Label ID="kits2_lbl" runat="server"></asp:Label></td>
+                                <asp:Label ID="lblKits2" runat="server"></asp:Label></td>
                         </tr>
                         <tr>
                             <td>
-                                <asp:Label ID="teacherNameKit3_lbl" runat="server"></asp:Label></td>
+                                <asp:Label ID="lblTeacherNameKit3" runat="server"></asp:Label></td>
                             <td>
-                                <asp:Label ID="kits3_lbl" runat="server"></asp:Label></td>
+                                <asp:Label ID="lblKits3" runat="server"></asp:Label></td>
                         </tr>
                         <tr>
                             <td>
-                                <asp:Label ID="teacherNameKit4_lbl" runat="server"></asp:Label></td>
+                                <asp:Label ID="lblTeacherNameKit4" runat="server"></asp:Label></td>
                             <td>
-                                <asp:Label ID="kits4_lbl" runat="server"></asp:Label></td>
+                                <asp:Label ID="lblKits4" runat="server"></asp:Label></td>
                         </tr>
                     </table>
                     <br />
@@ -139,11 +139,11 @@
                 </div>
 
                 <br />
-                <asp:Image ID="stavrosLogo_img" runat="server" ImageUrl="~/Media/FP_SI_Logo.png" CssClass="letter_logo_bottom" />
+                <asp:Image ID="imgStavrosLogo" runat="server" ImageUrl="~/Media/FP_SI_Logo.png" CssClass="letter_logo_bottom" />
             </div>
         </div>
 
-        <asp:HiddenField ID="currentVisitID_hf" runat="server" />
+        <asp:HiddenField ID="hfCurrentVisitID" runat="server" />
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="Scripts.js"></script>

@@ -18,14 +18,14 @@
         <div id="Site_Wrap_Fullscreen">
 
             <%--Logo--%>
-            <div id="startLogo_div" runat="server" class="Sim_Start_Logo_Back">
-                <asp:Image ID="startLogo_img" runat="server" ImageUrl="../../Media/FP_SI_Logo.png" CssClass="Sim_Start_Logo" AlternateText="Finance Park Logo" />
+            <div id="divStartLogo" runat="server" class="Sim_Start_Logo_Back">
+                <asp:Image ID="imgStartLogo" runat="server" ImageUrl="../../Media/FP_SI_Logo.png" CssClass="Sim_Start_Logo" AlternateText="Finance Park Logo" />
             </div>
             <br />
 
             <%--Start Button--%>
-            <div id="startSim_div" runat="server" class="Sim_Start_Btn_Div">
-                <asp:Button ID="startSim_btn" runat="server" CssClass="buttonLarge Sim_Start_Btn" Text="Start!" OnClick="startSim_btn_Click" />
+            <div id="divStartSim" runat="server" class="Sim_Start_Btn_Div">
+                <asp:Button ID="btnStartSim" runat="server" CssClass="buttonLarge Sim_Start_Btn" Text="Start!" OnClick="btnStartSim_Click" />
             </div>          
 
         </div>

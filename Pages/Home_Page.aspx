@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="false" CodeFile="Home_Page.aspx.cs" Inherits="_Home_Page" %>
+﻿<%@ Page Language="C#" AutoEventWireup="false" CodeFile="Home_Page.aspx.cs" Inherits="Home_Page" %>
 
 <!doctype html>
 <html>
@@ -23,7 +23,7 @@
                     Finance Park 2.0
                 </div>
                 <div id="header-e3">
-                    <asp:Label ID="headerSchoolName_lbl" Text="School Name Here" runat="server"></asp:Label><asp:Label ID="headerSchoolName2_lbl" runat="server"></asp:Label><asp:Label ID="headerSchoolName3_lbl" runat="server"></asp:Label>
+                    <asp:Label ID="lblHeaderSchoolName" Text="School Name Here" runat="server"></asp:Label><asp:Label ID="headerSchoolName2_lbl" runat="server"></asp:Label><asp:Label ID="headerSchoolName3_lbl" runat="server"></asp:Label>
                 </div>
                 <div id="header-e2">
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -36,8 +36,8 @@
 
                 <%--Today's Date, Student Count, and Schools--%>
                 <div class="Home_Page_Todays_Info">
-                    <p>Today's Date: <asp:Label ID="visitDate_lbl" runat="server" Font-Italic="true" Font-Bold="false"></asp:Label>&emsp;Student Count: <asp:Label ID="studentCount_lbl" runat="server" Font-Italic="true" Font-Bold="false"></asp:Label></p>
-                    <p>Today's School(s): <asp:Label ID="Label1" runat="server" Text="No School Visit Created For Today!" Font-Bold="false" Font-Italic="true"></asp:Label></p>
+                    <p>Today's Date: <asp:Label ID="lblTodayDate" runat="server" Font-Italic="true" Font-Bold="false"></asp:Label>&emsp;Student Count: <asp:Label ID="lblStudentCount" runat="server" Font-Italic="true" Font-Bold="false"></asp:Label></p>
+                    <p>Today's School(s): <asp:Label ID="lblSchoolName" runat="server" Text="No School Visit Created For Today!" Font-Bold="false" Font-Italic="true"></asp:Label></p>
                 </div>                
 
                 <%--Header Links--%>
@@ -46,7 +46,7 @@
                 <asp:LinkButton ID="LinkButton27" runat="server" PostBackUrl="/Help_page.aspx" Font-Size="Large" CssClass="button1">HELP</asp:LinkButton>
                 <asp:LinkButton ID="LinkButton24" runat="server" PostBackUrl="/default.aspx" Font-Size="Large" CssClass="button1">LOG OUT</asp:LinkButton>
                 <br />
-                <asp:Label ID="error_lbl" runat="server" Font-Bold="True" Font-Size="X-Large" ForeColor="Red"></asp:Label>
+                <asp:Label ID="lblError" runat="server" Font-Bold="True" Font-Size="X-Large" ForeColor="Red"></asp:Label>
                 <br />
                 <br />
 
@@ -70,6 +70,7 @@
                         <a href="../Pages/Edit/edit_Simulation.aspx">Edit Simulation</a>
                         <a href="../Pages/Edit/edit_school.aspx">Edit School</a>
                         <a href="../Pages/Edit/edit_teacher.aspx">Edit Teacher</a>
+                        <a href="../Pages/Edit/edit_student.aspx">Edit Student</a>
                         <a href="../Pages/Edit/Edit_Job.aspx">Edit Jobs</a>
                         <a href="../Pages/Edit/Edit_Question.aspx">Edit Questions</a>
                         <a href="../Pages/Edit/Edit_Sponsor.aspx">Edit Sponsors</a>
@@ -94,6 +95,7 @@
                         <a href="../Pages/Reports/Simulation_Report.aspx">Simulation Report</a>
                         <a href="../Pages/Reports/School_Report.aspx">School Report</a>                      
                         <a href="../Pages/Reports/Teacher_Report.aspx">Teacher Report</a>
+                        <a href="../Pages/Reports/Student_Report.aspx">Student Report</a>
                     </div>
                 </div>
 
@@ -105,7 +107,8 @@
                         <a href="../Pages/Forms/Daily_Totals.aspx">Daily Totals</a>
                         <a href="../Pages/Forms/Delivery_Ticket.aspx">Delivery Ticket</a>
                         <a href="../Pages/Forms/Liaison_Letter.aspx">Family and Community Liason Information Forms</a>
-                        <a href="../Pages/Forms/Teacher_Reminders.aspx">Teacher Reminders</a>                      
+                        <a href="../Pages/Forms/Teacher_Reminders.aspx">Teacher Reminders</a>
+                        <a href="../Pages/Forms/Business_Assignments.aspx">Business Assignments</a>
                     </div>
                 </div>
 
@@ -127,58 +130,58 @@
                     <div class="Home_Page_Calendar_Inner">
                         <div class="Home_Page_Calendar_Block_Start">
                             <a class="Home_Page_Calendar_Day">Monday</a>
-                            <asp:Label ID="monday_lbl" runat="server" CssClass="Home_Page_Calendar_Number" Text="0"></asp:Label>
+                            <asp:Label ID="lblMonday" runat="server" CssClass="Home_Page_Calendar_Number" Text="0"></asp:Label>
                             <br />
                             <br />
-                            <asp:Button ID="mondaySchool1_btn" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
-                            <asp:Button ID="mondaySchool2_btn" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
-                            <asp:Button ID="mondaySchool3_btn" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
-                            <asp:Button ID="mondaySchool4_btn" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
-                            <asp:Button ID="mondaySchool5_btn" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
+                            <asp:Button ID="btnMondaySchool1" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
+                            <asp:Button ID="btnMondaySchool2" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
+                            <asp:Button ID="btnMondaySchool3" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
+                            <asp:Button ID="btnMondaySchool4" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
+                            <asp:Button ID="btnMondaySchool5" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
                         </div>
                         <div class="Home_Page_Calendar_Block">
                             <a class="Home_Page_Calendar_Day">Tuesday</a>
-                            <asp:Label ID="tuesday_lbl" runat="server" CssClass="Home_Page_Calendar_Number" Text="0"></asp:Label>
+                            <asp:Label ID="lblTuesday" runat="server" CssClass="Home_Page_Calendar_Number" Text="0"></asp:Label>
                             <br />
                             <br />
-                            <asp:Button ID="tuesdaySchool1_btn" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
-                            <asp:Button ID="tuesdaySchool2_btn" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
-                            <asp:Button ID="tuesdaySchool3_btn" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
-                            <asp:Button ID="tuesdaySchool4_btn" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
-                            <asp:Button ID="tuesdaySchool5_btn" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
+                            <asp:Button ID="btnTuesdaySchool1" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
+                            <asp:Button ID="btnTuesdaySchool2" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
+                            <asp:Button ID="btnTuesdaySchool3" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
+                            <asp:Button ID="btnTuesdaySchool4" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
+                            <asp:Button ID="btnTuesdaySchool5" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
                         </div>
                         <div class="Home_Page_Calendar_Block">
                             <a class="Home_Page_Calendar_Day">Wednesday</a>
-                            <asp:Label ID="wednesday_lbl" runat="server" CssClass="Home_Page_Calendar_Number" Text="0"></asp:Label>
+                            <asp:Label ID="lblWednesday" runat="server" CssClass="Home_Page_Calendar_Number" Text="0"></asp:Label>
                             <br />
                             <br />
-                            <asp:Button ID="wednesdaySchool1_btn" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
-                            <asp:Button ID="wednesdaySchool2_btn" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
-                            <asp:Button ID="wednesdaySchool3_btn" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
-                            <asp:Button ID="wednesdaySchool4_btn" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
-                            <asp:Button ID="wednesdaySchool5_btn" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
+                            <asp:Button ID="btnWednesdaySchool1" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
+                            <asp:Button ID="btnWednesdaySchool2" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
+                            <asp:Button ID="btnWednesdaySchool3" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
+                            <asp:Button ID="btnWednesdaySchool4" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
+                            <asp:Button ID="btnWednesdaySchool5" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
                         </div>
                         <div class="Home_Page_Calendar_Block">
                             <a class="Home_Page_Calendar_Day">Thursday</a>
-                            <asp:Label ID="thursday_lbl" runat="server" CssClass="Home_Page_Calendar_Number" Text="0"></asp:Label>
+                            <asp:Label ID="lblThursday" runat="server" CssClass="Home_Page_Calendar_Number" Text="0"></asp:Label>
                             <br />
                             <br />
-                            <asp:Button ID="thursdaySchool1_btn" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
-                            <asp:Button ID="thursdaySchool2_btn" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
-                            <asp:Button ID="thursdaySchool3_btn" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
-                            <asp:Button ID="thursdaySchool4_btn" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
-                            <asp:Button ID="thursdaySchool5_btn" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
+                            <asp:Button ID="btnThursdaySchool1" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
+                            <asp:Button ID="btnThursdaySchool2" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
+                            <asp:Button ID="btnThursdaySchool3" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
+                            <asp:Button ID="btnThursdaySchool4" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
+                            <asp:Button ID="btnThursdaySchool5" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
                         </div>
                         <div class="Home_Page_Calendar_Block_End">
                             <a class="Home_Page_Calendar_Day">Friday</a>
-                            <asp:Label ID="friday_lbl" runat="server" CssClass="Home_Page_Calendar_Number" Text="0"></asp:Label>
+                            <asp:Label ID="lblFriday" runat="server" CssClass="Home_Page_Calendar_Number" Text="0"></asp:Label>
                             <br />
                             <br />
-                            <asp:Button ID="fridaySchool1_btn" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
-                            <asp:Button ID="fridaySchool2_btn" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
-                            <asp:Button ID="fridaySchool3_btn" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
-                            <asp:Button ID="fridaySchool4_btn" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
-                            <asp:Button ID="fridaySchool5_btn" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
+                            <asp:Button ID="btnFridaySchool1" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
+                            <asp:Button ID="btnFridaySchool2" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
+                            <asp:Button ID="btnFridaySchool3" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
+                            <asp:Button ID="btnFridaySchool4" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
+                            <asp:Button ID="btnFridaySchool5" runat="server" CssClass="Home_Page_Calendar_Button" Text="School Name Here" Visible="false"></asp:Button>
                         </div>
                     </div>
                 </div>
@@ -205,7 +208,7 @@
                         </div>
                     </div>
                     <div class="content_home_bottom">
-                        <p>Last Updated: 1/11/2024 @ 3:30pm&ensp;Version: 2.2.20&ensp;Current Visit ID:<asp:Label ID="visitID_lbl" runat="server"></asp:Label></p>
+                        <p>Last Updated: 1/11/2024 @ 3:30pm&ensp;Version: 2.2.20&ensp;Current Visit ID:<asp:Label ID="lblVisitID" runat="server"></asp:Label></p>
                     </div>
 
                     <br />
@@ -223,7 +226,7 @@
             </div>
         </div>
 
-        <asp:HiddenField ID="visitdate_hf" runat="server" />
+        <asp:HiddenField ID="hfVisitDate" runat="server" />
 
         <script src="Scripts.js"></script>
         <asp:SqlDataSource ID="Review_sds" runat="server"></asp:SqlDataSource>
@@ -254,7 +257,7 @@
                 // Get text elements
                 const setup = document.getElementById("jokeSetup");
                 const punchline = document.getElementById("jokePunchline");
-                const error = document.getElementById("error_lbl");
+                const error = document.getElementById("lblError");
 
                 // Hide error and render jokes
                 error.innerHTML = "";
@@ -264,7 +267,7 @@
 
             // Function to render the error message if there is one
             function renderError() {
-                const error = document.getElementById("error_lbl");
+                const error = document.getElementById("lblError");
                 error.innerHTML = "Whoops, something went wrong. Please try again later!";
             }
 

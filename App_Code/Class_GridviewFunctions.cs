@@ -42,6 +42,25 @@ public class Class_GridviewFunctions
         }
     }
 
+    //Gets all the visitint school names of a visit ID in the schoolInfoFP and inserts them into a DDL
+    public void VisitingSchoolNames(DropDownList ddlSchool, string lblSchool, int VisitID)
+    {
+        ddlSchool.DataSource = GetData("SELECT s.id, s.schoolName as 'schoolName' FROM schoolInfoFP s JOIN visitInfoFP v ON v.school = s.id OR v.school2 = s.id OR v.school3 = s.id OR v.school4 = s.id OR v.school5 = s.id  WHERE v.id='" + VisitID + "' ORDER BY schoolName ASC");
+        ddlSchool.DataTextField = "schoolName";
+        ddlSchool.DataValueField = "id";
+        ddlSchool.DataBind();
+        ddlSchool.Items.Insert(0, "");
+
+        if (lblSchool == "")
+        {
+            ddlSchool.Items.FindByText("").Selected = true;
+        }
+        else
+        {
+            ddlSchool.Items.FindByValue(lblSchool).Selected = true;
+        }
+    }
+
 
     //Gets all the business names in the businessInfoFP and inserts them into a DDL
     public void BusinessNames(DropDownList ddlBusiness, string lblBusiness)
@@ -142,7 +161,8 @@ public class Class_GridviewFunctions
         }
     }
 
-    //Gets all questions short in the questionsFP and inserts them into a DDL
+
+    //Gets all job titles in the jobsFP and inserts them into a DDL
     public void JobTitle(DropDownList ddlJobTitle, string lblJobTitle)
     {
         ddlJobTitle.DataSource = GetData("SELECT DISTINCT id, jobTitle FROM jobsFP ORDER BY jobTitle ASC");
@@ -160,6 +180,65 @@ public class Class_GridviewFunctions
             ddlJobTitle.Items.FindByValue(lblJobTitle).Selected = true;
         }
     }
+
+    //Gets all teacher names in the teacherInfoFP and inserts them into a DDL
+    public void TeacherName(DropDownList ddlTeacherName, string lblTeacherName)
+    {
+        ddlTeacherName.DataSource = GetData("SELECT DISTINCT id, CONCAT(firstName, ' ', lastName) as teacherName FROM teacherInfoFP");
+        ddlTeacherName.DataTextField = "teacherName";
+        ddlTeacherName.DataValueField = "id";
+        ddlTeacherName.DataBind();
+        ddlTeacherName.Items.Insert(0, "");
+
+        if (lblTeacherName == "0")
+        {
+            ddlTeacherName.Items.FindByText("").Selected = true;
+        }
+        else
+        {
+            ddlTeacherName.Items.FindByValue(lblTeacherName).Selected = true;
+        }
+    }
+
+    //Gets all visiting teacher names in the teacherInfoFP and inserts them into a DDL
+    public void SchoolOnlyTeacherName(DropDownList ddlTeacherName, string lblTeacherName, int SchoolID)
+    {
+        ddlTeacherName.DataSource = GetData("SELECT id, CONCAT(firstName, ' ', lastName) as teacherName FROM teacherInfoFP WHERE schoolID='" + SchoolID + "'");
+        ddlTeacherName.DataTextField = "teacherName";
+        ddlTeacherName.DataValueField = "id";
+        ddlTeacherName.DataBind();
+        ddlTeacherName.Items.Insert(0, "");
+
+        if (lblTeacherName == "0")
+        {
+            ddlTeacherName.Items.FindByText("").Selected = true;
+        }
+        else
+        {
+            ddlTeacherName.Items.FindByValue(lblTeacherName).Selected = true;
+        }
+    }
+
+    //Gets all persona names in the personasFP tabel and inserts them into a DDL
+    public void Personas(DropDownList ddlPersonas, string lblPersonas)
+    {
+        ddlPersonas.DataSource = GetData("SELECT DISTINCT id FROM personasFP");
+        ddlPersonas.DataTextField = "id";
+        ddlPersonas.DataValueField = "id";
+        ddlPersonas.DataBind();
+        ddlPersonas.Items.Insert(0, "");
+
+        if (lblPersonas == "0")
+        {
+            ddlPersonas.Items.FindByText("").Selected = true;
+        }
+        else
+        {
+            ddlPersonas.Items.FindByValue(lblPersonas).Selected = true;
+        }
+    }
+
+
 
     private DataSet GetData(string query)
     {

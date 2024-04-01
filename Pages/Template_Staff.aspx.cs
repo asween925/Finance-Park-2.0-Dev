@@ -27,7 +27,7 @@ public partial class Template_Staff : Page
     public Template_Staff()
     {
         ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
-        VisitID = VisitData.GetVisitID();
+        
         Load += Page_Load;
     }
 
@@ -44,20 +44,20 @@ public partial class Template_Staff : Page
             // Assign current visit ID to hidden field
             if (VisitID != 0)
             {
-                currentVisitID_hf.Value = VisitID.ToString();
+                hfCurrentVisitID.Value = VisitID.ToString();
             }
 
             // Populating school header
-            headerSchoolName_lbl.Text = (SchoolHeader.GetSchoolHeader()).ToString();
+            lblHeaderSchoolName.Text = (SchoolHeader.GetSchoolHeader()).ToString();
         }
     }
 
     public void LoadData()
     {
         // Highlight row being edited
-        //foreach (GridViewRow row in notes_dgv.Rows)
+        //foreach (GridViewRow row in dgvNotes.Rows)
         //{
-        //    if (row.RowIndex == notes_dgv.EditIndex) 
+        //    if (row.RowIndex == dgvNotes.EditIndex) 
         //    {
         //        row.BackColor = ColorTranslator.FromHtml("#ebe534");
         //        row.BorderWidth = 2;
@@ -65,67 +65,67 @@ public partial class Template_Staff : Page
         //}
     }
 
-    //protected void notes_dgv_RowUpdating(object sender, GridViewUpdateEventArgs e)
+    //protected void dgvNotes_RowUpdating(object sender, GridViewUpdateEventArgs e)
     //{
-    //    int ID = Convert.ToInt32(notes_dgv.DataKeys[e.RowIndex].Values[0]); // Gets id number
-    //    string SchoolName = ((DropDownList)notes_dgv.Rows[e.RowIndex].FindControl("schoolNameDGV_ddl")).SelectedValue;
-    //    string Note = ((TextBox)notes_dgv.Rows[e.RowIndex].FindControl("noteDGV_tb")).Text;
-    //    string NoteUser = ((Label)notes_dgv.Rows[e.RowIndex].FindControl("noteUserDGV_lbl")).Text;
-    //    string NoteTimestamp = ((Label)notes_dgv.Rows[e.RowIndex].FindControl("noteTimestampDGV_lbl")).Text;
+    //    int ID = Convert.ToInt32(dgvNotes.DataKeys[e.RowIndex].Values[0]); // Gets id number
+    //    string SchoolName = ((DropDownList)dgvNotes.Rows[e.RowIndex].FindControl("ddlSchoolNameDGV")).SelectedValue;
+    //    string Note = ((TextBox)dgvNotes.Rows[e.RowIndex].FindControl("tbNoteDGV")).Text;
+    //    string NoteUser = ((Label)dgvNotes.Rows[e.RowIndex].FindControl("lblNoteUserDGV")).Text;
+    //    string NoteTimestamp = ((Label)dgvNotes.Rows[e.RowIndex].FindControl("lblNoteTimestampDGV")).Text;
 
 
     //    try
     //    {
     //        SQL.UpdateRow(ID, "questionOrder", QuestionOrder, "questionsFP");
 
-    //        notes_dgv.EditIndex = -1;       // reset the grid after editing
+    //        dgvNotes.EditIndex = -1;       // reset the grid after editing
     //        LoadData();
     //    }
     //    catch
     //    {
-    //        error_lbl.Text = "Error in rowUpdating. Cannot update row.";
+    //        lblError.Text = "Error in rowUpdating. Cannot update row.";
     //        return;
     //    }
     //}
 
-    //protected void notes_dgv_RowDeleting(object sender, GridViewDeleteEventArgs e)
+    //protected void dgvNotes_RowDeleting(object sender, GridViewDeleteEventArgs e)
     //{
-    //    int ID = Convert.ToInt32(notes_dgv.DataKeys[e.RowIndex].Values[0]); // Gets id number
+    //    int ID = Convert.ToInt32(dgvNotes.DataKeys[e.RowIndex].Values[0]); // Gets id number
 
     //    try
     //    {
-    //        SQL.DeleteRow(ID, "notes_dgv");
+    //        SQL.DeleteRow(ID, "dgvNotes");
 
-    //        notes_dgv.EditIndex = -1;       // reset the grid after editing
+    //        dgvNotes.EditIndex = -1;       // reset the grid after editing
 
     //        LoadData();
     //    }
     //    catch
     //    {
-    //        error_lbl.Text = "Error in rowDeleting. Cannot delete row.";
+    //        lblError.Text = "Error in rowDeleting. Cannot delete row.";
     //        return;
     //    }
     //}
 
-    //protected void notes_dgv_RowEditing(object sender, GridViewEditEventArgs e)
+    //protected void dgvNotes_RowEditing(object sender, GridViewEditEventArgs e)
     //{
-    //    notes_dgv.EditIndex = e.NewEditIndex;
+    //    dgvNotes.EditIndex = e.NewEditIndex;
     //    LoadData();
     //}
 
-    //protected void notes_dgv_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+    //protected void dgvNotes_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
     //{
-    //    notes_dgv.EditIndex = -1;
+    //    dgvNotes.EditIndex = -1;
     //    LoadData();
     //}
 
-    //protected void notes_dgv_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    //protected void dgvNotes_PageIndexChanging(object sender, GridViewPageEventArgs e)
     //{
-    //    notes_dgv.PageIndex = e.NewPageIndex;
+    //    dgvNotes.PageIndex = e.NewPageIndex;
     //    LoadData();
     //}
 
-    //protected void notes_dgv_RowDataBound(object sender, GridViewRowEventArgs e)
+    //protected void dgvNotes_RowDataBound(object sender, GridViewRowEventArgs e)
     //{
     //    if ((e.Row.RowType == DataControlRowType.DataRow))
     //    {

@@ -27,7 +27,6 @@ public partial class Edit_School : Page
     public Edit_School()
     {
         ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
-        VisitID = VisitData.GetVisitID();
         Load += Page_Load;
     }
 
@@ -42,10 +41,10 @@ public partial class Edit_School : Page
         if (!IsPostBack)
         {
             //Populate school name ddl
-            SchoolData.LoadSchoolsDDL(schoolName_ddl);
+            SchoolData.LoadSchoolsDDL(ddlSchoolName);
 
             // Populating school header
-            headerSchoolName_lbl.Text = (SchoolHeader.GetSchoolHeader()).ToString();
+            lblHeaderSchoolName.Text = (SchoolHeader.GetSchoolHeader()).ToString();
 
             //Load schoolInfoFP table
             LoadData();
@@ -57,20 +56,20 @@ public partial class Edit_School : Page
         string SQLStatement = "SELECT * FROM schoolInfoFP";
 
         //Clear error
-        error_lbl.Text = "";
+        lblError.Text = "";
 
         //Clear table
-        school_dgv.DataSource = null;
-        school_dgv.DataBind();
+        dgvSchool.DataSource = null;
+        dgvSchool.DataBind();
 
         //If loading by the DDL, add school name to search query
-        if (schoolName_ddl.SelectedIndex != 0)
+        if (ddlSchoolName.SelectedIndex != 0)
         {
-            SQLStatement = SQLStatement + " WHERE schoolName='" + schoolName_ddl.SelectedValue + "'";
+            SQLStatement = SQLStatement + " WHERE schoolName='" + ddlSchoolName.SelectedValue + "'";
         }
-        else if (search_tb.Text != "")
+        else if (tbSearch.Text != "")
         {
-            SQLStatement = SQLStatement + " WHERE schoolName LIKE '%" + search_tb.Text + "%'";
+            SQLStatement = SQLStatement + " WHERE schoolName LIKE '%" + tbSearch.Text + "%'";
         }
         else
         {
@@ -84,8 +83,8 @@ public partial class Edit_School : Page
             con.Open();
             Review_sds.ConnectionString = ConnectionString;
             Review_sds.SelectCommand = SQLStatement;
-            school_dgv.DataSource = Review_sds;
-            school_dgv.DataBind();
+            dgvSchool.DataSource = Review_sds;
+            dgvSchool.DataBind();
 
             cmd.Dispose();
             con.Close();
@@ -93,14 +92,14 @@ public partial class Edit_School : Page
         }
         catch
         {
-            error_lbl.Text = "Error in LoadData(). Cannot load schoolInfo table.";
+            lblError.Text = "Error in LoadData(). Cannot load schoolInfo table.";
             return;
         }
 
         // Highlight row being edited
-        foreach (GridViewRow row in school_dgv.Rows)
+        foreach (GridViewRow row in dgvSchool.Rows)
         {
-            if (row.RowIndex == school_dgv.EditIndex)
+            if (row.RowIndex == dgvSchool.EditIndex)
             {
                 row.BackColor = ColorTranslator.FromHtml("#ebe534");
                 row.BorderWidth = 2;
@@ -110,32 +109,32 @@ public partial class Edit_School : Page
 
 
 
-    protected void school_dgv_RowUpdating(object sender, GridViewUpdateEventArgs e)
+    protected void dgvSchool_RowUpdating(object sender, GridViewUpdateEventArgs e)
     {
-        int ID = Convert.ToInt32(school_dgv.DataKeys[e.RowIndex].Values[0]); // Gets id number
-        string SchoolName = ((TextBox)school_dgv.Rows[e.RowIndex].FindControl("schoolNameDGV_tb")).Text;
-        string Address = ((TextBox)school_dgv.Rows[e.RowIndex].FindControl("addressDGV_tb")).Text;
-        string City = ((TextBox)school_dgv.Rows[e.RowIndex].FindControl("cityDGV_tb")).Text;
-        string Zip = ((TextBox)school_dgv.Rows[e.RowIndex].FindControl("zipDGV_tb")).Text;
-        string County = ((TextBox)school_dgv.Rows[e.RowIndex].FindControl("countyDGV_tb")).Text;
-        string PrincipalFirst = ((TextBox)school_dgv.Rows[e.RowIndex].FindControl("principalFirstDGV_tb")).Text;
-        string PrincipalLast = ((TextBox)school_dgv.Rows[e.RowIndex].FindControl("principalLastDGV_tb")).Text;
-        string AdminEmail = ((TextBox)school_dgv.Rows[e.RowIndex].FindControl("administratorEmailDGV_tb")).Text;
-        string Phone = ((TextBox)school_dgv.Rows[e.RowIndex].FindControl("phoneDGV_tb")).Text;
-        string Hours = ((TextBox)school_dgv.Rows[e.RowIndex].FindControl("hoursDGV_tb")).Text;
-        string SchoolType = ((DropDownList)school_dgv.Rows[e.RowIndex].FindControl("schoolTypeDGV_ddl")).SelectedValue;
-        string Notes = ((TextBox)school_dgv.Rows[e.RowIndex].FindControl("notesDGV_tb")).Text;
-        string LiaisonName = ((TextBox)school_dgv.Rows[e.RowIndex].FindControl("liaisonNameDGV_tb")).Text;
+        int ID = Convert.ToInt32(dgvSchool.DataKeys[e.RowIndex].Values[0]); // Gets id number
+        string SchoolName = ((TextBox)dgvSchool.Rows[e.RowIndex].FindControl("tbSchoolNameDGV")).Text;
+        string Address = ((TextBox)dgvSchool.Rows[e.RowIndex].FindControl("tbAddressDGV")).Text;
+        string City = ((TextBox)dgvSchool.Rows[e.RowIndex].FindControl("tbCityDGV")).Text;
+        string Zip = ((TextBox)dgvSchool.Rows[e.RowIndex].FindControl("tbZipDGV")).Text;
+        string County = ((TextBox)dgvSchool.Rows[e.RowIndex].FindControl("tbCountyDGV")).Text;
+        string PrincipalFirst = ((TextBox)dgvSchool.Rows[e.RowIndex].FindControl("tbPrincipalFirstDGV")).Text;
+        string PrincipalLast = ((TextBox)dgvSchool.Rows[e.RowIndex].FindControl("tbPrincipalLastDGV")).Text;
+        string AdminEmail = ((TextBox)dgvSchool.Rows[e.RowIndex].FindControl("tbAdministratorEmailDGV")).Text;
+        string Phone = ((TextBox)dgvSchool.Rows[e.RowIndex].FindControl("tbPhoneDGV")).Text;
+        string Hours = ((TextBox)dgvSchool.Rows[e.RowIndex].FindControl("tbHoursDGV")).Text;
+        string SchoolType = ((DropDownList)dgvSchool.Rows[e.RowIndex].FindControl("ddlSchoolTypeDGV")).SelectedValue;
+        string Notes = ((TextBox)dgvSchool.Rows[e.RowIndex].FindControl("tbNotesDGV")).Text;
+        string LiaisonName = ((TextBox)dgvSchool.Rows[e.RowIndex].FindControl("tbLiaisonNameDGV")).Text;
 
-        //try
-        //{
+        try
+        {
             using (SqlConnection con = new SqlConnection(ConnectionString))
             {
                 using (SqlCommand cmd = new SqlCommand("UPDATE schoolInfoFP SET schoolName=@schoolName, principalFirst=@principalFirst, principalLast=@principalLast, phone=@phone, schoolHours=@schoolHours, schoolType=@schoolType, administratorEmail=@adminEmail, notes=@notes, address=@address, city=@city, zip=@zip, county=@county, liaisonName=@liaisonName WHERE ID=@Id"))
                 {
                     cmd.Parameters.AddWithValue("@ID", ID);
-                cmd.Parameters.AddWithValue("@schoolName", SchoolName);
-                cmd.Parameters.AddWithValue("@principalFirst", PrincipalFirst);
+                    cmd.Parameters.AddWithValue("@schoolName", SchoolName);
+                    cmd.Parameters.AddWithValue("@principalFirst", PrincipalFirst);
                     cmd.Parameters.AddWithValue("@principalLast", PrincipalLast);
                     cmd.Parameters.AddWithValue("@phone", Phone);
                     cmd.Parameters.AddWithValue("@schoolHours", Hours);
@@ -153,59 +152,59 @@ public partial class Edit_School : Page
                     con.Close();
                 }
             }
-            school_dgv.EditIndex = -1;       // reset the grid after editing
+            dgvSchool.EditIndex = -1;       // reset the grid after editing
             LoadData();
-        //}
-        //catch
-        //{
-        //    error_lbl.Text = "Error in rowUpdating. Cannot update row.";
-        //    return;
-        //}
-    }
-
-    protected void school_dgv_RowEditing(object sender, GridViewEditEventArgs e)
-    {
-        school_dgv.EditIndex = e.NewEditIndex;
-        LoadData();
-    }
-
-    protected void school_dgv_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
-    {
-        school_dgv.EditIndex = -1;
-        LoadData();
-    }
-
-    protected void school_dgv_PageIndexChanging(object sender, GridViewPageEventArgs e)
-    {
-        school_dgv.PageIndex = e.NewPageIndex;
-        LoadData();
-    }
-
-
-
-    protected void schoolName_ddl_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        if (schoolName_ddl.SelectedIndex != 0)
+        }
+        catch
         {
-            search_tb.Text = "";
+            lblError.Text = "Error in rowUpdating. Cannot update row.";
+            return;
+        }
+    }
+
+    protected void dgvSchool_RowEditing(object sender, GridViewEditEventArgs e)
+    {
+        dgvSchool.EditIndex = e.NewEditIndex;
+        LoadData();
+    }
+
+    protected void dgvSchool_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+    {
+        dgvSchool.EditIndex = -1;
+        LoadData();
+    }
+
+    protected void dgvSchool_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        dgvSchool.PageIndex = e.NewPageIndex;
+        LoadData();
+    }
+
+
+
+    protected void ddlSchoolName_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (ddlSchoolName.SelectedIndex != 0)
+        {
+            tbSearch.Text = "";
             LoadData();
         }    
     }
 
-    protected void search_btn_Click(object sender, EventArgs e)
+    protected void btnSearch_Click(object sender, EventArgs e)
     {
-        if (search_tb.Text != "")
+        if (tbSearch.Text != "")
         {
-            schoolName_ddl.SelectedIndex = 0;
+            ddlSchoolName.SelectedIndex = 0;
             LoadData();
         }
         else
         {
-            error_lbl.Text = "Please enter a school name to search.";
+            lblError.Text = "Please enter a school name to search.";
         }
     }
 
-    protected void refresh_btn_Click(object sender, EventArgs e)
+    protected void btnRefresh_Click(object sender, EventArgs e)
     {
         Response.Redirect("Edit_school.aspx");
     }

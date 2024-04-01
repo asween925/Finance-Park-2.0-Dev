@@ -25,7 +25,7 @@ public partial class School_Report : Page
     public School_Report()
     {
         ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
-        VisitID = VisitData.GetVisitID();
+        
         Load += Page_Load;
     }
 
@@ -40,10 +40,10 @@ public partial class School_Report : Page
         if (!IsPostBack)
         {
             //Load schools DDL
-            SchoolData.LoadSchoolsDDL(schoolName_ddl);
+            SchoolData.LoadSchoolsDDL(ddlSchoolName);
 
             // Populating school header
-            headerSchoolName_lbl.Text = (SchoolHeader.GetSchoolHeader()).ToString();
+            lblHeaderSchoolName.Text = (SchoolHeader.GetSchoolHeader()).ToString();
 
             //Load data
             LoadData();
@@ -55,20 +55,20 @@ public partial class School_Report : Page
         string SQLStatement = "SELECT * FROM schoolInfoFP";
 
         //Clear error
-        error_lbl.Text = "";
+        lblError.Text = "";
 
         //Clear table
-        schools_dgv.DataSource = null;
-        schools_dgv.DataBind();
+        dgvSchools.DataSource = null;
+        dgvSchools.DataBind();
 
         //If loading by the DDL, add school name to search query
-        if (schoolName_ddl.SelectedIndex != 0)
+        if (ddlSchoolName.SelectedIndex != 0)
         {
-            SQLStatement = SQLStatement + " WHERE schoolName='" + schoolName_ddl.SelectedValue + "'";
+            SQLStatement = SQLStatement + " WHERE schoolName='" + ddlSchoolName.SelectedValue + "'";
         }
-        else if (search_tb.Text != "")
+        else if (tbSearch.Text != "")
         {
-            SQLStatement = SQLStatement + " WHERE schoolName LIKE '%" + search_tb.Text + "%'";
+            SQLStatement = SQLStatement + " WHERE schoolName LIKE '%" + tbSearch.Text + "%'";
         }
         else
         {
@@ -82,8 +82,8 @@ public partial class School_Report : Page
             con.Open();
             Review_sds.ConnectionString = ConnectionString;
             Review_sds.SelectCommand = SQLStatement;
-            schools_dgv.DataSource = Review_sds;
-            schools_dgv.DataBind();
+            dgvSchools.DataSource = Review_sds;
+            dgvSchools.DataBind();
 
             cmd.Dispose();
             con.Close();
@@ -91,43 +91,43 @@ public partial class School_Report : Page
         }
         catch
         {
-            error_lbl.Text = "Error in LoadData(). Cannot load schoolInfo table.";
+            lblError.Text = "Error in LoadData(). Cannot load schoolInfo table.";
             return;
         }
     }
 
 
 
-    protected void schools_dgv_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    protected void dgvSchools_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
-        schools_dgv.PageIndex = e.NewPageIndex;
+        dgvSchools.PageIndex = e.NewPageIndex;
         LoadData();
     }
 
 
 
-    protected void search_btn_Click(object sender, EventArgs e)
+    protected void btnSearch_Click(object sender, EventArgs e)
     {
-        if (search_tb.Text != "")
+        if (tbSearch.Text != "")
         {
             LoadData();
-            schoolName_ddl.SelectedIndex = 0;
+            ddlSchoolName.SelectedIndex = 0;
         }
         else
         {
-            error_lbl.Text = "Please enter a search keyword and press 'Search'.";
+            lblError.Text = "Please enter a search keyword and press 'Search'.";
             return;
         }
     }
 
-    protected void refresh_btn_Click(object sender, EventArgs e)
+    protected void btnRefresh_Click(object sender, EventArgs e)
     {
         Response.Redirect("school_report.aspx");
     }
 
-    protected void schoolName_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlSchoolName_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (schoolName_ddl.SelectedIndex != 0)
+        if (ddlSchoolName.SelectedIndex != 0)
         {
             LoadData();
         }

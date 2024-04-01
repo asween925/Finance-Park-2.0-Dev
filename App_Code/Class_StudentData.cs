@@ -5,8 +5,7 @@ using System.Web.UI.WebControls;
 
 public partial class Class_StudentData
 {
-    private Class_VisitData VisitID = new Class_VisitData();
-    private int Visit;
+    private Class_VisitData VisitData = new Class_VisitData();
     private SqlConnection con = new SqlConnection();
     private SqlCommand cmd = new SqlCommand();
     private SqlDataReader dr;
@@ -20,7 +19,6 @@ public partial class Class_StudentData
 
     public Class_StudentData()
     {
-        Visit = VisitID.GetVisitID();
         connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
     }
 
@@ -279,7 +277,7 @@ public partial class Class_StudentData
         con.Open();
         cmd = new SqlCommand();
         cmd.Connection = con;
-        cmd.CommandText = @"SELECT s.id, a.pin, s.lunchServed, s.lunchTicket 
+        cmd.CommandText = @"SELECT s.id, a.pin, s.lunchServed
                               FROM studentInfoFP s
                                 JOIN accountNumsFP a
                                 ON a.accountNum = s.accountNum

@@ -19,7 +19,7 @@
     <form id="EMS_Form" runat="server">
 
         <%--Header information--%>
-        <header class="headerTop no-print"><a style="float: left; padding-top: 2px;">Finance Park 2.0</a><a style="float: right; padding-right: 30px; padding-top: 2px;"><asp:Label ID="headerSchoolName_lbl" Text="School Name Here" runat="server"></asp:Label></a></header>
+        <header class="headerTop no-print"><a style="float: left; padding-top: 2px;">Finance Park 2.0</a><a style="float: right; padding-right: 30px; padding-top: 2px;"><asp:Label ID="lblHeaderSchoolName" Text="School Name Here" runat="server"></asp:Label></a></header>
 
         <%--Navigation bar--%>
         <div id="nav-placeholder">
@@ -39,27 +39,27 @@
                 Enter all of the information below. The required section must all be filled out before finishing. Click 'Submit' when you are finished.
             </h3>
             <p>School Name (Required):</p>
-            <asp:TextBox ID="schoolName_tb" runat="server" CssClass="textbox"></asp:TextBox>&ensp;<asp:Label ID="error_lbl" runat="server" Font-Bold="true" Font-Size="X-Large" ForeColor="Red"></asp:Label>
+            <asp:TextBox ID="tbSchoolName" runat="server" CssClass="textbox"></asp:TextBox>&ensp;<asp:Label ID="lblError" runat="server" Font-Bold="true" Font-Size="X-Large" ForeColor="Red"></asp:Label>
             <p>Phone Number: (Required)</p>
-            <asp:TextBox ID="phoneNum_tb" runat="server" TextMode="Phone" CssClass="textbox"></asp:TextBox>      
+            <asp:TextBox ID="tbPhoneNum" runat="server" TextMode="Phone" CssClass="textbox"></asp:TextBox>      
             <p>Address:</p>
-            <asp:TextBox ID="address_tb" runat="server" CssClass="textbox"></asp:TextBox>
+            <asp:TextBox ID="tbAddress" runat="server" CssClass="textbox"></asp:TextBox>
             <p>City:</p>
-            <asp:TextBox ID="city_tb" runat="server" CssClass="textbox"></asp:TextBox>
+            <asp:TextBox ID="tbCity" runat="server" CssClass="textbox"></asp:TextBox>
             <p>Zip Code:</p>
-            <asp:TextBox ID="zip_tb" runat="server" TextMode="number" Width="70px" CssClass="textbox"></asp:Textbox>
+            <asp:TextBox ID="tbZip" runat="server" TextMode="number" Width="70px" CssClass="textbox"></asp:Textbox>
             <p>County:</p>
-            <asp:TextBox ID="county_tb" runat="server" CssClass="textbox"></asp:TextBox>
+            <asp:TextBox ID="tbCounty" runat="server" CssClass="textbox"></asp:TextBox>
             <p>Principal First Name: </p>
-            <asp:TextBox ID="principalFirst_tb" runat="server" CssClass="textbox"></asp:Textbox>
+            <asp:TextBox ID="tbPrincipalFirst" runat="server" CssClass="textbox"></asp:Textbox>
             <p>Principal Last Name:</p>
-            <asp:TextBox ID="principalLast_tb" runat="server" CssClass="textbox"></asp:Textbox>                             
+            <asp:TextBox ID="tbPrincipalLast" runat="server" CssClass="textbox"></asp:Textbox>                             
             <p>School Number:</p>
-            <asp:TextBox ID="schoolNum_tb" runat="server" TextMode="Number" CssClass="textbox"></asp:TextBox>
+            <asp:TextBox ID="tbSchoolNum" runat="server" TextMode="Number" CssClass="textbox"></asp:TextBox>
             <p>School Hours:</p>
-            <asp:TextBox ID="schoolHours_tb" runat="server" CssClass="textbox"></asp:Textbox>
+            <asp:TextBox ID="tbSchoolHours" runat="server" CssClass="textbox"></asp:Textbox>
             <p>School Type:</p>
-            <asp:DropDownList CssClass="ddl" ID="schoolType_ddl" runat="server">
+            <asp:DropDownList CssClass="ddl" ID="tbSchoolType" runat="server">
                 <asp:ListItem>Public</asp:ListItem>
                 <asp:ListItem>Private</asp:ListItem>
                 <asp:ListItem>Charter</asp:ListItem>
@@ -67,17 +67,17 @@
                 <asp:ListItem>Religious</asp:ListItem>
             </asp:DropDownList>
             <p>Administrator Email:</p>
-            <asp:TextBox ID="adminEmail_tb" runat="server" TextMode="Email" CssClass="textbox"></asp:TextBox>
+            <asp:TextBox ID="tbAdminEmail" runat="server" TextMode="Email" CssClass="textbox"></asp:TextBox>
             <p>Notes:</p>
-            <asp:TextBox ID="notes_tb" runat="server" CssClass="textbox"></asp:Textbox>           
+            <asp:TextBox ID="tbNotes" runat="server" CssClass="textbox"></asp:Textbox>           
             <p>Liaison:</p>
-            <asp:TextBox ID="liaison_tb" runat="server" CssClass="textbox"></asp:Textbox>
+            <asp:TextBox ID="tbLiaison" runat="server" CssClass="textbox"></asp:Textbox>
             <br /><br />         
-            <asp:Button ID="Submit_btn" runat="server" Text="Submit" CssClass="button" OnClick="Submit_btn_Click" />
+            <asp:Button ID="btnSubmit" runat="server" Text="Submit" CssClass="button" OnClick="btnSubmit_Click" />
             <br /><br />          
         </div>
 
-        <asp:HiddenField ID="currentVisitID_hf" runat="server" />
+        <asp:HiddenField ID="hfCurrentVisitID" runat="server" />
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="../Scripts/Scripts.js" type="text/javascript"></script>

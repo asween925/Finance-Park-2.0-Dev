@@ -14,36 +14,22 @@ public partial class Class_VisitData
     private SqlCommand cmd = new SqlCommand();
     private string connection_string;
 
-    public int GetVisitID()
+    public object GetVisitID()
     {
         string connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
-        SqlDataReader dr;
-        string dateSQL = "SELECT ID FROM visitInfoFP WHERE visitDate = '" + DateTime.Now.ToShortDateString() + "'";
-        int returnValue = 0;
-        var con = new SqlConnection();
-        var cmd = new SqlCommand();
+        string returnValue = "0";
 
         con.ConnectionString = connection_string;
         con.Open();
-        cmd.CommandText = dateSQL;
+        cmd.CommandText = "SELECT ID FROM visitInfoFP WHERE visitDate = '" + DateTime.Now + "'";
         cmd.Connection = con;
         dr = cmd.ExecuteReader();
 
-
-        if (dr.HasRows)
-        {
             while (dr.Read())
             {
-                returnValue = Convert.ToInt16(dr["ID"]);
-            }
-                
-        }
-        else
-        {
-            // No visit on current date
-            returnValue = 0;
+                returnValue = dr["ID"].ToString();
+            }              
 
-        }
         cmd.Dispose();
         con.Close();
 
@@ -213,6 +199,35 @@ public partial class Class_VisitData
         con.Close();
 
         return ReturnData;
+    }
+
+
+    //Check if a visit id exists for a visit date and returns a confirmation message if there isn't one
+    public object ShowVisitConfirmation(string VisitDate)
+    {
+        string Confirm;
+        string connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
+
+        con.ConnectionString = connection_string;
+        con.Open();
+        cmd.CommandText = "SELECT id FROM visitInfoFP WHERE visitDate='" + VisitDate + "'";
+        cmd.Connection = con;
+        dr = cmd.ExecuteReader();
+
+        if (dr.HasRows)
+        {
+            Confirm = "";
+        }
+        else
+        {
+            // No visit on current date
+            Confirm = "No visit date scheduled for selected date.";
+
+        }
+        cmd.Dispose();
+        con.Close();
+
+        return Confirm;
     }
 
 }

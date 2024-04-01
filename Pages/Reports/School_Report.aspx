@@ -19,7 +19,7 @@
     <form id="EMS_Form" runat="server">
 
         <%--Header information--%>
-        <header class="headerTop no-print"><a style="float: left; padding-top: 2px;">Finance Park 2.0</a><a style="float: right; padding-right: 30px; padding-top: 2px;"><asp:Label ID="headerSchoolName_lbl" Text="School Name Here" runat="server"></asp:Label></a></header>
+        <header class="headerTop no-print"><a style="float: left; padding-top: 2px;">Finance Park 2.0</a><a style="float: right; padding-right: 30px; padding-top: 2px;"><asp:Label ID="lblHeaderSchoolName" Text="School Name Here" runat="server"></asp:Label></a></header>
 
         <%--Navigation bar--%>
         <div id="nav-placeholder">
@@ -37,16 +37,16 @@
             <h3 class="no-print">This page displays all schools in the database. Use the drop down menu to select a school you would like to view.
             </h3>
             <p>School Name:</p>
-            <asp:DropDownList ID="schoolName_ddl" runat="server" CssClass="ddl" AutoPostBack="true" OnSelectedIndexChanged="schoolName_ddl_SelectedIndexChanged"></asp:DropDownList> &ensp;<asp:Label ID="error_lbl" runat="server" Font-Size="X-Large" ForeColor="Red"></asp:Label>
+            <asp:DropDownList ID="ddlSchoolName" runat="server" CssClass="ddl" AutoPostBack="true" OnSelectedIndexChanged="ddlSchoolName_SelectedIndexChanged"></asp:DropDownList> &ensp;<asp:Label ID="lblError" runat="server" Font-Size="X-Large" ForeColor="Red"></asp:Label>
             <p>Type in School Name:</p>
-            <asp:TextBox ID="search_tb" runat="server" CssClass="textbox"></asp:TextBox> &nbsp;&nbsp; <asp:Button ID="search_btn" runat="server" CssClass="button" text="Search" OnClick="search_btn_Click"/>     
+            <asp:TextBox ID="tbSearch" runat="server" CssClass="textbox"></asp:TextBox> &nbsp;&nbsp; <asp:Button ID="btnSearch" runat="server" CssClass="button" text="Search" OnClick="btnSearch_Click"/>     
             <br /><br />            
-            <asp:Button ID="refresh_btn" runat="server" CssClass="button" text="Show All Schools" OnClick="refresh_btn_Click"/>
+            <asp:Button ID="btnRefresh" runat="server" CssClass="button" text="Show All Schools" OnClick="btnRefresh_Click"/>
             <br /><br />         
 
              <%--Print Out Table--%>           
             <div>
-                <asp:GridView ID="schools_dgv" runat="server" AutoGenerateColumns="False" PageSize="10" AllowPaging="true" CellPadding="3" Height="50" Font-Size="Medium" Visible="true" OnPageIndexChanging="schools_dgv_PageIndexChanging" PagerStyle-CssClass="pager" HeaderStyle-CssClass="header" RowStyle-CssClass="rows">
+                <asp:GridView ID="dgvSchools" runat="server" AutoGenerateColumns="False" PageSize="10" AllowPaging="true" CellPadding="3" Height="50" Font-Size="Medium" Visible="true" OnPageIndexChanging="dgvSchools_PageIndexChanging" PagerStyle-CssClass="pager" HeaderStyle-CssClass="header" RowStyle-CssClass="rows">
                     <Columns>
                         <asp:BoundField DataField="ID" HeaderText="ID" ReadOnly="true" Visible="true" />
                         <asp:BoundField DataField="schoolName" HeaderText="School Name" ReadOnly="true" Visible="true" />
@@ -69,7 +69,7 @@
             </div>           
         </div>
         
-        <asp:HiddenField ID="visitdate_hf" runat="server" />
+        <asp:HiddenField ID="hfVisitDate" runat="server" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="Scripts.js"></script>
         <script>
@@ -83,7 +83,7 @@
 
         <script type="text/javascript" language="javascript">
             $(document).ready(function () {
-                $('#<%=schools_dgv.ClientID %>').Scrollable();
+                $('#<%=dgvSchools.ClientID %>').Scrollable();
             })
         </script>
 

@@ -26,7 +26,7 @@ public partial class Create_Teacher : Page
     public Create_Teacher()
     {
         ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
-        VisitID = VisitData.GetVisitID();
+        
         Load += Page_Load;
     }
 
@@ -43,30 +43,30 @@ public partial class Create_Teacher : Page
             // Assign current visit ID to hidden field
             if (VisitID != 0)
             {
-                currentVisitID_hf.Value = VisitID.ToString();
+                hfCurrentVisitID.Value = VisitID.ToString();
             }
 
             // Populating school header
-            headerSchoolName_lbl.Text = (SchoolHeader.GetSchoolHeader()).ToString();
+            lblHeaderSchoolName.Text = (SchoolHeader.GetSchoolHeader()).ToString();
 
             //Populate school name DDL
-            SchoolData.LoadSchoolsDDL(schoolName_ddl);
+            SchoolData.LoadSchoolsDDL(ddlSchoolName);
         }
     }
 
     public void Submit()
     {
-        string FirstName = firstName_tb.Text;
-        string LastName = lastName_tb.Text;
-        string SchoolName = schoolName_ddl.SelectedValue;
+        string FirstName = tbFirstName.Text;
+        string LastName = tbLastName.Text;
+        string SchoolName = ddlSchoolName.SelectedValue;
         string SchoolID;
-        string Email = email_tb.Text;
-        bool Contact = contact_chk.Checked;
+        string Email = tbEmail.Text;
+        bool Contact = chkContact.Checked;
 
         // Checks what spots are empty and replaces select ones
-        if (FirstName == "" & LastName == "" & schoolName_ddl.SelectedIndex == 0 & Email == "")
+        if (FirstName == "" & LastName == "" & ddlSchoolName.SelectedIndex == 0 & Email == "")
         {
-            error_lbl.Text = "Please select a school name and enter a last name and an email before submiting.";
+            lblError.Text = "Please select a school name and enter a last name and an email before submiting.";
             return;
         }
         else if (FirstName == "")
@@ -75,25 +75,25 @@ public partial class Create_Teacher : Page
         }
         else if (LastName == "")
         {
-            error_lbl.Text = "Please enter a last name for the teacher.";
+            lblError.Text = "Please enter a last name for the teacher.";
             return;
         }
-        else if (schoolName_ddl.SelectedIndex == 0)
+        else if (ddlSchoolName.SelectedIndex == 0)
         {
-            error_lbl.Text = "Please select a school name from the drop down menu.";
+            lblError.Text = "Please select a school name from the drop down menu.";
             return;
         }
         else if (Email == "")
         {
-            error_lbl.Text = "Please enter a valid email.";
+            lblError.Text = "Please enter a valid email.";
             return;
         }
 
-        // Checks if email_tb is an address
+        // Checks if tbEmail is an address
         if (!(Email.Contains("@")) & !(Email.Contains(".")))
         {
             // Not an email. Show message
-            error_lbl.Text = "Not a valid email address.";
+            lblError.Text = "Not a valid email address.";
             return;
         }
 
@@ -113,7 +113,7 @@ public partial class Create_Teacher : Page
                 {
                     if (dr.HasRows == true)
                     {
-                        error_lbl.Text = "A teacher with that email address is already in the database. Please view the 'Edit Teacher' page to make changes to the teacher.";
+                        lblError.Text = "A teacher with that email address is already in the database. Please view the 'Edit Teacher' page to make changes to the teacher.";
                         return;
                     }
                 }
@@ -141,13 +141,13 @@ public partial class Create_Teacher : Page
                 meta.HttpEquiv = "Refresh";
                 meta.Content = "3;url=create_teacher.aspx";
                 this.Page.Controls.Add(meta);
-                error_lbl.Text = "Submission successful! Refreshing page...";
+                lblError.Text = "Submission successful! Refreshing page...";
 
             }
         }
     }
 
-    protected void Submit_btn_Click(object sender, EventArgs e)
+    protected void btnSubmit_Click(object sender, EventArgs e)
     {
         Submit();
     }

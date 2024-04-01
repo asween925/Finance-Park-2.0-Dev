@@ -26,7 +26,7 @@ public partial class Template_Student : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         //Get total businesses
-        totalBusiness_lbl.Text = BusinessData.GetTotalBusinesses().ToString();
+        lblTotalBusiness.Text = BusinessData.GetTotalBusinesses().ToString();
     }
 
 }

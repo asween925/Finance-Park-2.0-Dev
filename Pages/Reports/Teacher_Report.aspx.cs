@@ -26,7 +26,7 @@ public partial class Teacher_Report : Page
     public Teacher_Report()
     {
         ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
-        VisitID = VisitData.GetVisitID();
+        
         Load += Page_Load;
     }
 
@@ -41,10 +41,10 @@ public partial class Teacher_Report : Page
         if (!IsPostBack)
         {
             //Load school name DDL
-            SchoolData.LoadSchoolsDDL(schoolName_ddl);
+            SchoolData.LoadSchoolsDDL(ddlSchoolName);
 
             // Populating school header
-            headerSchoolName_lbl.Text = (SchoolHeader.GetSchoolHeader()).ToString();
+            lblHeaderSchoolName.Text = (SchoolHeader.GetSchoolHeader()).ToString();
 
             //Load data
             LoadData();
@@ -57,22 +57,22 @@ public partial class Teacher_Report : Page
         string SQLStatement = "SELECT t.id, s.schoolName, t.firstName, t.lastName, t.email, t.password, t.contact, v.visitDate as currVisitDate, v2.visitDate as prevVisitDate FROM teacherInfoFP t LEFT JOIN schoolInfoFP s ON s.id = t.schoolID LEFT JOIN visitInfoFP v ON v.id = t.currVisitID LEFT JOIN visitInfoFP v2 ON v2.id = t.prevVisitID";
 
         //Clear teacher table
-        teachers_dgv.DataSource = null;
-        teachers_dgv.DataBind();
+        dgvTeachers.DataSource = null;
+        dgvTeachers.DataBind();
 
         //Clear error label
-        error_lbl.Text = "";
+        lblError.Text = "";
 
         //Check if school name DDL or search field is entered
-        if (schoolName_ddl.SelectedIndex != 0)
+        if (ddlSchoolName.SelectedIndex != 0)
         {
             //get school id from name
-            //SchoolID = SchoolData.GetSchoolID(schoolName_ddl.SelectedValue).ToString();
-            SQLStatement = SQLStatement + " WHERE s.schoolName='" + schoolName_ddl.SelectedValue + "'";
+            //SchoolID = SchoolData.GetSchoolID(ddlSchoolName.SelectedValue).ToString();
+            SQLStatement = SQLStatement + " WHERE s.schoolName='" + ddlSchoolName.SelectedValue + "'";
         }
-        else if (search_tb.Text != "")
+        else if (tbSearch.Text != "")
         {
-            SQLStatement = SQLStatement + " WHERE t.firstName LIKE '%" + search_tb.Text + "%' OR t.lastName LIKE '%" + search_tb.Text + "%'";
+            SQLStatement = SQLStatement + " WHERE t.firstName LIKE '%" + tbSearch.Text + "%' OR t.lastName LIKE '%" + tbSearch.Text + "%'";
         }
         else
         {
@@ -80,59 +80,59 @@ public partial class Teacher_Report : Page
         }
 
         //Load teacherInfoFP table
-        //try
-        //{
+        try
+        {
             con.ConnectionString = ConnectionString;
             con.Open();
             Review_sds.ConnectionString = ConnectionString;
             Review_sds.SelectCommand = SQLStatement;
-            teachers_dgv.DataSource = Review_sds;
-            teachers_dgv.DataBind();
+            dgvTeachers.DataSource = Review_sds;
+            dgvTeachers.DataBind();
 
             cmd.Dispose();
             con.Close();
 
-        //}
-        //catch
-        //{
-        //    error_lbl.Text = "Error in LoadData(). Cannot load teacherInfo table.";
-        //    return;
-        //}
+        }
+        catch
+        {
+            lblError.Text = "Error in LoadData(). Cannot load teacherInfo table.";
+            return;
+        }
     }
 
 
 
-    protected void teachers_dgv_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    protected void dgvTeachers_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
-        teachers_dgv.PageIndex = e.NewPageIndex;
+        dgvTeachers.PageIndex = e.NewPageIndex;
         LoadData();
     }
 
 
 
-    protected void schoolName_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlSchoolName_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (schoolName_ddl.SelectedIndex != 0)
+        if (ddlSchoolName.SelectedIndex != 0)
         {
-            search_tb.Text = "";
+            tbSearch.Text = "";
             LoadData();
         }
     }
 
-    protected void search_btn_Click(object sender, EventArgs e)
+    protected void btnSearch_Click(object sender, EventArgs e)
     {
-        if (search_tb.Text != "")
+        if (tbSearch.Text != "")
         {
-            schoolName_ddl.SelectedIndex = 0;
+            ddlSchoolName.SelectedIndex = 0;
             LoadData();
         }
         else
         {
-            error_lbl.Text = "Please enter a teacher name to search.";
+            lblError.Text = "Please enter a teacher name to search.";
         }
     }
 
-    protected void refresh_btn_Click(object sender, EventArgs e)
+    protected void btnRefresh_Click(object sender, EventArgs e)
     {
         Response.Redirect("teacher_report.aspx");
     }

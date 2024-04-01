@@ -35,14 +35,14 @@ public partial class Sim_Research : System.Web.UI.Page
 
 
 
-    protected void enter_btn_Click(object sender, EventArgs e)
+    protected void btnEnter_Click(object sender, EventArgs e)
     {
         string ID;
 
         //Get ID from textbox if not blank
-        if (businessID_tb.Text != "")
+        if (tbBusinessID.Text != "")
         {
-            ID = businessID_tb.Text;
+            ID = tbBusinessID.Text;
 
             //Check if ID matches the kiosk ID of a business in the DB
             try
@@ -60,28 +60,28 @@ public partial class Sim_Research : System.Web.UI.Page
                 else
                 {
                     Page.ClientScript.RegisterStartupScript(GetType(), "TogglePopup", "toggle();", true);
-                    popupText_lbl.ForeColor = System.Drawing.Color.Red;
-                    popupText_lbl.Text = "ID is not tied to a business. Check the number again before entering.";
+                    lblPopupText.ForeColor = System.Drawing.Color.Red;
+                    lblPopupText.Text = "ID is not tied to a business. Check the number again before entering.";
                 }
         }
             catch
             {
                 Page.ClientScript.RegisterStartupScript(GetType(), "TogglePopup", "toggle();", true);
-                popupText_lbl.ForeColor = System.Drawing.Color.Red;
-                popupText_lbl.Text = "Could not detect business ID in database. Please find a staff member.";
+                lblPopupText.ForeColor = System.Drawing.Color.Red;
+                lblPopupText.Text = "Could not detect business ID in database. Please find a staff member.";
                 return;
             }
     }
         else
         {
             Page.ClientScript.RegisterStartupScript(GetType(), "TogglePopup", "toggle();", true);
-            popupText_lbl.ForeColor = System.Drawing.Color.Red;
-            popupText_lbl.Text = "No ID entered. Please enter a business ID before submitting.";
+            lblPopupText.ForeColor = System.Drawing.Color.Red;
+            lblPopupText.Text = "No ID entered. Please enter a business ID before submitting.";
         }
         
     }
 
-    protected void cancel_btn_Click(object sender, EventArgs e)
+    protected void btnCancel_Click(object sender, EventArgs e)
     {
         //Refresh page
         Response.Redirect("Sim_Research.aspx");

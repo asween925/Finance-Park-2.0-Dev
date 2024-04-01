@@ -29,7 +29,7 @@ public partial class Delivery_Ticket : Page
     public Delivery_Ticket()
     {
         ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
-        VisitID = VisitData.GetVisitID();
+        
         Load += Page_Load;
     }
 
@@ -46,11 +46,11 @@ public partial class Delivery_Ticket : Page
             // Assign current visit ID to hidden field
             if (VisitID != 0)
             {
-                currentVisitID_hf.Value = VisitID.ToString();
+                hfCurrentVisitID.Value = VisitID.ToString();
             }
 
             // Populating school header
-            headerSchoolName_lbl.Text = (SchoolHeader.GetSchoolHeader()).ToString();
+            lblHeaderSchoolName.Text = (SchoolHeader.GetSchoolHeader()).ToString();
 
             //if coming from SVC, automatically load the visit date and school name
             if (URL.Contains("b=")) {
@@ -59,7 +59,7 @@ public partial class Delivery_Ticket : Page
                 string VisitID = Request["b"];
 
                 //Assign visit date to text box
-                visitDate_tb.Text = DateTime.Parse(VisitData.GetVisitDateFromID(VisitID).ToString()).ToString("yyyy-MM-dd");
+                tbVisitDate.Text = DateTime.Parse(VisitData.GetVisitDateFromID(VisitID).ToString()).ToString("yyyy-MM-dd");
 
                 //Load data
                 LoadData();
@@ -68,7 +68,7 @@ public partial class Delivery_Ticket : Page
                 string SchoolID = Request["c"];
 
                 //Assign school to ddl
-                schoolName_ddl.SelectedValue = SchoolData.GetSchoolNameFromID(SchoolID).ToString();
+                ddlSchoolName.SelectedValue = SchoolData.GetSchoolNameFromID(SchoolID).ToString();
 
                 //Load data again
                 LoadData();
@@ -78,27 +78,27 @@ public partial class Delivery_Ticket : Page
 
     public void LoadData()
     {
-        string VisitDate = visitDate_tb.Text;
-        string SchoolName = schoolName_ddl.SelectedValue;
-        string TeacherName = teacherName_ddl.SelectedValue;
+        string VisitDate = tbVisitDate.Text;
+        string SchoolName = ddlSchoolName.SelectedValue;
+        string TeacherName = ddlTeacherName.SelectedValue;
         string ContactTeacher = TeacherData.GetContactTeacher(SchoolData.GetSchoolID(SchoolName).ToString()).ToString();
         string StudentCount = VisitData.LoadVisitInfoFromDate(VisitDate, "studentCount").ToString();
         string Email = "";
 
         //Load public, private, or kits only
-        if (letterType_ddl.SelectedValue == "Public" || letterType_ddl.SelectedValue == "Private")
+        if (ddlLetterType.SelectedValue == "Public" || ddlLetterType.SelectedValue == "Private")
         {
-            pub_div.Visible = true;
-            kit_div.Visible = false;
+            divPub.Visible = true;
+            divKit.Visible = false;
         }
-        else if (letterType_ddl.SelectedValue == "Kits Only")
+        else if (ddlLetterType.SelectedValue == "Kits Only")
         {
-            pub_div.Visible = false;
-            kit_div.Visible = true;
+            divPub.Visible = false;
+            divKit.Visible = true;
         }
 
         //If teacher name is not blank, assign first and last name and get email
-        if (teacherName_ddl.SelectedValue != "")
+        if (ddlTeacherName.SelectedValue != "")
         {
             string TeacherFirst = TeacherName.Split(' ')[0];
             string TeacherLast = TeacherName.Split(' ')[1];
@@ -106,64 +106,64 @@ public partial class Delivery_Ticket : Page
         }
       
         //Assign labels
-        schoolName_lbl.Text = SchoolName;
-        contact_lbl.Text = ContactTeacher;
-        teacherName_lbl.Text = TeacherName;
+        lblSchoolName.Text = SchoolName;
+        lblContact.Text = ContactTeacher;
+        lblTeacherName.Text = TeacherName;
     }
 
 
 
-    protected void visitDate_tb_TextChanged(object sender, EventArgs e)
+    protected void tbVisitDate_TextChanged(object sender, EventArgs e)
     {
-        if (visitDate_tb.Text != "")
+        if (tbVisitDate.Text != "")
         {
             //Check if date is a scheduled visit
-            if (VisitData.GetVisitIDFromDate(visitDate_tb.Text).ToString() != "")
+            if (VisitData.GetVisitIDFromDate(tbVisitDate.Text).ToString() != "")
             {
                 //Make school name div visible
-                schoolName_div.Visible = true;
+                divSchoolName.Visible = true;
 
                 //Load School name DDL
-                SchoolData.LoadVisitingSchoolsDDL(visitDate_tb.Text, schoolName_ddl);
+                SchoolData.LoadVisitingSchoolsDDL(tbVisitDate.Text, ddlSchoolName);
 
                 //Load Data
                 LoadData();
             }
             else
             {
-                error_lbl.Text = "Date entered is not scheduled.";
+                lblError.Text = "Date entered is not scheduled.";
                 return;
             }
 
         }
     }
 
-    protected void schoolName_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlSchoolName_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (schoolName_ddl.SelectedIndex != 0)
+        if (ddlSchoolName.SelectedIndex != 0)
         {
             //Make teacher name div visible
-            teacherName_div.Visible = true;
+            divTeacherName.Visible = true;
 
             //Clear teacher ddl
-            teacherName_ddl.Items.Clear();
+            ddlTeacherName.Items.Clear();
 
             //Load teacher name ddl
-            TeacherData.LoadTeacherNamesFromVID(Int16.Parse(VisitData.GetVisitIDFromDate(visitDate_tb.Text).ToString()), Int16.Parse(SchoolData.GetSchoolID(schoolName_ddl.SelectedValue).ToString()), teacherName_ddl);
-            teacherName_ddl.Items.Insert(0, "");
+            TeacherData.LoadTeacherNamesFromVID(Int16.Parse(VisitData.GetVisitIDFromDate(tbVisitDate.Text).ToString()), Int16.Parse(SchoolData.GetSchoolID(ddlSchoolName.SelectedValue).ToString()), ddlTeacherName);
+            ddlTeacherName.Items.Insert(0, "");
 
             //Load Data
             LoadData();
         }
     }
 
-    protected void teacherName_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlTeacherName_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (teacherName_ddl.SelectedIndex != 0)
+        if (ddlTeacherName.SelectedIndex != 0)
         {
             //make letter and letter div visible
-            letterType_div.Visible = true;
-            letter_div.Visible = true;
+            divLetterType.Visible = true;
+            divLetter.Visible = true;
 
             //Load Data
             LoadData();
@@ -171,13 +171,13 @@ public partial class Delivery_Ticket : Page
 
     }
 
-    protected void letterType_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlLetterType_SelectedIndexChanged(object sender, EventArgs e)
     {
         //Load data
         LoadData();
     }
 
-    protected void print_btn_Click(object sender, EventArgs e)
+    protected void btnPrint_Click(object sender, EventArgs e)
     {
         Page.ClientScript.RegisterStartupScript(GetType(), "Print", "print();", true);
     }

@@ -27,12 +27,12 @@ public partial class Template_Student : System.Web.UI.Page
 
     }
 
-    protected void enter_btn_Click(object sender, EventArgs e)
+    protected void btnEnter_Click(object sender, EventArgs e)
     {
 
     }
 
-    protected void cancel_btn_Click(object sender, EventArgs e)
+    protected void btnCancel_Click(object sender, EventArgs e)
     {
 
     }

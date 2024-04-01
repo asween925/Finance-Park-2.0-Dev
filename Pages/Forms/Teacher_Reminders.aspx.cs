@@ -29,7 +29,7 @@ public partial class Teacher_Reminders : Page
     public Teacher_Reminders()
     {
         ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
-        VisitID = VisitData.GetVisitID();
+        
         Load += Page_Load;
     }
 
@@ -45,25 +45,25 @@ public partial class Teacher_Reminders : Page
         {
             
             // Populating school header
-            headerSchoolName_lbl.Text = (SchoolHeader.GetSchoolHeader()).ToString();
+            lblHeaderSchoolName.Text = (SchoolHeader.GetSchoolHeader()).ToString();
         }
     }
 
     public void LoadData()
     {
-        string VisitDate = visitDate_tb.Text;
-        string SchoolName = schoolName_ddl.SelectedValue;
-        string TeacherName = teacherName_ddl.SelectedValue;
+        string VisitDate = tbVisitDate.Text;
+        string SchoolName = ddlSchoolName.SelectedValue;
+        string TeacherName = ddlTeacherName.SelectedValue;
         string VisitTime;
         string DueBy;
 
         //Clear error
-        error_lbl.Text = "";
+        lblError.Text = "";
 
         //Check if visit date exists
         if (VisitData.GetVisitIDFromDate(VisitDate).ToString() == "0")
         {
-            error_lbl.Text = "No visit scheduled for selected date.";
+            lblError.Text = "No visit scheduled for selected date.";
             return;
         }
 
@@ -72,122 +72,122 @@ public partial class Teacher_Reminders : Page
         DueBy = VisitData.LoadVisitInfoFromDate(VisitDate, "dueBy").ToString();
 
         //Make all inivisible
-        genPub_ul.Visible = false;
-        genPri_ul.Visible = false;
-        genDay_ul.Visible = false;
-        volPub_ul.Visible = false;
-        volPri_ul.Visible = false;
-        volDay_ul.Visible = false;
-        tran_div.Visible = false;
-        transportPub_ul.Visible = false;
-        transportPri_ul.Visible = false;
-        lunchPub_ul.Visible = false;
-        lunchPri_ul.Visible = false;
-        lunchHome_ul.Visible = false;
+        ulGenPub.Visible = false;
+        ulGenPri.Visible = false;
+        ulGenDay.Visible = false;
+        ulVolPub.Visible = false;
+        ulVolPri.Visible = false;
+        ulVolDay.Visible = false;
+        divTran.Visible = false;
+        ulTransportPub.Visible = false;
+        ulTransportPri.Visible = false;
+        ulLunchPub.Visible = false;
+        ulLunchPri.Visible = false;
+        ulLunchHome.Visible = false;
 
         //Check if letter type is public or private and make it visible
-        if (letterType_ddl.SelectedValue == "Public")
+        if (ddlLetterType.SelectedValue == "Public")
         {
-            genPub_ul.Visible = true;
-            volPub_ul.Visible = true;
-            lunchPub_ul.Visible = true;
-            tran_div.Visible = true;
-            transportPub_ul.Visible = true;
+            ulGenPub.Visible = true;
+            ulVolPub.Visible = true;
+            ulLunchPub.Visible = true;
+            divTran.Visible = true;
+            ulTransportPub.Visible = true;
         }
-        else if (letterType_ddl.SelectedValue == "Private")
+        else if (ddlLetterType.SelectedValue == "Private")
         {
-            genPri_ul.Visible = true;
-            volPri_ul.Visible = true;
-            lunchPri_ul.Visible = true;
-            tran_div.Visible = true;
-            transportPri_ul.Visible = true;
-            paymentPri_div.Visible = true;     
+            ulGenPri.Visible = true;
+            ulVolPri.Visible = true;
+            ulLunchPri.Visible = true;
+            divTran.Visible = true;
+            ulTransportPri.Visible = true;
+            divPaymentPri.Visible = true;     
         }
-        else if (letterType_ddl.SelectedValue == "Home Schooled")
+        else if (ddlLetterType.SelectedValue == "Home Schooled")
         {
-            genPri_ul.Visible = true;
-            volPri_ul.Visible = true;
-            paymentPri_div.Visible = true;
-            lunchPri_ul.Visible = true;
+            ulGenPri.Visible = true;
+            ulVolPri.Visible = true;
+            divPaymentPri.Visible = true;
+            ulLunchPri.Visible = true;
         }
         else
         {
-            genDay_ul.Visible = true;
-            volDay_ul.Visible = true;
-            tran_div.Visible = true;
-            transportPub_ul.Visible = true;
-            lunchPub_ul.Visible = true;
+            ulGenDay.Visible = true;
+            ulVolDay.Visible = true;
+            divTran.Visible = true;
+            ulTransportPub.Visible = true;
+            ulLunchPub.Visible = true;
         }
 
         //Load visit info
-        schoolName_lbl.Text = SchoolName;
-        teacherName_lbl.Text = TeacherName;
-        visitDate_lbl.Text = DateTime.Parse(VisitDate).ToString("d");
-        numOfStud_lbl.Text = VisitData.LoadVisitInfoFromDate(VisitDate, "studentCount").ToString();
-        numOfVol_lbl.Text = VisitData.LoadVisitInfoFromDate(VisitDate, "vMaxCount").ToString();
-        dueBy_lbl.Text = DateTime.Parse(DueBy).ToString("d");
-        dueByLetter_lbl.Text = DateTime.Parse(DueBy).ToString("d");
-        dueByLetterPri_lbl.Text = DateTime.Parse(DueBy).ToString("d");
-        dueByLetter2Pub_lbl.Text = DateTime.Parse(DueBy).ToString("d");
-        dueByLetterDay_lbl.Text = DateTime.Parse(DueBy).ToString("d");
-        volArrive_lbl.Text = DateTime.Parse(SchoolSchedule.GetVolArrivalTime(VisitTime).ToString()).ToString("t");
-        stuArrive_lbl.Text = DateTime.Parse(SchoolSchedule.GetArrivalTime(VisitTime).ToString()).ToString("t") + " /";
-        stuDismiss_lbl.Text = DateTime.Parse(SchoolSchedule.GetDismissalTime(VisitTime).ToString()).ToString("t");
+        lblSchoolName.Text = SchoolName;
+        lblTeacherName.Text = TeacherName;
+        lblVisitDate.Text = DateTime.Parse(VisitDate).ToString("d");
+        lblNumOfStub.Text = VisitData.LoadVisitInfoFromDate(VisitDate, "studentCount").ToString();
+        lblNumOfVol.Text = VisitData.LoadVisitInfoFromDate(VisitDate, "vMaxCount").ToString();
+        lblDueBy.Text = DateTime.Parse(DueBy).ToString("d");
+        lblDueByLetter.Text = DateTime.Parse(DueBy).ToString("d");
+        lblDueByLetterPri.Text = DateTime.Parse(DueBy).ToString("d");
+        lblDueByLetter2Pub.Text = DateTime.Parse(DueBy).ToString("d");
+        lblDueByLetterDay.Text = DateTime.Parse(DueBy).ToString("d");
+        lblVolArrive.Text = DateTime.Parse(SchoolSchedule.GetVolArrivalTime(VisitTime).ToString()).ToString("t");
+        lblStuArrive.Text = DateTime.Parse(SchoolSchedule.GetArrivalTime(VisitTime).ToString()).ToString("t") + " /";
+        lblStuDismiss.Text = DateTime.Parse(SchoolSchedule.GetDismissalTime(VisitTime).ToString()).ToString("t");
     }   
 
 
 
-    protected void visitDate_tb_TextChanged(object sender, EventArgs e)
+    protected void tbVisitDate_TextChanged(object sender, EventArgs e)
     {
-        if (visitDate_tb.Text != "")
+        if (tbVisitDate.Text != "")
         {
             //Check if date is a scheduled visit
-            if (VisitData.GetVisitIDFromDate(visitDate_tb.Text).ToString() != "")
+            if (VisitData.GetVisitIDFromDate(tbVisitDate.Text).ToString() != "")
             {
                 //Make school name div visible
-                schoolName_div.Visible = true;
+                divSchoolName.Visible = true;
 
                 //Load School name DDL
-                SchoolData.LoadVisitingSchoolsDDL(visitDate_tb.Text, schoolName_ddl);
+                SchoolData.LoadVisitingSchoolsDDL(tbVisitDate.Text, ddlSchoolName);
 
                 //Load Data
                 LoadData();
             }
             else
             {
-                error_lbl.Text = "Date entered is not scheduled.";
+                lblError.Text = "Date entered is not scheduled.";
                 return;
             }
             
         }
     }
 
-    protected void schoolName_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlSchoolName_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (schoolName_ddl.SelectedIndex != 0)
+        if (ddlSchoolName.SelectedIndex != 0)
         {
             //Make teacher name div visible
-            teacherName_div.Visible = true;
+            divTeacherName.Visible = true;
 
             //Clear teacher ddl
-            teacherName_ddl.Items.Clear();
+            ddlTeacherName.Items.Clear();
 
             //Load teacher name ddl
-            TeacherData.LoadTeacherNamesFromVID(Int16.Parse(VisitData.GetVisitIDFromDate(visitDate_tb.Text).ToString()), Int16.Parse(SchoolData.GetSchoolID(schoolName_ddl.SelectedValue).ToString()), teacherName_ddl);
-            teacherName_ddl.Items.Insert(0, "");
+            TeacherData.LoadTeacherNamesFromVID(Int16.Parse(VisitData.GetVisitIDFromDate(tbVisitDate.Text).ToString()), Int16.Parse(SchoolData.GetSchoolID(ddlSchoolName.SelectedValue).ToString()), ddlTeacherName);
+            ddlTeacherName.Items.Insert(0, "");
             
             //Load Data
             LoadData();
         }
     }
 
-    protected void teacherName_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlTeacherName_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (teacherName_ddl.SelectedIndex != 0)
+        if (ddlTeacherName.SelectedIndex != 0)
         {
             //make letter and letter div visible
-            letterType_div.Visible = true;
-            letter_div.Visible = true;
+            divLetterType.Visible = true;
+            divLetter.Visible = true;
 
             //Load Data
             LoadData();
@@ -195,13 +195,13 @@ public partial class Teacher_Reminders : Page
         
     }
 
-    protected void letterType_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlLetterType_SelectedIndexChanged(object sender, EventArgs e)
     {
         //Load data
         LoadData();
     }
 
-    protected void print_btn_Click(object sender, EventArgs e)
+    protected void btnPrint_Click(object sender, EventArgs e)
     {
         Page.ClientScript.RegisterStartupScript(GetType(), "Print", "print();", true);
     }

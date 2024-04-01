@@ -19,7 +19,7 @@
     <form id="EMS_Form" runat="server">
 
         <%--Header information--%>
-        <header class="headerTop no-print"><a style="float: left; padding-top: 2px;">Finance Park 2.0</a><a style="float: right; padding-right: 30px; padding-top: 2px;"><asp:Label ID="headerSchoolName_lbl" Text="School Name Here" runat="server"></asp:Label></a></header>
+        <header class="headerTop no-print"><a style="float: left; padding-top: 2px;">Finance Park 2.0</a><a style="float: right; padding-right: 30px; padding-top: 2px;"><asp:Label ID="lblHeaderSchoolName" Text="School Name Here" runat="server"></asp:Label></a></header>
 
         <%--Navigation bar--%>
         <div id="nav-placeholder">
@@ -36,11 +36,11 @@
             <h2 class="h2">Simulation Report</h2>
             <h3 class="no-print">This page will allow you to view all existing simulations in the database.</h3>
             <p class="no-print">Visit Date:</p>
-            <asp:TextBox ID="visitDate_tb" runat="server" TextMode="Date" AutoPostBack="true" CssClass="textbox no-print" OnTextChanged="visitDate_tb_TextChanged"></asp:TextBox><a class="no-print">&emsp;</a><asp:Label ID="error_lbl" runat="server" Font-Size="X-Large" ForeColor="Red"></asp:Label>
+            <asp:TextBox ID="tbVisitDate" runat="server" TextMode="Date" AutoPostBack="true" CssClass="textbox no-print" OnTextChanged="tbVisitDate_TextChanged"></asp:TextBox><a class="no-print">&emsp;</a><asp:Label ID="lblError" runat="server" Font-Size="X-Large" ForeColor="Red"></asp:Label>
             <p class="no-print">School Name:</p>
-            <asp:DropDownList CssClass="ddl no-print" ID="schoolName_ddl" runat="server" AutoPostBack="true" OnSelectedIndexChanged="schoolName_ddl_SelectedIndexChanged"></asp:DropDownList>
+            <asp:DropDownList CssClass="ddl no-print" ID="ddlSchoolName" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlSchoolName_SelectedIndexChanged"></asp:DropDownList>
             <p class="no-print">Month:</p>
-            <asp:DropDownList ID="month_ddl" runat="server" CssClass="ddl no-print" AutoPostBack="true" OnSelectedIndexChanged="month_ddl_SelectedIndexChanged">
+            <asp:DropDownList ID="ddlMonth" runat="server" CssClass="ddl no-print" AutoPostBack="true" OnSelectedIndexChanged="ddlMonth_SelectedIndexChanged">
                 <asp:ListItem></asp:ListItem>
                 <asp:ListItem>January</asp:ListItem>
                 <asp:ListItem>February</asp:ListItem>
@@ -56,12 +56,12 @@
                 <asp:ListItem>December</asp:ListItem>
             </asp:DropDownList>
             <br class="no-print" /><br class="no-print" />
-            <asp:Button ID="refresh_btn" runat="server" CssClass="button no-print" Text="Show All Visits" OnClick="refresh_btn_Click" /><a class="no-print">&ensp;|&ensp;</a><asp:Button ID="print_btn" runat="server" CssClass="button no-print" Text="Print" />
+            <asp:Button ID="btnRefresh" runat="server" CssClass="button no-print" Text="Show All Visits" OnClick="btnRefresh_Click" /><a class="no-print">&ensp;|&ensp;</a><asp:Button ID="btnPrint" runat="server" CssClass="button no-print" Text="Print" />
             <br class="no-print" /><br class="no-print" />
             
             <%--Table--%>
             <div>
-                <asp:GridView ID="visit_dgv" runat="server" AutoGenerateColumns="False" AllowPaging="True" CellPadding="3" Font-Size="Medium" Height="50px" PageSize="10" OnPageIndexChanging="visit_dgv_PageIndexChanging" PagerStyle-CssClass="pager" HeaderStyle-CssClass="header" RowStyle-CssClass="rows">
+                <asp:GridView ID="dgvVisit" runat="server" AutoGenerateColumns="False" AllowPaging="True" CellPadding="3" Font-Size="Medium" Height="50px" PageSize="10" OnPageIndexChanging="dgvVisit_PageIndexChanging" PagerStyle-CssClass="pager" HeaderStyle-CssClass="header" RowStyle-CssClass="rows">
                     <Columns>
                         <asp:BoundField DataField="id" HeaderText="ID" ReadOnly="true" Visible="true" />
                         <asp:BoundField DataField="visitDate" HeaderText="Visit Date" ReadOnly="true" Visible="true" DataFormatString="{0: MM-dd-yyyy }" />
@@ -82,8 +82,8 @@
 
         </div>
 
-        <asp:HiddenField ID="visitdate_hf" runat="server" />
-        <asp:HiddenField ID="visitdateUpdate_hf" runat="server" />
+        <asp:HiddenField ID="hfVisitDate" runat="server" />
+        <asp:HiddenField ID="hfVisitDateUpdate" runat="server" />
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="Scripts.js"></script>

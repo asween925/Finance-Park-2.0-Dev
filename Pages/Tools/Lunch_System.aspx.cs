@@ -28,7 +28,7 @@ public partial class Lunch_System : Page
     public Lunch_System()
     {
         ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
-        VisitID = VisitData.GetVisitID();
+        
         Load += Page_Load;
     }
 
@@ -45,26 +45,26 @@ public partial class Lunch_System : Page
             // Assign current visit ID to hidden field
             if (VisitID != 0)
             {
-                currentVisitID_hf.Value = VisitID.ToString();
+                hfCurrentVisitID.Value = VisitID.ToString();
             }
 
             // Populating school header
-            headerSchoolName_lbl.Text = (SchoolHeader.GetSchoolHeader()).ToString();
+            lblHeaderSchoolName.Text = (SchoolHeader.GetSchoolHeader()).ToString();
         }
     }
 
     public void LoadData()
     {
-        string VisitDate = visitDate_tb.Text;
+        string VisitDate = tbVisitDate.Text;
         int VisitID;
 
         //Clear error
-        error_lbl.Text = "";
+        lblError.Text = "";
         
         //Check if visit date is an ID
         if (VisitData.GetVisitIDFromDate(VisitDate).ToString() == "0")
         {
-            error_lbl.Text = "Visit date entered is not scheduled.";
+            lblError.Text = "Visit date entered is not scheduled.";
             return;
         }
         else
@@ -73,16 +73,16 @@ public partial class Lunch_System : Page
         }
 
         //Load lunches table
-        lunches_dgv.DataSource = StudentData.LoadLunchesTable(VisitID);
-        lunches_dgv.DataBind();
+        dgvLunches.DataSource = StudentData.LoadLunchesTable(VisitID);
+        dgvLunches.DataBind();
 
         //Make table visible
-        lunches_div.Visible = true;
+        divLunches.Visible = true;
 
         // Highlight row being edited
-        foreach (GridViewRow row in lunches_dgv.Rows)
+        foreach (GridViewRow row in dgvLunches.Rows)
         {
-            if (row.RowIndex == lunches_dgv.EditIndex)
+            if (row.RowIndex == dgvLunches.EditIndex)
             {
                 row.BackColor = ColorTranslator.FromHtml("#ebe534");
                 row.BorderWidth = 2;
@@ -92,61 +92,47 @@ public partial class Lunch_System : Page
 
 
 
-    protected void lunches_dgv_RowUpdating(object sender, GridViewUpdateEventArgs e)
+    protected void dgvLunches_RowUpdating(object sender, GridViewUpdateEventArgs e)
     {
-        int ID = Convert.ToInt32(lunches_dgv.DataKeys[e.RowIndex].Values[0]); // Gets id number
-        bool LunchServed = ((CheckBox)lunches_dgv.Rows[e.RowIndex].FindControl("lunchServedDGV_chk")).Checked;
-        string LunchTicket = ((DropDownList)lunches_dgv.Rows[e.RowIndex].FindControl("lunchTicketDGV_ddl")).SelectedValue;
+        int ID = Convert.ToInt32(dgvLunches.DataKeys[e.RowIndex].Values[0]); // Gets id number
+        bool LunchServed = ((CheckBox)dgvLunches.Rows[e.RowIndex].FindControl("chkLunchServedDGV")).Checked;
 
         try
         {
             SQL.UpdateRow(ID, "lunchServed", LunchServed.ToString(), "studentInfoFP");
-            SQL.UpdateRow(ID, "lunchTicket", LunchTicket, "studentInfoFP");
 
-            lunches_dgv.EditIndex = -1;       // reset the grid after editing
+            dgvLunches.EditIndex = -1;       // reset the grid after editing
             LoadData();
         }
         catch
         {
-            error_lbl.Text = "Error in rowUpdating. Cannot update row.";
+            lblError.Text = "Error in rowUpdating. Cannot update row.";
             return;
         }
     }
 
-    protected void lunches_dgv_RowEditing(object sender, GridViewEditEventArgs e)
+    protected void dgvLunches_RowEditing(object sender, GridViewEditEventArgs e)
     {
-        lunches_dgv.EditIndex = e.NewEditIndex;
+        dgvLunches.EditIndex = e.NewEditIndex;
         LoadData();
     }
 
-    protected void lunches_dgv_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+    protected void dgvLunches_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
     {
-        lunches_dgv.EditIndex = -1;
+        dgvLunches.EditIndex = -1;
         LoadData();
     }
 
-    protected void lunches_dgv_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    protected void dgvLunches_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
-        lunches_dgv.PageIndex = e.NewPageIndex;
+        dgvLunches.PageIndex = e.NewPageIndex;
         LoadData();
     }
 
-    protected void lunches_dgv_RowDataBound(object sender, GridViewRowEventArgs e)
+
+    protected void tbVisitDate_TextChanged(object sender, EventArgs e)
     {
-        if ((e.Row.RowType == DataControlRowType.DataRow))
-        {
-            string lblLunch = (e.Row.FindControl("lunchTicketDGV_lbl") as Label).Text;
-            DropDownList ddlLunch = e.Row.FindControl("lunchTicketDGV_ddl") as DropDownList;
-
-            //Load gridview school DDLs with school names
-            Gridviews.SchoolNames(ddlLunch, lblLunch);
-        }
-    }
-
-
-    protected void visitDate_tb_TextChanged(object sender, EventArgs e)
-    {
-        if (visitDate_tb.Text != "")
+        if (tbVisitDate.Text != "")
         {
             LoadData();
         }

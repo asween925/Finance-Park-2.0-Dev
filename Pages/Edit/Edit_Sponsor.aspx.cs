@@ -29,7 +29,7 @@ public partial class Edit_Sponsor : Page
     public Edit_Sponsor()
     {
         ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
-        VisitID = VisitData.GetVisitID();
+        
         Load += Page_Load;
     }
 
@@ -44,10 +44,10 @@ public partial class Edit_Sponsor : Page
         if (!IsPostBack)
         {
             //Load business names ddl
-            Sponsors.LoadSponsorNamesDDL(sponsorName_ddl);
+            Sponsors.LoadSponsorNamesDDL(ddlSponsorName);
 
             // Populating school header
-            headerSchoolName_lbl.Text = (SchoolHeader.GetSchoolHeader()).ToString();
+            lblHeaderSchoolName.Text = (SchoolHeader.GetSchoolHeader()).ToString();
 
             //Load data
             LoadData();
@@ -59,43 +59,43 @@ public partial class Edit_Sponsor : Page
         string SQLStatement = "SELECT * FROM sponsorsFP";
 
         //Clear table
-        sponsors_dgv.DataSource = null;
-        sponsors_dgv.DataBind();
+        dgvSponsors.DataSource = null;
+        dgvSponsors.DataBind();
 
         //Clear error label
-        error_lbl.Text = "";
+        lblError.Text = "";
 
         //Check if sponsor name is loaded
-        if (sponsorName_ddl.SelectedIndex != 0)
+        if (ddlSponsorName.SelectedIndex != 0)
         {
-            SQLStatement = SQLStatement + " WHERE sponsorName='" + sponsorName_ddl.SelectedValue + "'";
+            SQLStatement = SQLStatement + " WHERE sponsorName='" + ddlSponsorName.SelectedValue + "'";
         }
 
         //Load sponsor table
-        //try
-        //{
+        try
+        {
             con.ConnectionString = ConnectionString;
             con.Open();
             Review_sds.ConnectionString = ConnectionString;
             Review_sds.SelectCommand = SQLStatement;
-            sponsors_dgv.DataSource = Review_sds;
-            sponsors_dgv.DataBind();
+            dgvSponsors.DataSource = Review_sds;
+            dgvSponsors.DataBind();
 
-        //}
-        //catch
-        //{
-        //    error_lbl.Text = "Error in LoadData). Cannot load sponsor table.";
-        //    return;
-        //}
+        }
+        catch
+        {
+            lblError.Text = "Error in LoadData(). Cannot load sponsor table.";
+            return;
+        }
 
         //Close connection
         cmd.Dispose();
         con.Close();
 
         // Highlight row being edited
-        foreach (GridViewRow row in sponsors_dgv.Rows)
+        foreach (GridViewRow row in dgvSponsors.Rows)
         {
-            if (row.RowIndex == sponsors_dgv.EditIndex)
+            if (row.RowIndex == dgvSponsors.EditIndex)
             {
                 row.BackColor = ColorTranslator.FromHtml("#ebe534");
                 row.BorderWidth = 2;
@@ -103,14 +103,14 @@ public partial class Edit_Sponsor : Page
         }
     }
 
-    protected void sponsors_dgv_RowUpdating(object sender, GridViewUpdateEventArgs e)
+    protected void dgvSponsors_RowUpdating(object sender, GridViewUpdateEventArgs e)
     {
-        int ID = Convert.ToInt32(sponsors_dgv.DataKeys[e.RowIndex].Values[0]); // Gets id number
-        string SponsorName = ((TextBox)sponsors_dgv.Rows[e.RowIndex].FindControl("sponsorNameDGV_tb")).Text;
-        string BusinessName1 = ((DropDownList)sponsors_dgv.Rows[e.RowIndex].FindControl("businessNameDGV_ddl")).SelectedValue;
-        string BusinessName2 = ((DropDownList)sponsors_dgv.Rows[e.RowIndex].FindControl("businessName2DGV_ddl")).SelectedValue;
-        string BusinessName3 = ((DropDownList)sponsors_dgv.Rows[e.RowIndex].FindControl("businessName3DGV_ddl")).SelectedValue;
-        string BusinessName4 = ((DropDownList)sponsors_dgv.Rows[e.RowIndex].FindControl("businessName4DGV_ddl")).SelectedValue;       
+        int ID = Convert.ToInt32(dgvSponsors.DataKeys[e.RowIndex].Values[0]); // Gets id number
+        string SponsorName = ((TextBox)dgvSponsors.Rows[e.RowIndex].FindControl("tbSponsorNameDGV")).Text;
+        string BusinessName1 = ((DropDownList)dgvSponsors.Rows[e.RowIndex].FindControl("ddlBusinessNameDGV")).SelectedValue;
+        string BusinessName2 = ((DropDownList)dgvSponsors.Rows[e.RowIndex].FindControl("ddlBusinessName2DGV")).SelectedValue;
+        string BusinessName3 = ((DropDownList)dgvSponsors.Rows[e.RowIndex].FindControl("ddlBusinessName3DGV")).SelectedValue;
+        string BusinessName4 = ((DropDownList)dgvSponsors.Rows[e.RowIndex].FindControl("ddlBusinessName4DGV")).SelectedValue;       
 
         try
         {
@@ -120,65 +120,65 @@ public partial class Edit_Sponsor : Page
             SQL.UpdateRow(ID, "businessID3", BusinessName3, "sponsorsFP");
             SQL.UpdateRow(ID, "businessID4", BusinessName4, "sponsorsFP");
 
-            sponsors_dgv.EditIndex = -1;       // reset the grid after editing
+            dgvSponsors.EditIndex = -1;       // reset the grid after editing
             LoadData();
         }
         catch
         {
-            error_lbl.Text = "Error in rowUpdating. Cannot update row.";
+            lblError.Text = "Error in rowUpdating. Cannot update row.";
             return;
         }
     }
 
-    protected void sponsors_dgv_RowDeleting(object sender, GridViewDeleteEventArgs e)
+    protected void dgvSponsors_RowDeleting(object sender, GridViewDeleteEventArgs e)
     {
-        int ID = Convert.ToInt32(sponsors_dgv.DataKeys[e.RowIndex].Values[0]); // Gets id number
+        int ID = Convert.ToInt32(dgvSponsors.DataKeys[e.RowIndex].Values[0]); // Gets id number
 
         try
         {
             SQL.DeleteRow(ID, "sponsorsFP");
 
-            sponsors_dgv.EditIndex = -1;       // reset the grid after editing
+            dgvSponsors.EditIndex = -1;       // reset the grid after editing
 
             LoadData();
         }
         catch
         {
-            error_lbl.Text = "Error in rowDeleting. Cannot delete row.";
+            lblError.Text = "Error in rowDeleting. Cannot delete row.";
             return;
         }
     }
 
-    protected void sponsors_dgv_RowEditing(object sender, GridViewEditEventArgs e)
+    protected void dgvSponsors_RowEditing(object sender, GridViewEditEventArgs e)
     {
-        sponsors_dgv.EditIndex = e.NewEditIndex;
+        dgvSponsors.EditIndex = e.NewEditIndex;
         LoadData();
     }
 
-    protected void sponsors_dgv_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+    protected void dgvSponsors_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
     {
-        sponsors_dgv.EditIndex = -1;
+        dgvSponsors.EditIndex = -1;
         LoadData();
     }
 
-    protected void sponsors_dgv_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    protected void dgvSponsors_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
-        sponsors_dgv.PageIndex = e.NewPageIndex;
+        dgvSponsors.PageIndex = e.NewPageIndex;
         LoadData();
     }
 
-    protected void sponsors_dgv_RowDataBound(object sender, GridViewRowEventArgs e)
+    protected void dgvSponsors_RowDataBound(object sender, GridViewRowEventArgs e)
     {
         if ((e.Row.RowType == DataControlRowType.DataRow))
         {
-            string lblBusiness1 = (e.Row.FindControl("businessName1DGV_lbl") as Label).Text;
-            DropDownList ddlBusiness1 = e.Row.FindControl("businessName1DGV_ddl") as DropDownList;
-            string lblBusiness2 = (e.Row.FindControl("businessName2DGV_lbl") as Label).Text;
-            DropDownList ddlBusiness2 = e.Row.FindControl("businessName2DGV_ddl") as DropDownList;
-            string lblBusiness3 = (e.Row.FindControl("businessName3DGV_lbl") as Label).Text;
-            DropDownList ddlBusiness3 = e.Row.FindControl("businessName3DGV_ddl") as DropDownList;
-            string lblBusiness4 = (e.Row.FindControl("businessName4DGV_lbl") as Label).Text;
-            DropDownList ddlBusiness4 = e.Row.FindControl("businessName4DGV_ddl") as DropDownList;
+            string lblBusiness1 = (e.Row.FindControl("lblBusinessName1DGV") as Label).Text;
+            DropDownList ddlBusiness1 = e.Row.FindControl("ddlBusinessName1DGV") as DropDownList;
+            string lblBusiness2 = (e.Row.FindControl("lblBusinessName2DGV") as Label).Text;
+            DropDownList ddlBusiness2 = e.Row.FindControl("ddlBusinessName2DGV") as DropDownList;
+            string lblBusiness3 = (e.Row.FindControl("lblBusinessName3DGV") as Label).Text;
+            DropDownList ddlBusiness3 = e.Row.FindControl("ddlBusinessName3DGV") as DropDownList;
+            string lblBusiness4 = (e.Row.FindControl("lblBusinessName4DGV") as Label).Text;
+            DropDownList ddlBusiness4 = e.Row.FindControl("ddlBusinessName4DGV") as DropDownList;
 
             //Load gridview school DDLs with school names
             Gridviews.BusinessNames(ddlBusiness1, lblBusiness1);
@@ -189,7 +189,7 @@ public partial class Edit_Sponsor : Page
     }
 
 
-    protected void sponsorName_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlSponsorName_SelectedIndexChanged(object sender, EventArgs e)
     {
         LoadData();
     }

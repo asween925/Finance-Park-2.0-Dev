@@ -20,7 +20,7 @@
     <form id="EMS_Form" runat="server">
 
         <%--Header information--%>
-        <header class="headerTop no-print"><a style="float: left; padding-top: 2px;">Finance Park 2.0</a><a style="float: right; padding-right: 30px; padding-top: 2px;"><asp:Label ID="headerSchoolName_lbl" Text="School Name Here" runat="server"></asp:Label></a></header>
+        <header class="headerTop no-print"><a style="float: left; padding-top: 2px;">Finance Park 2.0</a><a style="float: right; padding-right: 30px; padding-top: 2px;"><asp:Label ID="lblHeaderSchoolName" Text="School Name Here" runat="server"></asp:Label></a></header>
 
         <%--Navigation bar--%>
         <div id="nav-placeholder">
@@ -38,64 +38,64 @@
             <h3>This page allows you to create a new persona.
             </h3>
             <p>Job Title:</p>
-            <asp:DropDownList ID="jobTitle_ddl" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:Label ID="error_lbl" runat="server" Font-Bold="true" Font-Size="X-Large" ForeColor="Red"></asp:Label>
+            <asp:DropDownList ID="ddlJobTitle" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:Label ID="lblError" runat="server" Font-Bold="true" Font-Size="X-Large" ForeColor="Red"></asp:Label>
             <p>Job Type:</p>
-            <asp:DropDownList ID="jobType_ddl" runat="server" CssClass="ddl">
+            <asp:DropDownList ID="ddlJobType" runat="server" CssClass="ddl">
                 <asp:ListItem>Part Time</asp:ListItem>
                 <asp:ListItem>Full Time</asp:ListItem>
             </asp:DropDownList>
             <p>GAI:</p>
-            <asp:TextBox ID="gai_tb" runat="server" CssClass="textbox" TextMode="Number"></asp:TextBox>
+            <asp:TextBox ID="tbGAI" runat="server" CssClass="textbox" TextMode="Number"></asp:TextBox>
             <p>Age:</p>
-            <asp:TextBox ID="age_tb" runat="server" CssClass="textbox" TextMode="Number" Width="50px"></asp:TextBox>
+            <asp:TextBox ID="tbAge" runat="server" CssClass="textbox" TextMode="Number" Width="50px"></asp:TextBox>
             <p>Martial Status:</p>
-            <asp:DropDownList ID="martialStatus_ddl" runat="server" CssClass="ddl" AutoPostBack="true" OnSelectedIndexChanged="martialStatus_ddl_SelectedIndexChanged">
+            <asp:DropDownList ID="ddlMartialStatus" runat="server" CssClass="ddl" AutoPostBack="true" OnSelectedIndexChanged="ddlMartialStatus_SelectedIndexChanged">
                 <asp:ListItem>Single</asp:ListItem>
                 <asp:ListItem>Married</asp:ListItem>
             </asp:DropDownList>
-            <p id="spouseAge_p" runat="server" visible="false">Spouse Age:</p>
-            <asp:Textbox ID="spouseAge_tb" runat="server" TextMode="Number" Width="50px" CssClass="textbox" Visible="false"></asp:Textbox>
+            <p id="pSpouseAge" runat="server" visible="false">Spouse Age:</p>
+            <asp:Textbox ID="tbSpouseAge" runat="server" TextMode="Number" Width="50px" CssClass="textbox" Visible="false"></asp:Textbox>
             <p>Number of Children:</p>
-            <asp:DropDownList ID="numOfChild_ddl" runat="server" TextMode="Number" AutoPostBack="true" CssClass="ddl" OnSelectedIndexChanged="numOfChild_ddl_SelectedIndexChanged" >
+            <asp:DropDownList ID="ddlNumOfChild" runat="server" TextMode="Number" AutoPostBack="true" CssClass="ddl" OnSelectedIndexChanged="ddlNumOfChild_SelectedIndexChanged" >
                 <asp:ListItem>0</asp:ListItem>
                 <asp:ListItem>1</asp:ListItem>
                 <asp:ListItem>2</asp:ListItem>
             </asp:DropDownList>
-            <p id="child1_p" runat="server" visible="false">Child #1 Age</p>
-            <asp:TextBox ID="child1_tb" runat="server" Visible="false" CssClass="textbox" TextMode="Number" Text="0" ></asp:TextBox>
-            <p id="child2_p" runat="server" visible="false">Child #2 Age</p>
-            <asp:TextBox ID="child2_tb" runat="server" Visible="false" CssClass="textbox" TextMode="Number" Text="0" ></asp:TextBox>
+            <p id="pChild1" runat="server" visible="false">Child #1 Age</p>
+            <asp:TextBox ID="tbChild1" runat="server" Visible="false" CssClass="textbox" TextMode="Number" Text="0" ></asp:TextBox>
+            <p id="pChild2" runat="server" visible="false">Child #2 Age</p>
+            <asp:TextBox ID="tbChild2" runat="server" Visible="false" CssClass="textbox" TextMode="Number" Text="0" ></asp:TextBox>
             <p>Credit Score:</p>
-            <asp:Textbox ID="creditScore_tb" runat="server" TextMode="Number" Width="50px" CssClass="textbox"></asp:Textbox>
+            <asp:Textbox ID="tbCreditScore" runat="server" TextMode="Number" Width="50px" CssClass="textbox"></asp:Textbox>
             <p>NMI:</p>
-            <asp:Textbox ID="nmi_tb" runat="server" TextMode="Number" Width="100px" CssClass="textbox"></asp:Textbox>
+            <asp:Textbox ID="tbNMI" runat="server" TextMode="Number" Width="100px" CssClass="textbox"></asp:Textbox>
             <p>CC Debt:</p>
-            <asp:Textbox ID="ccdebt_tb" runat="server" TextMode="Number" Width="100px" CssClass="textbox"></asp:Textbox>
+            <asp:Textbox ID="tbCCDebt" runat="server" TextMode="Number" Width="100px" CssClass="textbox"></asp:Textbox>
             <p>Furniture Limit:</p>
-            <asp:Textbox ID="furnLimit_tb" runat="server" TextMode="Number" Width="100px" CssClass="textbox"></asp:Textbox>
+            <asp:Textbox ID="tbFurnLimit" runat="server" TextMode="Number" Width="100px" CssClass="textbox"></asp:Textbox>
             <p>Home Improvment Limit:</p>
-            <asp:Textbox ID="homeImp_tb" runat="server" TextMode="Number" Width="100px" CssClass="textbox"></asp:Textbox>
+            <asp:Textbox ID="tbHomeImp" runat="server" TextMode="Number" Width="100px" CssClass="textbox"></asp:Textbox>
             <p>Longterm Savings:</p>
-            <asp:Textbox ID="longSave_tb" runat="server" TextMode="Number" Width="100px" CssClass="textbox"></asp:Textbox>
+            <asp:Textbox ID="tbLongSave" runat="server" TextMode="Number" Width="100px" CssClass="textbox"></asp:Textbox>
             <p>Emergency Funds:</p>
-            <asp:Textbox ID="emerFunds_tb" runat="server" TextMode="Number" Width="100px" CssClass="textbox"></asp:Textbox>
+            <asp:Textbox ID="tbEmerFunds" runat="server" TextMode="Number" Width="100px" CssClass="textbox"></asp:Textbox>
             <p>Other Savings:</p>
-            <asp:Textbox ID="otherSave_tb" runat="server" TextMode="Number" Width="100px" CssClass="textbox"></asp:Textbox>
+            <asp:Textbox ID="tbOtherSave" runat="server" TextMode="Number" Width="100px" CssClass="textbox"></asp:Textbox>
             <p>Auto Loan Limit:</p>
-            <asp:Textbox ID="autoLoan_tb" runat="server" TextMode="Number" Width="100px" CssClass="textbox"></asp:Textbox>
+            <asp:Textbox ID="tbAutoLoan" runat="server" TextMode="Number" Width="100px" CssClass="textbox"></asp:Textbox>
             <p>Mortgage Amount:</p>
-            <asp:Textbox ID="mortAmnt_tb" runat="server" TextMode="Number" Width="100px" CssClass="textbox"></asp:Textbox>
+            <asp:Textbox ID="tbMortAmnt" runat="server" TextMode="Number" Width="100px" CssClass="textbox"></asp:Textbox>
             <p>That's Life Amount:</p>
-            <asp:Textbox ID="thatsAmnt_tb" runat="server" TextMode="Number" Width="100px" CssClass="textbox"></asp:Textbox>
+            <asp:Textbox ID="tbThatsAmnt" runat="server" TextMode="Number" Width="100px" CssClass="textbox"></asp:Textbox>
             <p>Description:</p>
-            <asp:Textbox ID="desc_tb" runat="server" CssClass="textbox" TextMode="MultiLine" Height="102px" Width="288px"></asp:Textbox>
+            <asp:Textbox ID="tbDesc" runat="server" CssClass="textbox" TextMode="MultiLine" Height="102px" Width="288px"></asp:Textbox>
             <br /><br />
-            <asp:Button ID="submit_btn" runat="server" CssClass="button" Text="Submit" OnClick="submit_btn_Click" />&ensp;<asp:Label ID="success_lbl" runat="server" Font-Bold="true" Font-Size="X-Large" ForeColor="Red"></asp:Label>
+            <asp:Button ID="btnSubmit" runat="server" CssClass="button" Text="Submit" OnClick="btnSubmit_Click" />&ensp;<asp:Label ID="lblSuccess" runat="server" Font-Bold="true" Font-Size="X-Large" ForeColor="Red"></asp:Label>
             <br /><br />
           
         </div>
 
-        <asp:HiddenField ID="currentVisitID_hf" runat="server" />
+        <asp:HiddenField ID="hfCurrentVisitID" runat="server" />
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="Scripts.js"></script>

@@ -19,7 +19,7 @@
     <form id="EMS_Form" runat="server">
 
         <%--Header information--%>
-        <header class="headerTop no-print"><a style="float: left; padding-top: 2px;">Finance Park 2.0</a><a style="float: right; padding-right: 30px; padding-top: 2px;"><asp:Label ID="headerSchoolName_lbl" Text="School Name Here" runat="server"></asp:Label></a></header>
+        <header class="headerTop no-print"><a style="float: left; padding-top: 2px;">Finance Park 2.0</a><a style="float: right; padding-right: 30px; padding-top: 2px;"><asp:Label ID="lblHeaderSchoolName" Text="School Name Here" runat="server"></asp:Label></a></header>
 
         <%--Navigation bar--%>
         <div id="nav-placeholder">
@@ -37,24 +37,24 @@
             <h3>This page allows you to add a new sponsor to Finance Park. Fill out the required fields and press submit to create a sponsor.
             </h3>
             <p>Sponsor Name (Required):</p>
-            <asp:TextBox ID="sponsorName_tb" runat="server" CssClass="textbox"></asp:TextBox>&ensp;<asp:Label ID="error_lbl" runat="server" Font-Bold="true" Font-Size="X-Large" ForeColor="Red"></asp:Label>
+            <asp:TextBox ID="tbSponsorName" runat="server" CssClass="textbox"></asp:TextBox>&ensp;<asp:Label ID="lblError" runat="server" Font-Bold="true" Font-Size="X-Large" ForeColor="Red"></asp:Label>
             <p>Business Name #1 (Required):</p>
-            <asp:DropDownList ID="businessName1_ddl" runat="server" CssClass="ddl"></asp:DropDownList>
+            <asp:DropDownList ID="ddlBusinessName1" runat="server" CssClass="ddl"></asp:DropDownList>
             <p>Business Name #2:</p>
-            <asp:DropDownList ID="businessName2_ddl" runat="server" CssClass="ddl"></asp:DropDownList>
+            <asp:DropDownList ID="ddlBusinessName2" runat="server" CssClass="ddl"></asp:DropDownList>
             <p>Business Name #3:</p>
-            <asp:DropDownList ID="businessName3_ddl" runat="server" CssClass="ddl"></asp:DropDownList>
+            <asp:DropDownList ID="ddlBusinessName3" runat="server" CssClass="ddl"></asp:DropDownList>
             <p>Business name #4:</p>
-            <asp:DropDownList ID="businessName4_ddl" runat="server" CssClass="ddl"></asp:DropDownList>
+            <asp:DropDownList ID="ddlBusinessName4" runat="server" CssClass="ddl"></asp:DropDownList>
             <p>Upload Logo:</p>
-            <asp:FileUpload ID="logo_fu" runat="server" />
+            <asp:FileUpload ID="fuLogo" runat="server" />
             <br /><br />
-            <asp:Button ID="submit_btn" runat="server" CssClass="button" Text="Submit" OnClick="submit_btn_Click" />
+            <asp:Button ID="btnSubmit" runat="server" CssClass="button" Text="Submit" OnClick="btnSubmit_Click" />
             <br /><br />
             
         </div>
 
-        <asp:HiddenField ID="currentVisitID_hf" runat="server" />
+        <asp:HiddenField ID="hfCurrentVisitID" runat="server" />
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="Scripts.js"></script>

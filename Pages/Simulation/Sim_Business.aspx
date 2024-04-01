@@ -18,10 +18,10 @@
         <div id="Site_Wrap_Fullscreen">
 
             <%--Header--%>
-            <div id="header_div" runat="server" class="header">
+            <div id="divHeader" runat="server" class="header">
                 <div id="nav-placeholder"></div>
                 <a class="headerTitle" >Business Information</a>
-                <a><asp:Image ID="startLogo_img" runat="server" ImageUrl="~/Media/FP_Logo.png" CssClass="headerFPLogo" /></a>               
+                <a><asp:Image ID="imgStartLogo" runat="server" ImageUrl="~/Media/FP_Logo.png" CssClass="headerFPLogo" /></a>               
             </div>
 
             <%--Blured Area--%>
@@ -29,12 +29,12 @@
 
                 <%--Directions & Unlocked Biz--%>
                 <div class="directionsBlock">
-                    <asp:Image ID="businessLogo_img" runat="server" /><asp:Label ID="businessName_lbl" runat="server"></asp:Label>
+                    <asp:Image ID="imgBusinessLogo" runat="server" /><asp:Label ID="lblBusinessName" runat="server"></asp:Label>
                     <a class="unlocked">
-                        <asp:Label ID="businessUnlocked_lbl" runat="server"></asp:Label>
+                        <asp:Label ID="lblBusinessUnlocked" runat="server"></asp:Label>
                         of
-                        <asp:Label ID="totalBusiness_lbl" runat="server" Font-Bold="true"></asp:Label>
-                        businesses unlocked.&ensp;<asp:Button ID="research_btn" runat="server" Text="Unlock More" CssClass="button" /></a>                   
+                        <asp:Label ID="lblTotalBusiness" runat="server" Font-Bold="true"></asp:Label>
+                        businesses unlocked.&ensp;<asp:Button ID="rebtnSearch" runat="server" Text="Unlock More" CssClass="button" /></a>                   
                 </div>          
 
                 <%--Content--%>
@@ -45,12 +45,12 @@
                         <div class="Sim_Business_Sponsor_Header">
                             <p>Sponsored By:</p>
                         </div>
-                        <asp:Image ID="sponsorLogo_img" runat="server" />
+                        <asp:Image ID="imgSponsorLogo" runat="server" />
                     </div>
 
                     <%--Script--%>
                     <div class="Sim_Business_Script">
-                        <asp:Label ID="kioskScript_lbl" runat="server" Text="The kiosk script for the business will go here." ></asp:Label>
+                        <asp:Label ID="lblKioskScript" runat="server" Text="The kiosk script for the business will go here." ></asp:Label>
                     </div>
                 </div>
                 
@@ -59,7 +59,7 @@
             <%--Popup--%>
             <div id="popup">
                 <p class="popup_header"></p>
-                <p><asp:Label ID="popupText_lbl" runat="server"></asp:Label></p>
+                <p><asp:Label ID="lblPopupText" runat="server"></asp:Label></p>
                 <br /><br />
                 <button onclick="toggle(); return false;" class="button">Okay</button>
             </div>

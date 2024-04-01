@@ -20,7 +20,7 @@
     <form id="EMS_Form" runat="server">
 
         <%--Header information--%>
-        <header class="headerTop no-print"><a style="float: left; padding-top: 2px;">Finance Park 2.0</a><a style="float: right; padding-right: 30px; padding-top: 2px;"><asp:Label ID="headerSchoolName_lbl" Text="School Name Here" runat="server"></asp:Label></a></header>
+        <header class="headerTop no-print"><a style="float: left; padding-top: 2px;">Finance Park 2.0</a><a style="float: right; padding-right: 30px; padding-top: 2px;"><asp:Label ID="lblHeaderSchoolName" Text="School Name Here" runat="server"></asp:Label></a></header>
 
         <%--Navigation bar--%>
         <div id="nav-placeholder">
@@ -37,12 +37,12 @@
             <h2 class="h2 no-print">School Checklist</h2>
             <h3 class="no-print">Use this page to view the contact teachers of the schools in databases.
             </h3>
-            <asp:Label ID="error_lbl" runat="server" Font-Bold="true" Font-Size="X-Large" ForeColor="Red"></asp:Label>
+            <asp:Label ID="lblError" runat="server" Font-Bold="true" Font-Size="X-Large" ForeColor="Red"></asp:Label>
             <br />
 
             <%--Gridview--%>
-            <div id="school_div" runat="server" visible="true">
-                <asp:GridView ID="schools_dgv" runat="server" AutoGenerateColumns="False" DataKeyNames="ID" CellPadding="5" PageSize="50" AllowPaging="True" ShowHeaderWhenEmpty="True" Font-Size="Medium" PagerStyle-CssClass="pager" HeaderStyle-CssClass="header" RowStyle-CssClass="rows" Visible="true"> 
+            <div id="divSchool" runat="server" visible="true">
+                <asp:GridView ID="dgvSchools" runat="server" AutoGenerateColumns="False" DataKeyNames="ID" CellPadding="5" PageSize="50" AllowPaging="True" ShowHeaderWhenEmpty="True" Font-Size="Medium" PagerStyle-CssClass="pager" HeaderStyle-CssClass="header" RowStyle-CssClass="rows" Visible="true"> 
                     <Columns>
                         <asp:BoundField DataField="ID" HeaderText="ID" Visible="false" />
                         <asp:BoundField DataField="schoolName" HeaderText="School Name" Visible="true" />
@@ -50,13 +50,13 @@
                         <asp:BoundField DataField="email" HeaderText="Email" Visible="true" />
                         <%--<asp:TemplateField HeaderText="School Name">
                             <ItemTemplate>
-                                <asp:Label ID="schoolNameDGV_lbl" runat="server" Text='<%#Bind("schoolName") %>' Visible="false"></asp:Label>
-                                <asp:DropDownList CssClass="ddl" ID="schoolNameDGV_ddl" runat="server" AutoPostBack="true" readonly="false"></asp:DropDownList>
+                                <asp:Label ID="lblSchoolNameDGV" runat="server" Text='<%#Bind("schoolName") %>' Visible="false"></asp:Label>
+                                <asp:DropDownList CssClass="ddl" ID="ddlSchoolNameDGV" runat="server" AutoPostBack="true" readonly="false"></asp:DropDownList>
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="Contact Person">
                             <ItemTemplate>
-                               <asp:TextBox ID="noteDGV_tb" runat="server" Width="250px" ReadOnly="false" Text='<%#Bind("note") %>' CssClass="textbox"></asp:TextBox>
+                               <asp:TextBox ID="tbNoteDGV" runat="server" Width="250px" ReadOnly="false" Text='<%#Bind("note") %>' CssClass="textbox"></asp:TextBox>
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="Email">
@@ -69,7 +69,7 @@
             </div>
         </div>
 
-        <asp:HiddenField ID="currentVisitID_hf" runat="server" />
+        <asp:HiddenField ID="hfCurrentVisitID" runat="server" />
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="Scripts.js"></script>

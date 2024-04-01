@@ -19,7 +19,7 @@
     <form id="EMS_Form" runat="server">
 
         <%--Header information--%>
-        <header class="headerTop no-print"><a style="float: left; padding-top: 2px;">Finance Park 2.0</a><a style="float: right; padding-right: 30px; padding-top: 2px;"><asp:Label ID="headerSchoolName_lbl" Text="School Name Here" runat="server"></asp:Label></a></header>
+        <header class="headerTop no-print"><a style="float: left; padding-top: 2px;">Finance Park 2.0</a><a style="float: right; padding-right: 30px; padding-top: 2px;"><asp:Label ID="lblHeaderSchoolName" Text="School Name Here" runat="server"></asp:Label></a></header>
 
         <%--Navigation bar--%>
         <div id="nav-placeholder">
@@ -37,20 +37,20 @@
             <h3>This page allows you to edit the tax information for the simulation.
             </h3>
             <p>Tax Name:</p>
-            <asp:DropDownList ID="taxName_ddl" runat="server" CssClass="ddl" AutoPostBack="true" OnSelectedIndexChanged="taxName_ddl_SelectedIndexChanged">
+            <asp:DropDownList ID="ddlTaxName" runat="server" CssClass="ddl" AutoPostBack="true" OnSelectedIndexChanged="ddlTaxName_SelectedIndexChanged">
                 <asp:ListItem></asp:ListItem>
                 <asp:ListItem>Federal</asp:ListItem>
                 <asp:ListItem>FICA</asp:ListItem>
                 <asp:ListItem>Medicare</asp:ListItem>
-            </asp:DropDownList>&ensp;<asp:Label ID="error_lbl" runat="server" Font-Bold="true" Font-Size="X-Large" ForeColor="Red"></asp:Label>
+            </asp:DropDownList>&ensp;<asp:Label ID="lblError" runat="server" Font-Bold="true" Font-Size="X-Large" ForeColor="Red"></asp:Label>
             <br />
             <br />
 
             <%--Taxes Div--%>
-            <div id="taxes_div" runat="server" visible="false">
+            <div id="divTaxes" runat="server" visible="false">
 
                 <%--Federal--%>
-                <div id="federal_div" runat="server" visible="false">
+                <div id="divFederal" runat="server" visible="false">
 
                     <%--Single--%>
                     <p style="font-weight: bold;">Marital Status: Single</p>
@@ -59,46 +59,46 @@
                             <tr>
                                 <td>GAI Between:</td>
                                 <td>
-                                    <asp:TextBox ID="gaiRange1MinS_tb" runat="server" CssClass="textbox" Width="70px"></asp:TextBox>&</td>
+                                    <asp:TextBox ID="tbGAIRange1MinS" runat="server" CssClass="textbox" Width="70px"></asp:TextBox>&</td>
                                 <td>
-                                    <asp:TextBox ID="gaiRange1MaxS_tb" runat="server" CssClass="textbox" Width="70px"></asp:TextBox></td>
+                                    <asp:TextBox ID="tbGAIRange1MaxS" runat="server" CssClass="textbox" Width="70px"></asp:TextBox></td>
                                 <td>Tax is equal to:</td>
                                 <td>
-                                    <asp:TextBox ID="taxEqual1LeftS_tb" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>+</td>
+                                    <asp:TextBox ID="tbTaxEqual1LeftS" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>+</td>
                                 <td>
-                                    <asp:TextBox ID="taxEqual1RightS_tb" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>* (GMI - </td>
+                                    <asp:TextBox ID="tbTaxEqual1RightS" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>* (GMI - </td>
                                 <td>
-                                    <asp:TextBox ID="gmi1S_tb" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>)
+                                    <asp:TextBox ID="tbGMI1S" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>)
                                 </td>
                             </tr>
                             <tr>
                                 <td>GAI Between:</td>
                                 <td>
-                                    <asp:TextBox ID="gaiRange2MinS_tb" runat="server" CssClass="textbox" Width="70px"></asp:TextBox>&</td>
+                                    <asp:TextBox ID="tbGAIRange2MinS" runat="server" CssClass="textbox" Width="70px"></asp:TextBox>&</td>
                                 <td>
-                                    <asp:TextBox ID="gaiRange2MaxS_tb" runat="server" CssClass="textbox" Width="70px"></asp:TextBox></td>
+                                    <asp:TextBox ID="tbGAIRange2MaxS" runat="server" CssClass="textbox" Width="70px"></asp:TextBox></td>
                                 <td>Tax is equal to:</td>
                                 <td>
-                                    <asp:TextBox ID="taxEqual2LeftS_tb" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>+</td>
+                                    <asp:TextBox ID="tbTaxEqual2LeftS" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>+</td>
                                 <td>
-                                    <asp:TextBox ID="taxEqual2RightS_tb" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>* (GMI - </td>
+                                    <asp:TextBox ID="tbTaxEqual2RightS" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>* (GMI - </td>
                                 <td>
-                                    <asp:TextBox ID="gmi2S_tb" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>)
+                                    <asp:TextBox ID="tbGMI2S" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>)
                                 </td>
                             </tr>
                             <tr>
                                 <td>GAI Between:</td>
                                 <td>
-                                    <asp:TextBox ID="gaiRange3MinS_tb" runat="server" CssClass="textbox" Width="70px"></asp:TextBox>&</td>
+                                    <asp:TextBox ID="tbGAIRange3MinS" runat="server" CssClass="textbox" Width="70px"></asp:TextBox>&</td>
                                 <td>
-                                    <asp:TextBox ID="gaiRange3MaxS_tb" runat="server" CssClass="textbox" Width="70px"></asp:TextBox></td>
+                                    <asp:TextBox ID="tbGAIRange3MaxS" runat="server" CssClass="textbox" Width="70px"></asp:TextBox></td>
                                 <td>Tax is equal to:</td>
                                 <td>
-                                    <asp:TextBox ID="taxEqual3LeftS_tb" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>+</td>
+                                    <asp:TextBox ID="tbTaxEqual3LeftS" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>+</td>
                                 <td>
-                                    <asp:TextBox ID="taxEqual3RightS_tb" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>* (GMI - </td>
+                                    <asp:TextBox ID="tbTaxEqual3RightS" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>* (GMI - </td>
                                 <td>
-                                    <asp:TextBox ID="gmi3S_tb" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>)
+                                    <asp:TextBox ID="tbGMI3S" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>)
                                 </td>
                             </tr>
                         </tbody>
@@ -110,46 +110,46 @@
                             <tr>
                                 <td>GAI Between:</td>
                                 <td>
-                                    <asp:TextBox ID="gaiRange1MinM_tb" runat="server" CssClass="textbox" Width="70px"></asp:TextBox>&</td>
+                                    <asp:TextBox ID="tbGAIRange1MinM" runat="server" CssClass="textbox" Width="70px"></asp:TextBox>&</td>
                                 <td>
-                                    <asp:TextBox ID="gaiRange1MaxM_tb" runat="server" CssClass="textbox" Width="70px"></asp:TextBox></td>
+                                    <asp:TextBox ID="tbGAIRange1MaxM" runat="server" CssClass="textbox" Width="70px"></asp:TextBox></td>
                                 <td>Tax is equal to:</td>
                                 <td>
-                                    <asp:TextBox ID="taxEqual1LeftM_tb" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>+</td>
+                                    <asp:TextBox ID="tbTaxEqual1LeftM" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>+</td>
                                 <td>
-                                    <asp:TextBox ID="taxEqual1RightM_tb" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>* (GMI - </td>
+                                    <asp:TextBox ID="tbTaxEqual1RightM" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>* (GMI - </td>
                                 <td>
-                                    <asp:TextBox ID="gmi1M_tb" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>)
+                                    <asp:TextBox ID="tbGMI1M" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>)
                                 </td>
                             </tr>
                             <tr>
                                 <td>GAI Between:</td>
                                 <td>
-                                    <asp:TextBox ID="gaiRange2MinM_tb" runat="server" CssClass="textbox" Width="70px"></asp:TextBox>&</td>
+                                    <asp:TextBox ID="tbGAIRange2MinM" runat="server" CssClass="textbox" Width="70px"></asp:TextBox>&</td>
                                 <td>
-                                    <asp:TextBox ID="gaiRange2MaxM_tb" runat="server" CssClass="textbox" Width="70px"></asp:TextBox></td>
+                                    <asp:TextBox ID="tbGAIRange2MaxM" runat="server" CssClass="textbox" Width="70px"></asp:TextBox></td>
                                 <td>Tax is equal to:</td>
                                 <td>
-                                    <asp:TextBox ID="taxEqual2LeftM_tb" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>+</td>
+                                    <asp:TextBox ID="tbTaxEqual2LeftM" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>+</td>
                                 <td>
-                                    <asp:TextBox ID="taxEqual2RightM_tb" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>* (GMI - </td>
+                                    <asp:TextBox ID="tbTaxEqual2RightM" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>* (GMI - </td>
                                 <td>
-                                    <asp:TextBox ID="gmi2M_tb" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>)
+                                    <asp:TextBox ID="tbGMI2M" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>)
                                 </td>
                             </tr>
                             <tr>
                                 <td>GAI Between:</td>
                                 <td>
-                                    <asp:TextBox ID="gaiRange3MinM_tb" runat="server" CssClass="textbox" Width="70px"></asp:TextBox>&</td>
+                                    <asp:TextBox ID="tbGAIRange3MinM" runat="server" CssClass="textbox" Width="70px"></asp:TextBox>&</td>
                                 <td>
-                                    <asp:TextBox ID="gaiRange3MaxM_tb" runat="server" CssClass="textbox" Width="70px"></asp:TextBox></td>
+                                    <asp:TextBox ID="tbGAIRange3MaxM" runat="server" CssClass="textbox" Width="70px"></asp:TextBox></td>
                                 <td>Tax is equal to:</td>
                                 <td>
-                                    <asp:TextBox ID="taxEqual3LeftM_tb" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>+</td>
+                                    <asp:TextBox ID="tbTaxEqual3LeftM" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>+</td>
                                 <td>
-                                    <asp:TextBox ID="taxEqual3RightM_tb" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>* (GMI - </td>
+                                    <asp:TextBox ID="tbTaxEqual3RightM" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>* (GMI - </td>
                                 <td>
-                                    <asp:TextBox ID="gmi3M_tb" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>)
+                                    <asp:TextBox ID="tbGMI3M" runat="server" CssClass="textbox" Width="60px"></asp:TextBox>)
                                 </td>
                             </tr>
                         </tbody>
@@ -157,26 +157,26 @@
                 </div>
 
                 <%--FICA--%>
-                <div id="fica_div" runat="server" visible="false">
+                <div id="divFICA" runat="server" visible="false">
                     <p>Calculation:</p>
-                    <asp:TextBox ID="calcF_tb" runat="server" CssClass="textbox"></asp:TextBox>
+                    <asp:TextBox ID="tbCalcF" runat="server" CssClass="textbox"></asp:TextBox>
                     * GMI
                 </div>
 
                 <%--Medciare--%>
-                <div id="medicare_div" runat="server" visible="false">
+                <div id="divMedicare" runat="server" visible="false">
                     <p>Calculation:</p>
-                    <asp:TextBox ID="calcM_tb" runat="server" CssClass="textbox"></asp:TextBox>
+                    <asp:TextBox ID="tbCalcM" runat="server" CssClass="textbox"></asp:TextBox>
                     * GMI
                 </div>
 
                 <br />
-                <asp:Button ID="submit_btn" runat="server" CssClass="button" Text="Submit" OnClick="submit_btn_Click" />&ensp;<asp:Button ID="reset_btn" runat="server" CssClass="buttonReset" Text="Reset" OnClick="reset_btn_Click" />
+                <asp:Button ID="btnSubmit" runat="server" CssClass="button" Text="Submit" OnClick="btnSubmit_Click" />&ensp;<asp:Button ID="btnReset" runat="server" CssClass="buttonReset" Text="Reset" OnClick="btnReset_Click" />
             </div>
 
         </div>
 
-        <asp:HiddenField ID="currentVisitID_hf" runat="server" />
+        <asp:HiddenField ID="hfCurrentVisitID" runat="server" />
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="Scripts.js"></script>

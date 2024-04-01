@@ -18,10 +18,10 @@
         <div id="Site_Wrap_Fullscreen">
             
             <%--Header--%>
-            <div id="header_div" runat="server" class="header">
+            <div id="divHeader" runat="server" class="header">
                 <div id="nav-placeholder"></div>
                 <a class="headerTitle" >Title</a>
-                <a><asp:Image ID="startLogo_img" runat="server" ImageUrl="~/Media/FP_Logo.png" CssClass="headerFPLogo" /></a>               
+                <a><asp:Image ID="imgStartLogo" runat="server" ImageUrl="~/Media/FP_Logo.png" CssClass="headerFPLogo" /></a>               
             </div>
 
             <%--Blured Area--%>
@@ -31,9 +31,9 @@
                 <div class="directionsBlock">
                     <a class="directions">Directions.</a>&ensp;
                     <a class="unlocked">
-                        <asp:Label ID="businessUnlocked_lbl" runat="server" Font-Bold="true"></asp:Label>
+                        <asp:Label ID="lblBusinessUnlocked" runat="server" Font-Bold="true"></asp:Label>
                         of
-                        <asp:Label ID="totalBusiness_lbl" runat="server" Font-Bold="true"></asp:Label>
+                        <asp:Label ID="lblTotalBusiness" runat="server" Font-Bold="true"></asp:Label>
                         businesses unlocked.</a>
                 </div>
 
@@ -46,11 +46,11 @@
             <%--Popup--%>
             <div id="popup">
                 <p class="Sim_Research_Popup_Header">
-                    <asp:Label ID="popupText_lbl" runat="server" Text="Popup Text"></asp:Label></p>
-                <asp:TextBox ID="businessID_tb" runat="server" CssClass="popup_textbox" TextMode="Number"></asp:TextBox>
+                    <asp:Label ID="lblPopupText" runat="server" Text="Popup Text"></asp:Label></p>
+                <asp:TextBox ID="tbBusinessID" runat="server" CssClass="popup_textbox" TextMode="Number"></asp:TextBox>
                 <br />
                 <br />
-                <asp:Button ID="enter_btn" runat="server" Text="Enter" CssClass="button" OnClick="enter_btn_Click" /><asp:Button ID="cancel_btn" runat="server" OnClick="cancel_btn_Click" CssClass="buttonReset" Text="Cancel"></asp:Button>
+                <asp:Button ID="btnEnter" runat="server" Text="Enter" CssClass="button" OnClick="btnEnter_Click" /><asp:Button ID="btnCancel" runat="server" OnClick="btnCancel_Click" CssClass="buttonReset" Text="Cancel"></asp:Button>
             </div>
 
             <br /><br />          

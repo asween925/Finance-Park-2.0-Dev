@@ -2,8 +2,8 @@
 
 public partial class Class_SchoolHeader
 {
-    private Class_VisitData VisitID = new Class_VisitData();
-    private int Visit;
+    private Class_VisitData VisitData = new Class_VisitData();
+    private string VisitID;
     private string schoolHeader;
     private string schoolHeader2;
     private string schoolHeader3;
@@ -22,10 +22,10 @@ public partial class Class_SchoolHeader
 
     public Class_SchoolHeader()
     {
-        Visit = VisitID.GetVisitID();
-        schoolHeader = "SELECT s.SchoolName FROM schoolinfoFP s INNER JOIN visitInfoFP v on s.ID = v.School WHERE v.id='" + Visit + "'";
-        schoolHeader2 = "SELECT s.SchoolName FROM schoolinfoFP s INNER JOIN visitInfoFP v on s.ID = v.School2 WHERE v.id='" + Visit + "'";
-        schoolHeader3 = "SELECT s.SchoolName FROM schoolinfoFP s INNER JOIN visitInfoFP v on s.ID = v.School3 WHERE v.id='" + Visit + "'";
+        VisitID = VisitData.GetVisitID().ToString();
+        schoolHeader = "SELECT s.SchoolName FROM schoolinfoFP s INNER JOIN visitInfoFP v on s.ID = v.School WHERE v.id='" + VisitID + "'";
+        schoolHeader2 = "SELECT s.SchoolName FROM schoolinfoFP s INNER JOIN visitInfoFP v on s.ID = v.School2 WHERE v.id='" + VisitID + "'";
+        schoolHeader3 = "SELECT s.SchoolName FROM schoolinfoFP s INNER JOIN visitInfoFP v on s.ID = v.School3 WHERE v.id='" + VisitID + "'";
         connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
     }
 
@@ -122,7 +122,7 @@ public partial class Class_SchoolHeader
 
         returnSchool = returnSchool1 + returnSchool2 + returnSchool3;
 
-        if (Visit == 0)
+        if (VisitID == "0")
         {
             returnSchool = "No School Scheduled";
         }

@@ -27,7 +27,7 @@ public partial class Edit_Teacher : Page
     public Edit_Teacher()
     {
         ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
-        VisitID = VisitData.GetVisitID();
+        
         Load += Page_Load;
     }
 
@@ -42,10 +42,10 @@ public partial class Edit_Teacher : Page
         if (!IsPostBack)
         {           
             // Populating school header
-            headerSchoolName_lbl.Text = (SchoolHeader.GetSchoolHeader()).ToString();
+            lblHeaderSchoolName.Text = (SchoolHeader.GetSchoolHeader()).ToString();
 
             //Populate school name DDL
-            SchoolData.LoadSchoolsDDL(schoolName_ddl);
+            SchoolData.LoadSchoolsDDL(ddlSchoolName);
 
             //Load teacher table
             LoadData();
@@ -58,22 +58,22 @@ public partial class Edit_Teacher : Page
         string SQLStatement = "SELECT t.id, t.firstName, t.lastName, t.email, t.contact, t.password, t.schoolID, v.visitDate as currVisitDate, v2.visitDate as prevVisitDate FROM teacherInfoFP t LEFT JOIN visitInfoFP v ON v.id = t.currVisitID LEFT JOIN visitInfoFP v2 ON v2.id = t.prevVisitID";
 
         //Clear teacher table
-        teachers_dgv.DataSource = null;
-        teachers_dgv.DataBind();
+        dgvTeachers.DataSource = null;
+        dgvTeachers.DataBind();
 
         //Clear error label
-        error_lbl.Text = "";
+        lblError.Text = "";
 
         //Check if school name DDL or search field is entered
-        if (schoolName_ddl.SelectedIndex != 0)
+        if (ddlSchoolName.SelectedIndex != 0)
         {
             //get school id from name
-            SchoolID = SchoolData.GetSchoolID(schoolName_ddl.SelectedValue).ToString();
+            SchoolID = SchoolData.GetSchoolID(ddlSchoolName.SelectedValue).ToString();
             SQLStatement = SQLStatement + " WHERE schoolID='" + SchoolID + "'";
         }
-        else if (search_tb.Text != "")
+        else if (tbSearch.Text != "")
         {
-            SQLStatement = SQLStatement + " WHERE firstName LIKE '%" + search_tb.Text + "%' OR lastName LIKE '%" + search_tb.Text + "%'";
+            SQLStatement = SQLStatement + " WHERE firstName LIKE '%" + tbSearch.Text + "%' OR lastName LIKE '%" + tbSearch.Text + "%'";
         }
         else
         {
@@ -87,8 +87,8 @@ public partial class Edit_Teacher : Page
             con.Open();
             Review_sds.ConnectionString = ConnectionString;
             Review_sds.SelectCommand = SQLStatement;
-            teachers_dgv.DataSource = Review_sds;
-            teachers_dgv.DataBind();
+            dgvTeachers.DataSource = Review_sds;
+            dgvTeachers.DataBind();
 
             cmd.Dispose();
             con.Close();
@@ -96,14 +96,14 @@ public partial class Edit_Teacher : Page
         }
         catch
         {
-            error_lbl.Text = "Error in LoadData(). Cannot load teacherInfo table.";
+            lblError.Text = "Error in LoadData(). Cannot load teacherInfo table.";
             return;
         }
 
         // Highlight row being edited
-        foreach (GridViewRow row in teachers_dgv.Rows)
+        foreach (GridViewRow row in dgvTeachers.Rows)
         {
-            if (row.RowIndex == teachers_dgv.EditIndex)
+            if (row.RowIndex == dgvTeachers.EditIndex)
             {
                 row.BackColor = ColorTranslator.FromHtml("#ebe534");
                 row.BorderWidth = 2;
@@ -111,34 +111,34 @@ public partial class Edit_Teacher : Page
         }
     }
 
-    protected void teachers_dgv_RowUpdating(object sender, GridViewUpdateEventArgs e)
+    protected void dgvTeachers_RowUpdating(object sender, GridViewUpdateEventArgs e)
     {
-        int ID = Convert.ToInt32(teachers_dgv.DataKeys[e.RowIndex].Values[0]); // Gets id number
-        string FirstName = ((TextBox)teachers_dgv.Rows[e.RowIndex].FindControl("firstNameDGV_tb")).Text;
-        string LastName = ((TextBox)teachers_dgv.Rows[e.RowIndex].FindControl("lastNameDGV_tb")).Text;
-        string Email = ((TextBox)teachers_dgv.Rows[e.RowIndex].FindControl("emailDGV_tb")).Text;
-        bool Contact = ((CheckBox)teachers_dgv.Rows[e.RowIndex].FindControl("contactDGV_chk")).Checked;
-        string Password = ((TextBox)teachers_dgv.Rows[e.RowIndex].FindControl("passwordDGV_tb")).Text;
-        string SchoolID = ((DropDownList)teachers_dgv.Rows[e.RowIndex].FindControl("schoolNameDGV_ddl")).SelectedValue;
+        int ID = Convert.ToInt32(dgvTeachers.DataKeys[e.RowIndex].Values[0]); // Gets id number
+        string FirstName = ((TextBox)dgvTeachers.Rows[e.RowIndex].FindControl("tbFirstNameDGV")).Text;
+        string LastName = ((TextBox)dgvTeachers.Rows[e.RowIndex].FindControl("tbLastNameDGV")).Text;
+        string Email = ((TextBox)dgvTeachers.Rows[e.RowIndex].FindControl("tbEmailDGV")).Text;
+        bool Contact = ((CheckBox)dgvTeachers.Rows[e.RowIndex].FindControl("chkContactDGV")).Checked;
+        string Password = ((TextBox)dgvTeachers.Rows[e.RowIndex].FindControl("tbPasswordDGV")).Text;
+        string SchoolID = ((DropDownList)dgvTeachers.Rows[e.RowIndex].FindControl("ddlSchoolNameDGV")).SelectedValue;
 
         //Check if email is blank
         if (Email == "")
         {
-            error_lbl.Text = "Please enter a valid email address.";
+            lblError.Text = "Please enter a valid email address.";
             return;
         }
 
         //Check if email is a valid address
         if ((!(Email.Contains("@")) && (!(Email.Contains("."))))) 
         {
-            error_lbl.Text = "Not a valid email address.";
+            lblError.Text = "Not a valid email address.";
             return;
         }
 
         //Check if last name field id blank
         if (LastName == "")
         {
-            error_lbl.Text = "Please enter a last name.";
+            lblError.Text = "Please enter a last name.";
             return;
         }
 
@@ -161,19 +161,19 @@ public partial class Edit_Teacher : Page
                     con.Close();
                 }
             }
-            teachers_dgv.EditIndex = -1;       // reset the grid after editing
+            dgvTeachers.EditIndex = -1;       // reset the grid after editing
             LoadData();
         }
         catch
         {
-            error_lbl.Text = "Error in rowUpdating. Cannot update row.";
+            lblError.Text = "Error in rowUpdating. Cannot update row.";
             return;
         }
     }
 
-    protected void teachers_dgv_RowDeleting(object sender, GridViewDeleteEventArgs e)
+    protected void dgvTeachers_RowDeleting(object sender, GridViewDeleteEventArgs e)
     {
-        int ID = Convert.ToInt32(teachers_dgv.DataKeys[e.RowIndex].Values[0]); // Gets id number
+        int ID = Convert.ToInt32(dgvTeachers.DataKeys[e.RowIndex].Values[0]); // Gets id number
 
         try
         {
@@ -188,41 +188,41 @@ public partial class Edit_Teacher : Page
                     con.Close();
                 }
             }
-            teachers_dgv.EditIndex = -1;       // reset the grid after editing
+            dgvTeachers.EditIndex = -1;       // reset the grid after editing
 
             LoadData();
         }
         catch
         {
-            error_lbl.Text = "Error in rowDeleting. Cannot delete row.";
+            lblError.Text = "Error in rowDeleting. Cannot delete row.";
             return;
         }
     }
 
-    protected void teachers_dgv_RowEditing(object sender, GridViewEditEventArgs e)
+    protected void dgvTeachers_RowEditing(object sender, GridViewEditEventArgs e)
     {
-        teachers_dgv.EditIndex = e.NewEditIndex;
+        dgvTeachers.EditIndex = e.NewEditIndex;
         LoadData();
     }
 
-    protected void teachers_dgv_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+    protected void dgvTeachers_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
     {
-        teachers_dgv.EditIndex = -1;
+        dgvTeachers.EditIndex = -1;
         LoadData();
     }
 
-    protected void teachers_dgv_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    protected void dgvTeachers_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
-        teachers_dgv.PageIndex = e.NewPageIndex;
+        dgvTeachers.PageIndex = e.NewPageIndex;
         LoadData();
     }
 
-    protected void teachers_dgv_RowDataBound(object sender, GridViewRowEventArgs e)
+    protected void dgvTeachers_RowDataBound(object sender, GridViewRowEventArgs e)
     {
         if ((e.Row.RowType == DataControlRowType.DataRow))
         {
-            string lblSchool1 = (e.Row.FindControl("schoolNameDGV_lbl") as Label).Text;
-            DropDownList ddlSchool1 = e.Row.FindControl("schoolNameDGV_ddl") as DropDownList;
+            string lblSchool1 = (e.Row.FindControl("lblSchoolNameDGV") as Label).Text;
+            DropDownList ddlSchool1 = e.Row.FindControl("ddlSchoolNameDGV") as DropDownList;
 
             //Load gridview school DDLs with school names
             Gridviews.SchoolNames(ddlSchool1, lblSchool1);
@@ -230,29 +230,29 @@ public partial class Edit_Teacher : Page
     }
 
 
-    protected void schoolName_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlSchoolName_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (schoolName_ddl.SelectedIndex != 0)
+        if (ddlSchoolName.SelectedIndex != 0)
         {
-            search_tb.Text = "";
+            tbSearch.Text = "";
             LoadData();
         }
     }
 
-    protected void search_btn_Click(object sender, EventArgs e)
+    protected void btnSearch_Click(object sender, EventArgs e)
     {
-        if (search_tb.Text != "")
+        if (tbSearch.Text != "")
         {
-            schoolName_ddl.SelectedIndex = 0;
+            ddlSchoolName.SelectedIndex = 0;
             LoadData();
         }
         else
         {
-            error_lbl.Text = "Please enter a teacher name to search.";
+            lblError.Text = "Please enter a teacher name to search.";
         }
     }
 
-    protected void refresh_btn_Click(object sender, EventArgs e)
+    protected void btnRefresh_Click(object sender, EventArgs e)
     {
         Response.Redirect("Edit_Teacher.aspx");
     }

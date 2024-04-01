@@ -29,7 +29,7 @@ public partial class Create_Job : Page
     public Create_Job()
     {
         ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
-        VisitID = VisitData.GetVisitID();
+        
         Load += Page_Load;
     }
 
@@ -44,39 +44,39 @@ public partial class Create_Job : Page
         if (!IsPostBack)
         {
             //Load businesses ddl from businessInfoFP
-            BusinessData.LoadBusinessNamesDDL(businessName_ddl);
+            BusinessData.LoadBusinessNamesDDL(ddlBusinessName);
 
             // Populating school header
-            headerSchoolName_lbl.Text = (SchoolHeader.GetSchoolHeader()).ToString();
+            lblHeaderSchoolName.Text = (SchoolHeader.GetSchoolHeader()).ToString();
         }
     }
 
     public void Submit()
     {
         //Check if fields are empty
-        if (jobTitle_tb.Text == "")
+        if (tbJobTitle.Text == "")
         {
-            error_lbl.Text = "Please enter a job title before submitting.";
+            lblError.Text = "Please enter a job title before submitting.";
             return;
         }
-        else if (businessName_ddl.SelectedIndex == 0)
+        else if (ddlBusinessName.SelectedIndex == 0)
         {
-            error_lbl.Text = "Please select a business before submitting.";
+            lblError.Text = "Please select a business before submitting.";
             return;
         }
-        else if (duties_tb.InnerText == "")
+        else if (tbDuties.InnerText == "")
         {
-            error_lbl.Text = "Please enter in a job duty before submitting.";
+            lblError.Text = "Please enter in a job duty before submitting.";
             return;
         }
-        else if (edDebt_tb.Text == "")
+        else if (tbEdDebt.Text == "")
         {
-            error_lbl.Text = "Please enter in a debt amount before submitting.";
+            lblError.Text = "Please enter in a debt amount before submitting.";
             return;
         }
-        else if (advance_tb.InnerText == "")
+        else if (tbAdvance.InnerText == "")
         {
-            error_lbl.Text = "Please enter in an advancement text before submitting.";
+            lblError.Text = "Please enter in an advancement text before submitting.";
             return;
         }
 
@@ -88,12 +88,12 @@ public partial class Create_Job : Page
                 using (SqlCommand cmd = new SqlCommand(@"INSERT INTO jobsFP (jobTitle, business, educationBG, jobDuties, edDebt, advancement)
 												        VALUES (@jobTitle, @business, @educationBG, @jobDuties, @edDebt, @advancement);"))
                 {
-                    cmd.Parameters.Add("@jobTitle", SqlDbType.VarChar).Value = jobTitle_tb.Text;
-                    cmd.Parameters.Add("@business", SqlDbType.VarChar).Value = businessName_ddl.SelectedValue;
-                    cmd.Parameters.Add("@educationBG", SqlDbType.VarChar).Value = education_ddl.SelectedValue;
-                    cmd.Parameters.Add("@jobDuties", SqlDbType.VarChar).Value = duties_tb.InnerText;
-                    cmd.Parameters.Add("@edDebt", SqlDbType.VarChar).Value = edDebt_tb.Text;
-                    cmd.Parameters.Add("@advancement", SqlDbType.VarChar).Value = advance_tb.InnerText;
+                    cmd.Parameters.Add("@jobTitle", SqlDbType.VarChar).Value = tbJobTitle.Text;
+                    cmd.Parameters.Add("@business", SqlDbType.VarChar).Value = ddlBusinessName.SelectedValue;
+                    cmd.Parameters.Add("@educationBG", SqlDbType.VarChar).Value = ddlEducation.SelectedValue;
+                    cmd.Parameters.Add("@jobDuties", SqlDbType.VarChar).Value = tbDuties.InnerText;
+                    cmd.Parameters.Add("@edDebt", SqlDbType.VarChar).Value = tbEdDebt.Text;
+                    cmd.Parameters.Add("@advancement", SqlDbType.VarChar).Value = tbAdvance.InnerText;
 
                     cmd.Connection = con;
                     con.Open();
@@ -106,11 +106,11 @@ public partial class Create_Job : Page
                 meta.HttpEquiv = "Refresh";
                 meta.Content = "3;url=create_job.aspx";
                 this.Page.Controls.Add(meta);
-                error_lbl.Text = "Submission successful! Refreshing page...";
+                lblError.Text = "Submission successful! Refreshing page...";
             }
                 catch
                 {
-                error_lbl.Text = "Error in Submit(). Cannot create new school.";
+                lblError.Text = "Error in Submit(). Cannot create new school.";
                 return;
             }
         }
@@ -119,7 +119,7 @@ public partial class Create_Job : Page
 
 
 
-    protected void submit_btn_Click(object sender, EventArgs e)
+    protected void btnSubmit_Click(object sender, EventArgs e)
     {
         Submit();
     }

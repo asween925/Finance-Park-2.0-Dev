@@ -19,7 +19,7 @@
     <form id="EMS_Form" runat="server">
 
         <%--Header information--%>
-        <header class="headerTop no-print"><a style="float: left; padding-top: 2px;">Finance Park 2.0</a><a style="float: right; padding-right: 30px; padding-top: 2px;"><asp:Label ID="headerSchoolName_lbl" Text="School Name Here" runat="server"></asp:Label></a></header>
+        <header class="headerTop no-print"><a style="float: left; padding-top: 2px;">Finance Park 2.0</a><a style="float: right; padding-right: 30px; padding-top: 2px;"><asp:Label ID="lblHeaderSchoolName" Text="School Name Here" runat="server"></asp:Label></a></header>
 
         <%--Navigation bar--%>
         <div id="nav-placeholder">
@@ -40,11 +40,11 @@
                 Fill out the fields below and click the submit button to finish.
             </h3>
             <p>Job Title:</p>
-            <asp:TextBox ID="jobTitle_tb" runat="server" CssClass="textbox"></asp:TextBox>&ensp;<asp:Label ID="error_lbl" runat="server" Font-Bold="true" Font-Size="X-Large" ForeColor="Red"></asp:Label>
+            <asp:TextBox ID="tbJobTitle" runat="server" CssClass="textbox"></asp:TextBox>&ensp;<asp:Label ID="lblError" runat="server" Font-Bold="true" Font-Size="X-Large" ForeColor="Red"></asp:Label>
             <p>Business:</p>
-            <asp:DropDownList ID="businessName_ddl" runat="server" CssClass="ddl"></asp:DropDownList>
+            <asp:DropDownList ID="ddlBusinessName" runat="server" CssClass="ddl"></asp:DropDownList>
             <p>Education Background:</p>
-            <asp:DropDownList ID="education_ddl" runat="server" CssClass="ddl">
+            <asp:DropDownList ID="ddlEducation" runat="server" CssClass="ddl">
                 <asp:ListItem>Associate's Degree</asp:ListItem>
                 <asp:ListItem>Bachelor's Degree</asp:ListItem>
                 <asp:ListItem>Master's Degree</asp:ListItem>
@@ -52,18 +52,18 @@
                 <asp:ListItem>Trade/Vocational School</asp:ListItem>
             </asp:DropDownList>
             <p>Job Duties:</p>
-            <textarea id="duties_tb" runat="server" class="textbox"></textarea>
+            <textarea id="tbDuties" runat="server" class="textbox"></textarea>
             <p>Educational Debt:</p>
-            <asp:TextBox ID="edDebt_tb" runat="server" TextMode="Number" CssClass="textbox"></asp:TextBox>
+            <asp:TextBox ID="tbEdDebt" runat="server" TextMode="Number" CssClass="textbox"></asp:TextBox>
             <p>Advancement:</p>
-            <textarea id="advance_tb" runat="server" class="textbox"></textarea>
+            <textarea id="tbAdvance" runat="server" class="textbox"></textarea>
             <br />
             <br />
-            <asp:Button ID="submit_btn" runat="server" CssClass="button" Text="Submit" OnClick="submit_btn_Click" />
+            <asp:Button ID="btnSubmit" runat="server" CssClass="button" Text="Submit" OnClick="btnSubmit_Click" />
             <br />
         </div>
 
-        <asp:HiddenField ID="currentVisitID_hf" runat="server" />
+        <asp:HiddenField ID="hfCurrentVisitID" runat="server" />
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="Scripts.js"></script>

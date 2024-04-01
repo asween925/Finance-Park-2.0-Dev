@@ -40,10 +40,10 @@ public partial class Edit_Job : Page
         if (!IsPostBack)
         {
             //Load jobs ddl
-            JobData.LoadJobsDDL(jobTitle_ddl);
+            JobData.LoadJobsDDL(ddlJobTitle);
 
             // Populating school header
-            headerSchoolName_lbl.Text = SchoolHeader.GetSchoolHeader().ToString();
+            lblHeaderSchoolName.Text = SchoolHeader.GetSchoolHeader().ToString();
 
             //Load table
             LoadData();
@@ -55,20 +55,20 @@ public partial class Edit_Job : Page
         string SQLStatement = "SELECT * FROM jobsFP";
 
         //Clear error
-        error_lbl.Text = "";
+        lblError.Text = "";
 
         //Clear table
-        jobs_dgv.DataSource = null;
-        jobs_dgv.DataBind();
+        dgvJobs.DataSource = null;
+        dgvJobs.DataBind();
 
         //If loading by the DDL, add school name to search query
-        if (jobTitle_ddl.SelectedIndex != 0)
+        if (ddlJobTitle.SelectedIndex != 0)
         {
-            SQLStatement = SQLStatement + " WHERE jobTitle='" + jobTitle_ddl.SelectedValue + "'";
+            SQLStatement = SQLStatement + " WHERE jobTitle='" + ddlJobTitle.SelectedValue + "'";
         }
-        else if (search_tb.Text != "")
+        else if (tbSearch.Text != "")
         {
-            SQLStatement = SQLStatement + " WHERE jobTitle LIKE '%" + search_tb.Text + "%'";
+            SQLStatement = SQLStatement + " WHERE jobTitle LIKE '%" + tbSearch.Text + "%'";
         }
         else
         {
@@ -82,8 +82,8 @@ public partial class Edit_Job : Page
             con.Open();
             Review_sds.ConnectionString = ConnectionString;
             Review_sds.SelectCommand = SQLStatement;
-            jobs_dgv.DataSource = Review_sds;
-            jobs_dgv.DataBind();
+            dgvJobs.DataSource = Review_sds;
+            dgvJobs.DataBind();
 
             cmd.Dispose();
             con.Close();
@@ -91,14 +91,14 @@ public partial class Edit_Job : Page
         }
         catch
         {
-            error_lbl.Text = "Error in LoadData(). Cannot load jobs table.";
+            lblError.Text = "Error in LoadData(). Cannot load jobs table.";
             return;
         }
 
         // Highlight row being edited
-        foreach (GridViewRow row in jobs_dgv.Rows)
+        foreach (GridViewRow row in dgvJobs.Rows)
         {
-            if (row.RowIndex == jobs_dgv.EditIndex)
+            if (row.RowIndex == dgvJobs.EditIndex)
             {
                 row.BackColor = ColorTranslator.FromHtml("#ebe534");
                 row.BorderWidth = 2;
@@ -106,15 +106,15 @@ public partial class Edit_Job : Page
         }
     }
 
-    protected void jobs_dgv_RowUpdating(object sender, GridViewUpdateEventArgs e)
+    protected void dgvJobs_RowUpdating(object sender, GridViewUpdateEventArgs e)
     {
-        int ID = Convert.ToInt32(jobs_dgv.DataKeys[e.RowIndex].Values[0]); // Gets id number
-        string JobTitle = ((DropDownList)jobs_dgv.Rows[e.RowIndex].FindControl("jobTitleDGV_tb")).Text;
-        string BusinessName = ((DropDownList)jobs_dgv.Rows[e.RowIndex].FindControl("businessNameDGV_ddl")).SelectedValue;
-        string EducationBG = ((DropDownList)jobs_dgv.Rows[e.RowIndex].FindControl("educationBGDGV_lbl")).SelectedValue;
-        string JobDuties = ((HtmlTextArea)jobs_dgv.Rows[e.RowIndex].FindControl("jobDutiesDGV_lbl")).InnerText;
-        string EdDebt = ((TextBox)jobs_dgv.Rows[e.RowIndex].FindControl("edDebtDGV_tb")).Text;
-        string Advancements = ((HtmlTextArea)jobs_dgv.Rows[e.RowIndex].FindControl("advancementsDGV_lbl")).InnerText;
+        int ID = Convert.ToInt32(dgvJobs.DataKeys[e.RowIndex].Values[0]); // Gets id number
+        string JobTitle = ((TextBox)dgvJobs.Rows[e.RowIndex].FindControl("tbJobTitleDGV")).Text;
+        string BusinessName = ((DropDownList)dgvJobs.Rows[e.RowIndex].FindControl("ddlBusinessNameDGV")).SelectedValue;
+        string EducationBG = ((DropDownList)dgvJobs.Rows[e.RowIndex].FindControl("ddlEducationBGDGV")).SelectedValue;
+        string JobDuties = ((TextBox)dgvJobs.Rows[e.RowIndex].FindControl("tbJobDutiesDGV")).Text;
+        string EdDebt = ((TextBox)dgvJobs.Rows[e.RowIndex].FindControl("tbEdDebtDGV")).Text;
+        string Advancement = ((TextBox)dgvJobs.Rows[e.RowIndex].FindControl("tbAdvancementDGV")).Text;
         string BusinessID;
 
         //Get business ID from name
@@ -139,26 +139,26 @@ public partial class Edit_Job : Page
                     cmd.Parameters.AddWithValue("@educationBG", EducationBG);
                     cmd.Parameters.AddWithValue("@jobDuties", JobDuties);
                     cmd.Parameters.AddWithValue("@edDebt", EdDebt);
-                    cmd.Parameters.AddWithValue("@advancement", Advancements);
+                    cmd.Parameters.AddWithValue("@advancement", Advancement);
                     cmd.Connection = con;
                     con.Open();
                     cmd.ExecuteNonQuery();
                     con.Close();
                 }
             }
-            jobs_dgv.EditIndex = -1;       // reset the grid after editing
+            dgvJobs.EditIndex = -1;       // reset the grid after editing
             LoadData();
         }
         catch
         {
-            error_lbl.Text = "Error in rowUpdating. Cannot update row.";
+            lblError.Text = "Error in rowUpdating. Cannot update row.";
             return;
         }
     }
 
-    protected void jobs_dgv_RowDeleting(object sender, GridViewDeleteEventArgs e)
+    protected void dgvJobs_RowDeleting(object sender, GridViewDeleteEventArgs e)
     {
-        int ID = Convert.ToInt32(jobs_dgv.DataKeys[e.RowIndex].Values[0]); // Gets id number
+        int ID = Convert.ToInt32(dgvJobs.DataKeys[e.RowIndex].Values[0]); // Gets id number
 
         try
         {
@@ -173,47 +173,47 @@ public partial class Edit_Job : Page
                     con.Close();
                 }
             }
-            jobs_dgv.EditIndex = -1;       // reset the grid after editing
+            dgvJobs.EditIndex = -1;       // reset the grid after editing
 
             LoadData();
         }
         catch
         {
-            error_lbl.Text = "Error in rowDeleting. Cannot delete row.";
+            lblError.Text = "Error in rowDeleting. Cannot delete row.";
             return;
         }
     }
 
-    protected void jobs_dgv_RowEditing(object sender, GridViewEditEventArgs e)
+    protected void dgvJobs_RowEditing(object sender, GridViewEditEventArgs e)
     {
-        jobs_dgv.EditIndex = e.NewEditIndex;
+        dgvJobs.EditIndex = e.NewEditIndex;
         LoadData();
     }
 
-    protected void jobs_dgv_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+    protected void dgvJobs_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
     {
-        jobs_dgv.EditIndex = -1;
+        dgvJobs.EditIndex = -1;
         LoadData();
     }
 
-    protected void jobs_dgv_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    protected void dgvJobs_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
-        jobs_dgv.PageIndex = e.NewPageIndex;
+        dgvJobs.PageIndex = e.NewPageIndex;
         LoadData();
     }
 
-    protected void jobs_dgv_RowDataBound(object sender, GridViewRowEventArgs e)
+    protected void dgvJobs_RowDataBound(object sender, GridViewRowEventArgs e)
     {
         if ((e.Row.RowType == DataControlRowType.DataRow))
         {
-            string lblBusiness = (e.Row.FindControl("businessNameDGV_lbl") as Label).Text;
-            DropDownList ddlBusiness = e.Row.FindControl("businessNameDGV_ddl") as DropDownList;
+            string lblBusiness = (e.Row.FindControl("lblBusinessNameDGV") as Label).Text;
+            DropDownList ddlBusiness = e.Row.FindControl("ddlBusinessNameDGV") as DropDownList;
 
             //Load gridview school DDLs with school names
             Gridviews.BusinessNames(ddlBusiness, lblBusiness);
 
-            string lblEdBG = (e.Row.FindControl("educationBGDGV_lbl") as Label).Text;
-            DropDownList ddlEdBG = e.Row.FindControl("educationBGDGV_ddl") as DropDownList;
+            string lblEdBG = (e.Row.FindControl("lblEducationBGDGV") as Label).Text;
+            DropDownList ddlEdBG = e.Row.FindControl("ddlEducationBGDGV") as DropDownList;
 
             //Select business name from label
             ddlEdBG.SelectedValue = lblEdBG;
@@ -223,23 +223,23 @@ public partial class Edit_Job : Page
 
 
 
-    protected void submit_btn_Click(object sender, EventArgs e)
+    protected void btnSubmit_Click(object sender, EventArgs e)
     {
-        if (search_tb.Text != "")
+        if (tbSearch.Text != "")
         {
             LoadData();
         }
     }
 
-    protected void jobTitle_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlJobTitle_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (jobTitle_ddl.SelectedIndex != 0) 
+        if (ddlJobTitle.SelectedIndex != 0) 
         {
             LoadData();
         }
     }
 
-    protected void refresh_btn_Click(object sender, EventArgs e)
+    protected void btnRefresh_Click(object sender, EventArgs e)
     {
         Response.Redirect("edit_job.aspx");
     }

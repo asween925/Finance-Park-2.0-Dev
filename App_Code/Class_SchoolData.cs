@@ -6,7 +6,6 @@ using System.Web.UI.WebControls;
 public partial class Class_SchoolData
 {
     private Class_VisitData VisitID = new Class_VisitData();
-    private int Visit;
     private SqlConnection con = new SqlConnection();
     private SqlCommand cmd = new SqlCommand();
     private SqlDataReader dr;
@@ -22,7 +21,6 @@ public partial class Class_SchoolData
 
     public Class_SchoolData()
     {
-        Visit = VisitID.GetVisitID();
         connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
     }
 

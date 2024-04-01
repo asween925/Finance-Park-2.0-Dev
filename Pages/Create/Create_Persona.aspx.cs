@@ -29,7 +29,7 @@ public partial class Create_Persona : Page
     public Create_Persona()
     {
         ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
-        VisitID = VisitData.GetVisitID();
+        
         Load += Page_Load;
     }
 
@@ -44,10 +44,10 @@ public partial class Create_Persona : Page
         if (!IsPostBack)
         {
             //load job titles ddl
-            Jobs.LoadJobsDDL(jobTitle_ddl);
+            Jobs.LoadJobsDDL(ddlJobTitle);
 
             // Populating school header
-            headerSchoolName_lbl.Text = (SchoolHeader.GetSchoolHeader()).ToString();
+            lblHeaderSchoolName.Text = (SchoolHeader.GetSchoolHeader()).ToString();
         }
     }
 
@@ -59,109 +59,109 @@ public partial class Create_Persona : Page
         string SpouseAge = "0";
 
         //Check if fields are empty
-        if (jobTitle_ddl.SelectedIndex == 0)
+        if (ddlJobTitle.SelectedIndex == 0)
         {
-            success_lbl.Text = "Please select a job title before submitting.";
+            lblSuccess.Text = "Please select a job title before submitting.";
             return;
         }
-        else if (gai_tb.Text == "")
+        else if (tbGAI.Text == "")
         {
-            success_lbl.Text = "Please enter a GAI amount before submitting.";
+            lblSuccess.Text = "Please enter a GAI amount before submitting.";
             return;
         }
-        else if (age_tb.Text == "")
+        else if (tbAge.Text == "")
         {
-            success_lbl.Text = "Please enter an age before submitting.";
+            lblSuccess.Text = "Please enter an age before submitting.";
             return;
         }
-        else if (creditScore_tb.Text == "")
+        else if (tbCreditScore.Text == "")
         {
-            success_lbl.Text = "Please enter a credit score before submitting.";
+            lblSuccess.Text = "Please enter a credit score before submitting.";
             return;
         }
-        else if (creditScore_tb.Text == "")
+        else if (tbCreditScore.Text == "")
         {
-            success_lbl.Text = "Please enter a credit score before submitting.";
+            lblSuccess.Text = "Please enter a credit score before submitting.";
             return;
         }
-        else if (nmi_tb.Text == "")
+        else if (tbNMI.Text == "")
         {
-            success_lbl.Text = "Please enter a NMI amount before submitting.";
+            lblSuccess.Text = "Please enter a NMI amount before submitting.";
             return;
         }
-        else if (ccdebt_tb.Text == "")
+        else if (tbCCDebt.Text == "")
         {
-            success_lbl.Text = "Please enter a CC debt amount before submitting.";
+            lblSuccess.Text = "Please enter a CC debt amount before submitting.";
             return;
         }
-        else if (furnLimit_tb.Text == "")
+        else if (tbFurnLimit.Text == "")
         {
-            success_lbl.Text = "Please enter a furniture limit before submitting.";
+            lblSuccess.Text = "Please enter a furniture limit before submitting.";
             return;
         }
-        else if (homeImp_tb.Text == "")
+        else if (tbHomeImp.Text == "")
         {
-            success_lbl.Text = "Please enter a home improvement limit before submitting.";
+            lblSuccess.Text = "Please enter a home improvement limit before submitting.";
             return;
         }
-        else if (longSave_tb.Text == "")
+        else if (tbLongSave.Text == "")
         {
-            success_lbl.Text = "Please enter a longterm savings before submitting.";
+            lblSuccess.Text = "Please enter a longterm savings before submitting.";
             return;
         }
-        else if (emerFunds_tb.Text == "")
+        else if (tbEmerFunds.Text == "")
         {
-            success_lbl.Text = "Please enter an emergencies funds before submitting.";
+            lblSuccess.Text = "Please enter an emergencies funds before submitting.";
             return;
         }
-        else if (otherSave_tb.Text == "")
+        else if (tbOtherSave.Text == "")
         {
-            success_lbl.Text = "Please enter an other savings amount before submitting.";
+            lblSuccess.Text = "Please enter an other savings amount before submitting.";
             return;
         }
-        else if (autoLoan_tb.Text == "")
+        else if (tbAutoLoan.Text == "")
         {
-            success_lbl.Text = "Please enter an auto loan amount before submitting.";
+            lblSuccess.Text = "Please enter an auto loan amount before submitting.";
             return;
         }
-        else if (mortAmnt_tb.Text == "")
+        else if (tbMortAmnt.Text == "")
         {
-            success_lbl.Text = "Please enter a mortgage amount before submitting.";
+            lblSuccess.Text = "Please enter a mortgage amount before submitting.";
             return;
         }
-        else if (thatsAmnt_tb.Text == "")
+        else if (tbThatsAmnt.Text == "")
         {
-            success_lbl.Text = "Please enter a 'That's Life' amount before submitting.";
+            lblSuccess.Text = "Please enter a 'That's Life' amount before submitting.";
             return;
         }
-        else if (desc_tb.Text == "")
+        else if (tbDesc.Text == "")
         {
-            success_lbl.Text = "Please enter a description before submitting.";
+            lblSuccess.Text = "Please enter a description before submitting.";
             return;
         }
 
         //Get job ID from name
-        JobID = Jobs.GetJobIDFromTitle(jobTitle_ddl.SelectedValue).ToString();
+        JobID = Jobs.GetJobIDFromTitle(ddlJobTitle.SelectedValue).ToString();
 
         //Check if married
-        if (martialStatus_ddl.SelectedIndex == 1) 
+        if (ddlMartialStatus.SelectedIndex == 1) 
         {
-            SpouseAge = spouseAge_tb.Text;
+            SpouseAge = tbSpouseAge.Text;
         }
 
         //Check if child 1 or child 2 is selected
-        if (numOfChild_ddl.SelectedIndex == 1)
+        if (ddlNumOfChild.SelectedIndex == 1)
         {
-            if (child1_tb.Text == "")
+            if (tbChild1.Text == "")
             {
-                Child1 = child1_tb.Text;
+                Child1 = tbChild1.Text;
             }          
         }
-        else if (numOfChild_ddl.SelectedIndex == 2)
+        else if (ddlNumOfChild.SelectedIndex == 2)
         {
-            if (child2_tb.Text == "")
+            if (tbChild2.Text == "")
             {
-                Child2 = child2_tb.Text;
+                Child2 = tbChild2.Text;
             }
         }
 
@@ -174,26 +174,26 @@ public partial class Create_Persona : Page
 												        VALUES (@jobID, @jobType, @gai, @age, @maritalStatus, @spouseAge, @numOfChildren, @child1Age, @child2Age, @creditScore, @nmi, @ccDebt, @furnitureLimit, @homeImpLimit, @longSavings, @emergFunds, @otherSavings, @autoLoanAmnt, @mortAmnt, @thatsLifeAmnt, @description);"))
                 {
                     cmd.Parameters.Add("@jobID", SqlDbType.Int).Value = JobID;
-                    cmd.Parameters.Add("@jobType", SqlDbType.VarChar).Value = jobType_ddl.SelectedValue;
-                    cmd.Parameters.Add("@gai", SqlDbType.Money).Value = gai_tb.Text;
-                    cmd.Parameters.Add("@age", SqlDbType.Int).Value = age_tb.Text;
-                    cmd.Parameters.Add("@maritalStatus", SqlDbType.VarChar).Value = martialStatus_ddl.SelectedValue;
+                    cmd.Parameters.Add("@jobType", SqlDbType.VarChar).Value = ddlJobType.SelectedValue;
+                    cmd.Parameters.Add("@gai", SqlDbType.Money).Value = tbGAI.Text;
+                    cmd.Parameters.Add("@age", SqlDbType.Int).Value = tbAge.Text;
+                    cmd.Parameters.Add("@maritalStatus", SqlDbType.VarChar).Value = ddlMartialStatus.SelectedValue;
                     cmd.Parameters.Add("@spouseAge", SqlDbType.Int).Value = SpouseAge;
-                    cmd.Parameters.Add("@numOfChildren", SqlDbType.Int).Value = numOfChild_ddl.SelectedValue;
+                    cmd.Parameters.Add("@numOfChildren", SqlDbType.Int).Value = ddlNumOfChild.SelectedValue;
                     cmd.Parameters.Add("@child1Age", SqlDbType.Int).Value = Child1;
                     cmd.Parameters.Add("@child2Age", SqlDbType.Int).Value = Child2;
-                cmd.Parameters.Add("@creditScore", SqlDbType.Int).Value = creditScore_tb.Text;
-                cmd.Parameters.Add("@nmi", SqlDbType.Money).Value = nmi_tb.Text;
-                    cmd.Parameters.Add("@ccDebt", SqlDbType.Money).Value = ccdebt_tb.Text;
-                    cmd.Parameters.Add("@furnitureLimit", SqlDbType.Money).Value = furnLimit_tb.Text;
-                    cmd.Parameters.Add("@homeImpLimit", SqlDbType.Money).Value = homeImp_tb.Text;
-                    cmd.Parameters.Add("@longSavings", SqlDbType.Money).Value = longSave_tb.Text;
-                    cmd.Parameters.Add("@emergFunds", SqlDbType.Money).Value = emerFunds_tb.Text;
-                    cmd.Parameters.Add("@otherSavings", SqlDbType.Money).Value = otherSave_tb.Text;
-                    cmd.Parameters.Add("@autoLoanAmnt", SqlDbType.Money).Value = autoLoan_tb.Text;
-                    cmd.Parameters.Add("@mortAmnt", SqlDbType.Money).Value = mortAmnt_tb.Text;
-                    cmd.Parameters.Add("@thatsLifeAmnt", SqlDbType.Money).Value = thatsAmnt_tb.Text;
-                    cmd.Parameters.Add("@description", SqlDbType.VarChar).Value = desc_tb.Text;
+                cmd.Parameters.Add("@creditScore", SqlDbType.Int).Value = tbCreditScore.Text;
+                cmd.Parameters.Add("@nmi", SqlDbType.Money).Value = tbNMI.Text;
+                    cmd.Parameters.Add("@ccDebt", SqlDbType.Money).Value = tbCCDebt.Text;
+                    cmd.Parameters.Add("@furnitureLimit", SqlDbType.Money).Value = tbFurnLimit.Text;
+                    cmd.Parameters.Add("@homeImpLimit", SqlDbType.Money).Value = tbHomeImp.Text;
+                    cmd.Parameters.Add("@longSavings", SqlDbType.Money).Value = tbLongSave.Text;
+                    cmd.Parameters.Add("@emergFunds", SqlDbType.Money).Value = tbEmerFunds.Text;
+                    cmd.Parameters.Add("@otherSavings", SqlDbType.Money).Value = tbOtherSave.Text;
+                    cmd.Parameters.Add("@autoLoanAmnt", SqlDbType.Money).Value = tbAutoLoan.Text;
+                    cmd.Parameters.Add("@mortAmnt", SqlDbType.Money).Value = tbMortAmnt.Text;
+                    cmd.Parameters.Add("@thatsLifeAmnt", SqlDbType.Money).Value = tbThatsAmnt.Text;
+                    cmd.Parameters.Add("@description", SqlDbType.VarChar).Value = tbDesc.Text;
 
                     cmd.Connection = con;
                     con.Open();
@@ -206,57 +206,57 @@ public partial class Create_Persona : Page
                 meta.HttpEquiv = "Refresh";
                 meta.Content = "3;url=create_persona.aspx";
                 this.Page.Controls.Add(meta);
-                success_lbl.Text = "Submission successful! Refreshing page...";
+                lblSuccess.Text = "Submission successful! Refreshing page...";
         }
             catch
             {
-            error_lbl.Text = "Error in Submit(). Cannot create new persona.";
+            lblError.Text = "Error in Submit(). Cannot create new persona.";
             return;
         }
     }
     }
 
-    protected void submit_btn_Click(object sender, EventArgs e)
+    protected void btnSubmit_Click(object sender, EventArgs e)
     {
         Submit();
     }
 
-    protected void numOfChild_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlNumOfChild_SelectedIndexChanged(object sender, EventArgs e)
     {
-            if (numOfChild_ddl.SelectedIndex == 0)
+            if (ddlNumOfChild.SelectedIndex == 0)
             {
-                child2_p.Visible = false;
-                child2_tb.Visible = false;
-                child1_p.Visible = false;
-                child1_tb.Visible = false;
+                pChild2.Visible = false;
+                tbChild2.Visible = false;
+                pChild1.Visible = false;
+                tbChild1.Visible = false;
         }
-            else if (numOfChild_ddl.SelectedIndex == 1)
+            else if (ddlNumOfChild.SelectedIndex == 1)
             {
-                child2_p.Visible = false;
-                child2_tb.Visible = false;
-                child1_p.Visible = true;
-                child1_tb.Visible = true;
+                pChild2.Visible = false;
+                tbChild2.Visible = false;
+                pChild1.Visible = true;
+                tbChild1.Visible = true;
             }
-            else if (numOfChild_ddl.SelectedIndex == 2)
+            else if (ddlNumOfChild.SelectedIndex == 2)
             {
-                child2_p.Visible = true;
-                child2_tb.Visible = true;
-                child1_p.Visible = true;
-                child1_tb.Visible = true;
+                pChild2.Visible = true;
+                tbChild2.Visible = true;
+                pChild1.Visible = true;
+                tbChild1.Visible = true;
             }
     }
 
-    protected void martialStatus_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlMartialStatus_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (martialStatus_ddl.SelectedIndex == 0)
+        if (ddlMartialStatus.SelectedIndex == 0)
         {
-            spouseAge_p.Visible = false;
-            spouseAge_tb.Visible = false;
+            pSpouseAge.Visible = false;
+            tbSpouseAge.Visible = false;
         }
-        else if (martialStatus_ddl.SelectedIndex == 1)
+        else if (ddlMartialStatus.SelectedIndex == 1)
         {
-            spouseAge_p.Visible= true;
-            spouseAge_tb.Visible = true;
+            pSpouseAge.Visible= true;
+            tbSpouseAge.Visible = true;
         }
     }
 }

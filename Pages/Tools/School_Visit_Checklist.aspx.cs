@@ -29,8 +29,7 @@ public partial class School_Visit_Checklist : Page
 
     public School_Visit_Checklist()
     {
-        ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
-        VisitID = VisitData.GetVisitID();
+        ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";      
         Load += Page_Load;
     }
 
@@ -51,7 +50,7 @@ public partial class School_Visit_Checklist : Page
             }
 
             // Populating school header
-            headerSchoolName_lbl.Text = (SchoolHeader.GetSchoolHeader()).ToString();
+            lblHeaderSchoolName.Text = (SchoolHeader.GetSchoolHeader()).ToString();
         }
     }
 
@@ -143,6 +142,7 @@ public partial class School_Visit_Checklist : Page
                 else
                 {
                     btnS1Submit.Text = "Submit";
+                    return;
                 }
             }
             catch
@@ -157,7 +157,7 @@ public partial class School_Visit_Checklist : Page
             lblError.Text = "Error in LoadData(). Could not load inital data or completion data for Step 1.";
             return;
         }
-        
+
         //Step 2
         try
         {
@@ -217,8 +217,8 @@ public partial class School_Visit_Checklist : Page
         }
 
         //Step 4
-        //try
-        //{
+        try
+        {
             //Check if Step 4 is completed
             if (SVC.LoadTable(VisitID, SchoolID, "completeS4").ToString() != "False")
             {
@@ -239,12 +239,12 @@ public partial class School_Visit_Checklist : Page
                 //Change S4 button to submit
                 btnS4Submit.Text = "Submit";
             }
-        //}
-        //catch
-        //{
-        //    lblError.Text = "Error in LoadData(). Could not load data for Step 4.";
-        //    return;
-        //}
+        }
+        catch
+        {
+            lblError.Text = "Error in LoadData(). Could not load data for Step 4.";
+            return;
+        }
 
         //Step 5
         try

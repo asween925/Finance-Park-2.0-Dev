@@ -27,7 +27,7 @@ public partial class Bookkeeper_Guidelines : Page
     public Bookkeeper_Guidelines()
     {
         ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
-        VisitID = VisitData.GetVisitID();
+        
         Load += Page_Load;
     }
 
@@ -42,41 +42,41 @@ public partial class Bookkeeper_Guidelines : Page
         if (!IsPostBack)
         {
             // Populating school header
-            headerSchoolName_lbl.Text = (SchoolHeader.GetSchoolHeader()).ToString();
+            lblHeaderSchoolName.Text = (SchoolHeader.GetSchoolHeader()).ToString();
         }
     }
 
     public void LoadData()
     {
         //Load public or home school
-        if (letterType_ddl.SelectedIndex == 0) 
+        if (ddlLetterType.SelectedIndex == 0) 
         {
-            letterTopPub_p.Visible = true;
-            tablePub_div.Visible = true;
-            letterPayPub_p.Visible = true;
+            pLetterTopPub.Visible = true;
+            divTablePub.Visible = true;
+            pLetterPayPub.Visible = true;
 
-            letterTopHome_p.Visible = false;
-            tableHome_div.Visible = false;
-            letterPayHome_p.Visible = false;
+            pLetterTopHome.Visible = false;
+            divTableHome.Visible = false;
+            pLetterPayHome.Visible = false;
         }
         else
         {
-            letterTopPub_p.Visible = false;
-            tablePub_div.Visible = false;
-            letterPayPub_p.Visible = false;
+            pLetterTopPub.Visible = false;
+            divTablePub.Visible = false;
+            pLetterPayPub.Visible = false;
 
-            letterTopHome_p.Visible = true;
-            tableHome_div.Visible = true;
-            letterPayHome_p.Visible = true;
+            pLetterTopHome.Visible = true;
+            divTableHome.Visible = true;
+            pLetterPayHome.Visible = true;
         }
     }
 
-    protected void print_btn_Click(object sender, EventArgs e)
+    protected void btnPrint_Click(object sender, EventArgs e)
     {
         Page.ClientScript.RegisterStartupScript(GetType(), "Print", "print();", true);
     }
 
-    protected void letterType_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlLetterType_SelectedIndexChanged(object sender, EventArgs e)
     {
         LoadData();
     }
