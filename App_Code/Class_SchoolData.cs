@@ -13,7 +13,7 @@ public partial class Class_SchoolData
     string sqldatabase = System.Configuration.ConfigurationManager.AppSettings["FP_DB"];
     string sqluser = System.Configuration.ConfigurationManager.AppSettings["db_user"];
     string sqlpassword = System.Configuration.ConfigurationManager.AppSettings["db_password"];
-    private string connection_string;
+    private string ConnectionString;
     private string volRange;
     private string vMin;
     private string vMax;
@@ -21,7 +21,7 @@ public partial class Class_SchoolData
 
     public Class_SchoolData()
     {
-        connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
+        ConnectionString = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
     }
 
     // Populates a DDL with schools scheduled to come on an entered visit date
@@ -40,7 +40,7 @@ public partial class Class_SchoolData
             // Populate school DDL from entered visit date
             try
             {
-                con.ConnectionString = connection_string;
+                con.ConnectionString = ConnectionString;
                 con.Open();
                 cmd.CommandText = @"SELECT s.schoolName as 'schoolName'
 											  FROM schoolInfoFP s 
@@ -70,21 +70,31 @@ public partial class Class_SchoolData
 
     }
 
-    // Populates a DDL with all schools in the DB
-    public object LoadSchoolsDDL(DropDownList schoolNameDDL)
+    // Populates a DDL with all schools in the DB, asks if it should load school ID 1, the cancel school, or not
+    public object LoadSchoolsDDL(DropDownList schoolNameDDL, bool LoadCancel)
     {
         string errorString;
-        // Dim schoolNameDDL As DropDownList
+        string SQL = "SELECT schoolName FROM schoolInfoFP ";
 
         // Clear out teacher and school DDLs
         schoolNameDDL.Items.Clear();
 
+        //If LoadCancel is true, then add school ID 1 (School Cancelled/Rescheduled) to DDL
+        if (LoadCancel == true)
+        {
+            SQL = SQL + "ORDER BY CASE WHEN id=1 THEN 0 ELSE 1 END, schoolName";
+        }
+        else
+        {
+            SQL = SQL + "WHERE NOT id=1 ORDER BY schoolName ASC";
+        }
+
         // Populate school DDL from entered visit date
         try
         {
-            con.ConnectionString = connection_string;
+            con.ConnectionString = ConnectionString;
             con.Open();
-            cmd.CommandText = "SELECT schoolname FROM schoolInfoFP  WHERE NOT schoolName = 'A1 No School Scheduled' AND NOT id='505' ORDER BY schoolName";
+            cmd.CommandText = SQL;
             cmd.Connection = con;
             dr = cmd.ExecuteReader();
 
@@ -111,7 +121,7 @@ public partial class Class_SchoolData
         string returnData = "";
 
         // Get school info from school name
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd.CommandText = "SELECT " + column + " FROM schoolInfoFP WHERE schoolName = '" + schoolName + "'";
         cmd.Connection = con;
@@ -133,12 +143,12 @@ public partial class Class_SchoolData
     }
 
     // Gets the ID of a school name
-    public object GetSchoolID(string schoolName)
+    public int GetSchoolID(string schoolName)
     {
-        string returnSchoolID = "";
+        int returnSchoolID = 0;
 
         // Get school info from school name
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd.CommandText = "SELECT ID FROM schoolInfoFP WHERE schoolName = '" + schoolName + "'";
         cmd.Connection = con;
@@ -146,7 +156,7 @@ public partial class Class_SchoolData
 
         while (dr.Read())
         {
-            returnSchoolID = dr["ID"].ToString();
+            returnSchoolID = int.Parse(dr["ID"].ToString());
             cmd.Dispose();
             con.Close();
             return returnSchoolID;
@@ -171,7 +181,7 @@ public partial class Class_SchoolData
         DDL.Items.Clear();
 
         // Populate DDL
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd.CommandText = sqlStatement;
         cmd.Connection = con;
@@ -208,7 +218,7 @@ public partial class Class_SchoolData
                                             LEFT JOIN schoolInfoFP s5 ON s5.ID = v.school5
 											 WHERE v.visitDate='" + VisitDate + "' AND NOT v.school=1 ORDER BY v.visitDate DESC";
 
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd.CommandText = SQLStatement;
         cmd.Connection = con;
@@ -270,7 +280,7 @@ public partial class Class_SchoolData
                                             LEFT JOIN schoolInfoFP s5 ON s5.ID = v.school5
 											 WHERE v.visitDate='" + VisitDate + "' AND NOT v.school=1 ORDER BY v.visitDate DESC";
 
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd.CommandText = SQLStatement;
         cmd.Connection = con;
@@ -350,7 +360,7 @@ public partial class Class_SchoolData
                                             LEFT JOIN schoolInfoFP s5 ON s5.ID = v.school5
 											 WHERE v.visitDate='" + VisitDate + "' AND NOT v.school=1 ORDER BY v.visitDate DESC";
 
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd.CommandText = SQLStatement;
         cmd.Connection = con;
@@ -387,7 +397,7 @@ public partial class Class_SchoolData
             SQLStatment += " WHERE o.visitDate='" + VisitDate + "' AND o.openstatus=1";
         }
 
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd.CommandText = SQLStatment;
         cmd.Connection = con;
@@ -411,7 +421,7 @@ public partial class Class_SchoolData
         string returnSchoolName = "";
 
         // Get school info from school name
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd.CommandText = "SELECT schoolName FROM schoolInfoFP WHERE id = '" + SchoolID + "'";
         cmd.Connection = con;
@@ -435,7 +445,7 @@ public partial class Class_SchoolData
     public void UpdatePreviousVisitDate(string SchoolID)
     {
 
-        using (var con = new SqlConnection(connection_string))
+        using (var con = new SqlConnection(ConnectionString))
         {
             using (var cmd = new SqlCommand("UPDATE schoolInfoFP SET previousVisitDate=currentVisitDate WHERE id=@school"))
             {
@@ -454,7 +464,7 @@ public partial class Class_SchoolData
     {
         if (SchoolID != "0" || SchoolID != "0")
         {
-            using (var con = new SqlConnection(connection_string))
+            using (var con = new SqlConnection(ConnectionString))
             {
                 using (var cmd = new SqlCommand("UPDATE schoolInfoFP SET currentVisitDate=@VisitDate WHERE id=@school"))
                 {
@@ -477,7 +487,7 @@ public partial class Class_SchoolData
         string returnData = "";
 
         // Get school info from school name
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd.CommandText = "SELECT FORMAT(currentVisitDate, 'M/dd/yyyy') as currentVisitDate FROM schoolInfoFP WHERE id = '" + SchoolID + "'";
         cmd.Connection = con;

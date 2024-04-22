@@ -142,6 +142,7 @@
                         <asp:Label ID="lblS4LastEdit" runat="server" Font-Bold="false" Text="None"></asp:Label></p>
                     <p class="SVC_p">Number of Kits: </p>
                     <asp:DropDownList ID="ddlS4NumKits" runat="server" CssClass="ddl" AutoPostBack="true" OnSelectedIndexChanged="ddlS4NumKits_SelectedIndexChanged">
+                        <asp:ListItem>0</asp:ListItem>
                         <asp:ListItem>1</asp:ListItem>
                         <asp:ListItem>2</asp:ListItem>
                         <asp:ListItem>3</asp:ListItem>

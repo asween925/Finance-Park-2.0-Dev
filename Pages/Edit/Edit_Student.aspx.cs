@@ -54,12 +54,12 @@ public partial class Edit_Student : Page
     public void LoadData()
     {
         int VisitID = int.Parse(VisitData.GetVisitIDFromDate(tbVisitDate.Text).ToString());
-        string SQLStatement = @"SELECT s.id, s.accountNum, a.pin, s.firstName, s.lastName, s.schoolID, s.businessID, s.jobID, s.teacherID, s.personaID, s.lunchServed 
+        int SchoolID;
+        string SQLStatement = @"SELECT s.id, s.accountNum, a.pin, s.firstName, s.lastName, s.schoolID, s.sponsorID, s.teacherID, s.personaID, s.grade, s.gender, s.lunchServed 
                                 FROM studentInfoFP s 
                                 JOIN accountNumsFP a ON s.accountNum = a.accountNum 
                                 WHERE s.visitID='" + VisitID + "'";
-        int SchoolID;
-
+        
         //Clear error
         lblError.Text = "";
 
@@ -80,8 +80,8 @@ public partial class Edit_Student : Page
         }
 
         //Load schoolInfoFP table
-        //try
-        //{
+        try
+        {
             con.ConnectionString = ConnectionString;
             con.Open();
             Review_sds.ConnectionString = ConnectionString;
@@ -92,12 +92,12 @@ public partial class Edit_Student : Page
             cmd.Dispose();
             con.Close();
 
-        //}
-        //catch
-        //{
-        //    lblError.Text = "Error in LoadData(). Cannot load studentInfo table.";
-        //    return;
-        //}
+        }
+        catch
+        {
+            lblError.Text = "Error in LoadData(). Cannot load studentInfo table.";
+            return;
+        }
 
         // Highlight row being edited
         foreach (GridViewRow row in dgvStudents.Rows)
@@ -190,21 +190,21 @@ public partial class Edit_Student : Page
             int VisitID = int.Parse(VisitData.GetVisitIDFromDate(tbVisitDate.Text).ToString());
             string lblSchool = (e.Row.FindControl("lblSchoolIDDGV") as Label).Text;
             string lblBusiness = (e.Row.FindControl("lblBusinessIDDGV") as Label).Text;
-            string lblJob = (e.Row.FindControl("lblJobIDDGV") as Label).Text;
+            string lblSponsor = (e.Row.FindControl("lblSponsorIDDGV") as Label).Text;
             string lblTeacher = (e.Row.FindControl("lblTeacherIDDGV") as Label).Text;
             string lblPersona = (e.Row.FindControl("lblPersonaIDDGV") as Label).Text;
             DropDownList ddlSchool = e.Row.FindControl("ddlSchoolNameDGV") as DropDownList;
             DropDownList ddlBusiness = e.Row.FindControl("ddlBusinessNameDGV") as DropDownList;
-            DropDownList ddlJob = e.Row.FindControl("ddlJobNameDGV") as DropDownList;
+            DropDownList ddlSponsor = e.Row.FindControl("ddlSponsorNameDGV") as DropDownList;
             DropDownList ddlTeacher = e.Row.FindControl("ddlTeacherNameDGV") as DropDownList;
             DropDownList ddlPersona = e.Row.FindControl("ddlPersonaNameDGV") as DropDownList;
 
             //Load gridview school DDLs with school names, business names, job names, persona names, and teacher names
             Gridviews.VisitingSchoolNames(ddlSchool, lblSchool, VisitID);
             Gridviews.BusinessNames(ddlBusiness, lblBusiness);
-            Gridviews.JobTitle(ddlJob, lblJob);
+            Gridviews.Sponsors(ddlSponsor, lblSponsor);
             //Gridviews.TeacherName(ddlTeacher, lblTeacher);
-            Gridviews.SchoolOnlyTeacherName(ddlTeacher, lblTeacher, 66); //int.Parse(lblSchool)
+            Gridviews.SchoolOnlyTeacherName(ddlTeacher, lblTeacher, int.Parse(lblSchool)); //int.Parse(lblSchool)
             Gridviews.Personas(ddlPersona, lblPersona);
         }
     }

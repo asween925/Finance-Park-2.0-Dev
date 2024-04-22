@@ -56,13 +56,14 @@ public partial class Student_Report : Page
         int SchoolID;
         int VisitID = int.Parse(VisitData.GetVisitIDFromDate(tbVisitDate.Text).ToString());
         DateTime VisitDate = DateTime.Parse(tbVisitDate.Text);
-        string SQLStatement = @"SELECT s.id, s.accountNum, a.pin, s.firstName, s.lastName, p.maritalStatus, p.numOfChildren, j.educationBG, b.businessName, j.jobTitle
+        string SQLStatement = @"SELECT s.id, s.accountNum, a.pin, s.firstName, s.lastName, p.maritalStatus, p.numOfChildren, b.businessName, j.jobTitle, s.personaID
                                 FROM studentInfoFP s 
                                 JOIN accountNumsFP a ON s.accountNum = a.accountNum 
 								JOIN schoolInfoFP sc ON sc.id = s.schoolID
-								JOIN businessInfoFP b ON b.id = s.businessID
-								JOIN jobsFP j ON j.id = s.jobID
+								JOIN sponsorsFP sp ON sp.id = s.sponsorID
 								JOIN personasFP p ON p.id = s.personaID
+								JOIN jobsFP j ON j.id = p.jobID
+								LEFT JOIN businessInfoFP b ON b.id = j.businessID
                                 WHERE s.visitID='" + VisitID + "'";
 
         //Clear error label

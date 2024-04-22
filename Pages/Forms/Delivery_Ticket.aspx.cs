@@ -23,6 +23,7 @@ public partial class Delivery_Ticket : Page
     private Class_SchoolHeader SchoolHeader = new Class_SchoolHeader();
     private Class_GridviewFunctions Gridviews = new Class_GridviewFunctions();
     private Class_TeacherData TeacherData = new Class_TeacherData();
+    private Class_SVC SVC = new Class_SVC();
     private int VisitID;
     private string URL = HttpContext.Current.Request.Url.ToString();
 
@@ -77,12 +78,16 @@ public partial class Delivery_Ticket : Page
     }
 
     public void LoadData()
-    {
-        string VisitDate = tbVisitDate.Text;
+    {      
+        DateTime VisitDate = DateTime.Parse(tbVisitDate.Text);
+        int VisitID = int.Parse(VisitData.GetVisitIDFromDate(VisitDate.ToString()).ToString());
         string SchoolName = ddlSchoolName.SelectedValue;
         string TeacherName = ddlTeacherName.SelectedValue;
+        int SchoolID = SchoolData.GetSchoolID(SchoolName);
         string ContactTeacher = TeacherData.GetContactTeacher(SchoolData.GetSchoolID(SchoolName).ToString()).ToString();
-        string StudentCount = VisitData.LoadVisitInfoFromDate(VisitDate, "studentCount").ToString();
+        string StudentCount = VisitData.LoadVisitInfoFromDate(VisitDate.ToString(), "studentCount").ToString();
+        string Workbooks = SVC.GetWorkbooks(VisitID, SchoolID).ToString();
+        string Kits = SVC.GetKitNumbersString(VisitID, SchoolID).ToString();
         string Email = "";
 
         //Load public, private, or kits only
@@ -109,6 +114,8 @@ public partial class Delivery_Ticket : Page
         lblSchoolName.Text = SchoolName;
         lblContact.Text = ContactTeacher;
         lblTeacherName.Text = TeacherName;
+        lblBooks.Text = Workbooks;
+        lblKits.Text = Kits;
     }
 
 
@@ -149,7 +156,7 @@ public partial class Delivery_Ticket : Page
             ddlTeacherName.Items.Clear();
 
             //Load teacher name ddl
-            TeacherData.LoadTeacherNamesFromVID(Int16.Parse(VisitData.GetVisitIDFromDate(tbVisitDate.Text).ToString()), Int16.Parse(SchoolData.GetSchoolID(ddlSchoolName.SelectedValue).ToString()), ddlTeacherName);
+            TeacherData.LoadTeacherNamesFromVID(int.Parse(SchoolData.GetSchoolID(ddlSchoolName.SelectedValue).ToString()), ddlTeacherName);
             ddlTeacherName.Items.Insert(0, "");
 
             //Load Data

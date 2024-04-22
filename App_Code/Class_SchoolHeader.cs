@@ -3,7 +3,7 @@
 public partial class Class_SchoolHeader
 {
     private Class_VisitData VisitData = new Class_VisitData();
-    private string VisitID;
+    private int VisitID;
     private string schoolHeader;
     private string schoolHeader2;
     private string schoolHeader3;
@@ -14,7 +14,7 @@ public partial class Class_SchoolHeader
     string sqldatabase = System.Configuration.ConfigurationManager.AppSettings["FP_DB"];
     string sqluser = System.Configuration.ConfigurationManager.AppSettings["db_user"];
     string sqlpassword = System.Configuration.ConfigurationManager.AppSettings["db_password"];
-    private string connection_string;
+    private string ConnectionString;
     private string returnSchool1;
     private string returnSchool2;
     private string returnSchool3;
@@ -22,11 +22,11 @@ public partial class Class_SchoolHeader
 
     public Class_SchoolHeader()
     {
-        VisitID = VisitData.GetVisitID().ToString();
+        VisitID = VisitData.GetVisitID();
         schoolHeader = "SELECT s.SchoolName FROM schoolinfoFP s INNER JOIN visitInfoFP v on s.ID = v.School WHERE v.id='" + VisitID + "'";
         schoolHeader2 = "SELECT s.SchoolName FROM schoolinfoFP s INNER JOIN visitInfoFP v on s.ID = v.School2 WHERE v.id='" + VisitID + "'";
         schoolHeader3 = "SELECT s.SchoolName FROM schoolinfoFP s INNER JOIN visitInfoFP v on s.ID = v.School3 WHERE v.id='" + VisitID + "'";
-        connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
+        ConnectionString = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
     }
 
     public object GetSchoolHeader()
@@ -34,7 +34,7 @@ public partial class Class_SchoolHeader
         // Populating header school and school name label
         try
         {
-            con.ConnectionString = connection_string;
+            con.ConnectionString = ConnectionString;
             con.Open();
             cmd.CommandText = schoolHeader;
             cmd.Connection = con;
@@ -59,7 +59,7 @@ public partial class Class_SchoolHeader
         // School 2
         try
         {
-            con.ConnectionString = connection_string;
+            con.ConnectionString = ConnectionString;
             con.Open();
             cmd.CommandText = schoolHeader2;
             cmd.Connection = con;
@@ -91,7 +91,7 @@ public partial class Class_SchoolHeader
         // School 3
         try
         {
-            con.ConnectionString = connection_string;
+            con.ConnectionString = ConnectionString;
             con.Open();
             cmd.CommandText = schoolHeader3;
             cmd.Connection = con;
@@ -122,7 +122,7 @@ public partial class Class_SchoolHeader
 
         returnSchool = returnSchool1 + returnSchool2 + returnSchool3;
 
-        if (VisitID == "0")
+        if (VisitID == 0)
         {
             returnSchool = "No School Scheduled";
         }

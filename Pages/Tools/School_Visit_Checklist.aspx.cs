@@ -672,12 +672,16 @@ public partial class School_Visit_Checklist : Page
             //Check if visit date is a valid visit date
             if (int.Parse(VisitData.GetVisitIDFromDate(tbVisitDate.Text).ToString()) != 0)
             {
+                //Clear label
+                lblError.Text = "";
+                
                 //Show and load visiting schools DDL
                 SchoolData.LoadVisitDateSchoolsDDL(tbVisitDate.Text, ddlSchoolName);
                 divSchoolName.Visible = true;
             }
             else
             {
+                divSchoolName.Visible = false;
                 lblError.Text = "No visit scheduled for selected date.";
                 return;
             }

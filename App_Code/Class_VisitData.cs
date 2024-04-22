@@ -12,14 +12,14 @@ public partial class Class_VisitData
     private SqlDataReader dr;
     private SqlConnection con = new SqlConnection();
     private SqlCommand cmd = new SqlCommand();
-    private string connection_string;
+    private string ConnectionString;
 
-    public object GetVisitID()
+    public int GetVisitID()
     {
-        string connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
-        string returnValue = "0";
+        string ConnectionString = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
+        int returnValue = 0;
 
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd.CommandText = "SELECT ID FROM visitInfoFP WHERE visitDate = '" + DateTime.Now + "'";
         cmd.Connection = con;
@@ -27,26 +27,25 @@ public partial class Class_VisitData
 
             while (dr.Read())
             {
-                returnValue = dr["ID"].ToString();
+                returnValue = int.Parse(dr["ID"].ToString());
             }              
 
         cmd.Dispose();
         con.Close();
-
 
         return returnValue;
     }
 
     public object GetVisitIDFromDate(string visitDate)
     {
-        string connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
+        string ConnectionString = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
         SqlDataReader dr;
         string dateSQL = "SELECT ID FROM visitInfoFP WHERE visitDate = '" + visitDate + "'";
         int returnValue = 0;
         var con = new SqlConnection();
         var cmd = new SqlCommand();
 
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd.CommandText = dateSQL;
         cmd.Connection = con;
@@ -72,11 +71,11 @@ public partial class Class_VisitData
 
     public object GetVisitDateFromID(string VisitID)
     {
-        string connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
+        string ConnectionString = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
         string dateSQL = "SELECT visitDate FROM visitInfoFP WHERE id = '" + VisitID + "'";
         var returnValue = default(string);
 
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd.CommandText = dateSQL;
         cmd.Connection = con;
@@ -103,10 +102,10 @@ public partial class Class_VisitData
     public object LoadVisitInfoFromDate(string VisitDate, string Column)
     {
         string ReturnData = "";
-        string connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
+        string ConnectionString = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
 
         // Get school info from school name
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd.CommandText = "SELECT " + Column + " FROM visitInfoFP WHERE visitDate = '" + VisitDate + "'";
         cmd.Connection = con;
@@ -128,7 +127,7 @@ public partial class Class_VisitData
 
     public object LoadVisitInfoTable(string SQLWhereVisitDate = null, string SQLWhereSchool = null, string SQLWhereMonth = null, string SQLWhereNot = null)
     {
-        string connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
+        string ConnectionString = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
         string SQLStatement = @"SELECT v.id, IIF(s.id IS NULL, '', CONCAT(s.schoolName, ' (', s.id, ')')) as 'School #1',
 		                                    IIF(s2.id IS NULL, '', CONCAT(s2.schoolName, ' (', s2.id, ')')) as 'School #2', 
                                              IIF(s3.id IS NULL, '', CONCAT(s3.schoolName, ' (', s3.id, ')')) as 'School #3', 
@@ -162,7 +161,7 @@ public partial class Class_VisitData
             SQLStatement += SQLWhereNot;
         }
 
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd = new SqlCommand();
         cmd.Connection = con;
@@ -181,7 +180,7 @@ public partial class Class_VisitData
         string ReturnData = "";
 
         // Get school info from school name
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd.CommandText = "SELECT FORMAT (visitDate, 'MM/dd/yyyy') FROM visitInfoFP WHERE school = '" + SchoolID + "' Or school2 = '" + SchoolID + "' Or school3 = '" + SchoolID + "' Or school4 = '" + SchoolID + "' Or school5 = '" + SchoolID + "'";
         cmd.Connection = con;
@@ -206,9 +205,9 @@ public partial class Class_VisitData
     public object ShowVisitConfirmation(string VisitDate)
     {
         string Confirm;
-        string connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
+        string ConnectionString = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
 
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd.CommandText = "SELECT id FROM visitInfoFP WHERE visitDate='" + VisitDate + "'";
         cmd.Connection = con;

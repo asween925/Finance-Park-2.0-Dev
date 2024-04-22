@@ -66,12 +66,16 @@
             <%--Letter--%>
             <div id="divLetter" runat="server" visible="false" class="letter">
                 <h4 class="letter_title">Pinellas County Schools Form</h4>
-                <p class="letter_p">Visit Date: <asp:Label ID="lblVisitDate" runat="server"></asp:Label></p>
-                <p class="letter_p">Total Number of <asp:Label ID="lblSchoolName" runat="server"></asp:Label> students attending: <asp:Label ID="lblStudentCount" runat="server"></asp:Label></p>
+                <p class="letter_p">Visit Date: <asp:Label ID="lblVisitDate" runat="server" Font-Bold="false"></asp:Label></p>
+                <p class="letter_p">Total Number of 
+                    <asp:Label ID="lblSchoolName" runat="server" Font-Underline="true"></asp:Label> students attending: 
+                    <asp:Label ID="lblStudentCount" runat="server" Font-Bold="false"></asp:Label></p>
 
                 <%--Private--%>
-                <p id="pPri1" runat="server" visible="false" class="letter_p">Number of workbooks recieved by <asp:Label ID="lblSchoolNamePri1" runat="server"></asp:Label>: <asp:Label ID="lblBooksRec" runat="server"></asp:Label></p>
-                <p id="pPri2" runat="server" visible="false" class="letter_p">Number of unused workbooks returned: <asp:Label ID="lblBooksRet" runat="server"></asp:Label></p>
+                <p id="pPri1" runat="server" visible="false" class="letter_p">Number of workbooks recieved by 
+                    <asp:Label ID="lblSchoolNamePri1" runat="server" Font-Bold="false"></asp:Label>: <asp:Label ID="lblBooksRec" runat="server"></asp:Label></p>
+                <p id="pPri2" runat="server" visible="false" class="letter_p">Number of unused workbooks returned: 
+                    <asp:Label ID="lblBooksRet" runat="server" Font-Bold="false"></asp:Label></p>
 
                 <br />
                 <p class="letter_r" style="font-style: italic;">Please circle your answer:</p>

@@ -12,11 +12,11 @@ public partial class Class_TeacherData
     private string sqldatabase = System.Configuration.ConfigurationManager.AppSettings["FP_DB"].ToString();
     private string sqluser = System.Configuration.ConfigurationManager.AppSettings["db_user"].ToString();
     private string sqlpassword = System.Configuration.ConfigurationManager.AppSettings["db_password"].ToString();
-    private string connection_string;
+    private string ConnectionString;
 
     public Class_TeacherData()
     {
-        connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
+        ConnectionString = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
     }
 
     // Gets the contact teacher name
@@ -25,7 +25,7 @@ public partial class Class_TeacherData
         string returnData = "";
 
         // Get school info from school name
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd.CommandText = "SELECT TRIM(firstName) + ' ' + TRIM(lastName) as teacherName FROM teacherInfoFP WHERE schoolID = '" + schoolID + "' AND contact=1";
         cmd.Connection = con;
@@ -49,7 +49,7 @@ public partial class Class_TeacherData
     // Gets first and last name of teacher from a school name
     public object LoadTeacherNameDDLFromSchoolName(string SchoolName, DropDownList DDL)
     {
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd.CommandText = "SELECT t.firstName, t.lastName FROM teacherInfoFP t INNER JOIN schoolInfoFP s ON s.id = t.schoolID WHERE s.schoolName='" + SchoolName + "'";
         cmd.Connection = con;
@@ -68,10 +68,10 @@ public partial class Class_TeacherData
 
 
     //Gets first and last name of teacher from a school ID
-    public object LoadTeacherNameDDLFromSchoolID(string SchoolID, DropDownList DDL)
+    public object LoadTeacherNameDDLFromSchoolID(int SchoolID, DropDownList DDL)
     {
       
-            con.ConnectionString = connection_string;
+            con.ConnectionString = ConnectionString;
             con.Open();
             cmd.CommandText = "SELECT firstName, lastName FROM teacherInfoFP WHERE schoolID='" + SchoolID + "'";
             cmd.Connection = con;
@@ -91,18 +91,18 @@ public partial class Class_TeacherData
 
 
     //Gets ID of teacher from first and last name
-    public object GetTeacherIDFromName(string First, string Last)
+    public int GetTeacherIDFromName(string First, string Last)
     {
-        string ID = "";
+        int ID = 0;
 
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd.CommandText = "SELECT ID FROM teacherInfoFP WHERE firstName='" + First + "' AND lastName='" + Last + "'";
         cmd.Connection = con;
         dr = cmd.ExecuteReader();
 
         while (dr.Read())
-            ID = dr[0].ToString();
+            ID = int.Parse(dr[0].ToString());
 
         cmd.Dispose ();
         con.Close();
@@ -117,7 +117,7 @@ public partial class Class_TeacherData
         string UpdateSQL = "UPDATE teacherInfoFP SET ";
         
         //Check if currVisitID is not null
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd.CommandText = "SELECT currVisitID FROM teacherInfoFP WHERE id='" + TID + "'";
         cmd.Connection = con;
@@ -144,11 +144,11 @@ public partial class Class_TeacherData
 
 
     //Loads a DDL with the teachers of a visit ID
-    public object LoadTeacherNamesFromVID(int VisitID, int SchoolID, DropDownList DDL)
+    public object LoadTeacherNamesFromVID(int SchoolID, DropDownList DDL)
     {
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
-        cmd.CommandText = "SELECT firstName, lastName FROM teacherInfoFP WHERE schoolID='" + SchoolID + "' AND currVisitID='" + VisitID + "'";
+        cmd.CommandText = "SELECT firstName, lastName FROM teacherInfoFP WHERE schoolID='" + SchoolID + "'";
         cmd.Connection = con;
         dr = cmd.ExecuteReader();
 
@@ -168,7 +168,7 @@ public partial class Class_TeacherData
     {
         string email = "";
         
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd.CommandText = "SELECT email FROM teacherInfoFP WHERE id='" + TID + "'";
         cmd.Connection = con;

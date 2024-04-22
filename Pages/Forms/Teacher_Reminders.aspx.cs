@@ -173,7 +173,7 @@ public partial class Teacher_Reminders : Page
             ddlTeacherName.Items.Clear();
 
             //Load teacher name ddl
-            TeacherData.LoadTeacherNamesFromVID(Int16.Parse(VisitData.GetVisitIDFromDate(tbVisitDate.Text).ToString()), Int16.Parse(SchoolData.GetSchoolID(ddlSchoolName.SelectedValue).ToString()), ddlTeacherName);
+            TeacherData.LoadTeacherNamesFromVID(Int16.Parse(SchoolData.GetSchoolID(ddlSchoolName.SelectedValue).ToString()), ddlTeacherName);
             ddlTeacherName.Items.Insert(0, "");
             
             //Load Data

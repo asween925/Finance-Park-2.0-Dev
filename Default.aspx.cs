@@ -21,7 +21,7 @@ public partial class _Default : Page
     string sqldatabase = System.Configuration.ConfigurationManager.AppSettings["FP_DB"];
     string sqluser = System.Configuration.ConfigurationManager.AppSettings["db_user"];
     string sqlpassword = System.Configuration.ConfigurationManager.AppSettings["db_password"];
-    string connection_string;
+    string ConnectionString;
     string logoRoot = "~/media/Logos/";
     string strProfit;
     string schoolName;
@@ -37,13 +37,13 @@ public partial class _Default : Page
         string email = tbEmail.Text;
         string[] username = email.Split('@');
         string password = password_tb.Text;
-        connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
+        ConnectionString = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
         Regex emailCheck = new Regex("[@]");
         Regex domainCheck = new Regex(@"[\\]");
         Match emailMatch = emailCheck.Match(email);
         Match domainMatch = domainCheck.Match(email);
-        SqlConnection con = new SqlConnection(connection_string);
-        SqlCommand cmd = new SqlCommand(connection_string, con);
+        SqlConnection con = new SqlConnection(ConnectionString);
+        SqlCommand cmd = new SqlCommand(ConnectionString, con);
         SqlDataReader dr;
 
         //Checks if tbEmail is a proper email address (contains both a '@' and a '.'
@@ -60,7 +60,7 @@ public partial class _Default : Page
         //Checks if user is PCSB, if email contains '@pcsb.org'
         if (email.Contains("@pcsb.org"))
         {
-            con.ConnectionString = connection_string;
+            con.ConnectionString = ConnectionString;
             con.Open();
             cmd.Connection = con;
 
@@ -105,7 +105,7 @@ public partial class _Default : Page
                         //Check if entered email is in the database, by checking if there is a school name associated with email
                         try
                         {
-                            con.ConnectionString = connection_string;
+                            con.ConnectionString = ConnectionString;
                             con.Open();
                             cmd.CommandText = "SELECT DISTINCT t.schoolName FROM teacherInfoFP t LEFT JOIN schoolInfo s ON s.schoolName = t.schoolName WHERE t.futureRequestsEmail = '" + email + "' OR s.futureRequestsEmail = '" + email + "'";
                             cmd.Connection = con;
@@ -133,7 +133,7 @@ public partial class _Default : Page
 
                         try
                         {
-                            con.ConnectionString = connection_string;
+                            con.ConnectionString = ConnectionString;
                             con.Open();
                             cmd.CommandText = "SELECT DISTINCT id FROM schoolInfoFP WHERE schoolName = '" + lblSchoolName.Text + "' AND NOT id=505";
                             cmd.Connection = con;
@@ -163,7 +163,7 @@ public partial class _Default : Page
                         //Check if school has a visit created for 22-23
                         try
                         {
-                            con.ConnectionString = connection_string;
+                            con.ConnectionString = ConnectionString;
                             con.Open();
 
                             //CHANGE THIS CODE HERE AFTER EACH SCHOOL YEAR:     CHANGE THE YEAR BETWEEN AT THE END OF THIS LINE TO 8-10-(Current Year) AND 6-10(Next Year)
@@ -218,7 +218,7 @@ public partial class _Default : Page
             {
                 Session.Add("LoggedIn", "1");
 
-                con.ConnectionString = connection_string;
+                con.ConnectionString = ConnectionString;
                 con.Open();
                 cmd.CommandText = "SELECT DISTINCT password FROM teacherInfoFP WHERE futureRequestsEmail = '" + email + "'";
                 cmd.Connection = con;
@@ -257,7 +257,7 @@ public partial class _Default : Page
                 //Gets schoolName and ID from teacherInfo using email
                 try
                 {
-                    con.ConnectionString = connection_string;
+                    con.ConnectionString = ConnectionString;
                     con.Open();
                     cmd.CommandText = "SELECT DISTINCT id, schoolName FROM teacherInfoFP WHERE futureRequestsEmail = '" + email + "'";
                     cmd.Connection = con;
@@ -293,7 +293,7 @@ public partial class _Default : Page
                 //Get school ID
                 try
                 {
-                    con.ConnectionString = connection_string;
+                    con.ConnectionString = ConnectionString;
                     con.Open();
                     cmd.CommandText = "SELECT DISTINCT id FROM schoolInfoFP WHERE schoolName = '" + lblSchoolName.Text + "' AND NOT id='505'";
                     cmd.Connection = con;
@@ -324,7 +324,7 @@ public partial class _Default : Page
                 //Get visit ID from visitInfoFP and check if there is a visit in the system
                 try
                 {
-                    con.ConnectionString = connection_string;
+                    con.ConnectionString = ConnectionString;
                     con.Open();
 
                     //CHANGE THE YEAR BETWEEN AT THE END OF THIS LINE TO 8-10-(Current Year) AND 6-10(Next Year)

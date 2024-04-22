@@ -75,8 +75,8 @@ public partial class Edit_Persona : Page
         }
 
         //Load personasFP table
-        //try
-        //{
+        try
+        {
             con.ConnectionString = ConnectionString;
             con.Open();
             Review_sds.ConnectionString = ConnectionString;
@@ -87,12 +87,12 @@ public partial class Edit_Persona : Page
             cmd.Dispose();
             con.Close();
 
-        //}
-        //catch
-        //{
-        //    lblError.Text = "Error in LoadData(). Cannot load personas table.";
-        //    return;
-        //}
+        }
+        catch
+        {
+            lblError.Text = "Error in LoadData(). Cannot load personas table.";
+            return;
+        }
 
         // Highlight row being edited
         foreach (GridViewRow row in dgvPersona.Rows)

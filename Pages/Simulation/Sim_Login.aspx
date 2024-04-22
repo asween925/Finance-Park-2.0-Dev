@@ -10,7 +10,7 @@
     <title>Finance Park - Start</title>
 
     <link href="../../CSS/StudentPages.css" rel="stylesheet" media="screen" type="text/css" />
-    <link rel="shortcut icon" href="../../Media/faviconFP.png" type="image/ico" />
+    <link rel="shortcut icon" href="../../Media/FP_favicon_2.png" type="image/ico" />
 
 </head>
 <body>
@@ -45,14 +45,22 @@
                     <p>School:
                         <asp:DropDownList ID="ddlSchoolName" runat="server" CssClass="ddl Sim_Login_Fields" AutoPostBack="true" OnSelectedIndexChanged="ddlSchoolName_SelectedIndexChanged"></asp:DropDownList></p>
                     <p>Teacher:
-                        <asp:DropDownList ID="ddlTeacher" runat="server" CssClass="ddl Sim_Login_Fields"></asp:DropDownList></p>
+                        <asp:DropDownList ID="ddlTeacherName" runat="server" CssClass="ddl Sim_Login_Fields"></asp:DropDownList></p>
                     <p>Grade:
-                        <asp:TextBox ID="tbGrade" runat="server" CssClass="textbox Sim_Login_Fields" TextMode="Number" Width="40px" Text="8"></asp:TextBox></p>
+                        <asp:DropDownList ID="ddlGrade" runat="server" CssClass="ddl Sim_Login_Fields" >
+                            <asp:ListItem>6</asp:ListItem>
+                            <asp:ListItem>7</asp:ListItem>
+                            <asp:ListItem>8</asp:ListItem>
+                        </asp:DropDownList></p>
+                    <p>Business:
+                        <asp:DropDownList ID="ddlSponsor" runat="server" CssClass="ddl Sim_Login_Fields"></asp:DropDownList></p>
                     <p>
-                        <asp:Button ID="btnLogin" runat="server" CssClass="button Sim_Login_Fields" Text="Login" OnClick="btnLogin_Click" />&ensp;<asp:Button ID="btnReset" runat="server" CssClass="buttonReset Sim_Login_Fields" Text="Reset" OnClick="btnReset_Click" /></p>
+                        <asp:Button ID="btnEnter" runat="server" CssClass="button Sim_Login_Fields" Text="Enter" OnClick="btnEnter_Click" />&ensp;<asp:Button ID="btnReset" runat="server" CssClass="buttonReset Sim_Login_Fields" Text="Reset" OnClick="btnReset_Click" /></p>
                 </div>
                 <br />
-                <asp:Label ID="lblError" runat="server" ForeColor="Red" Font-Bold="true" Font-Size="X-Large"></asp:Label>
+                <div style="margin-left: auto; margin-right: auto; text-align: center;">
+                    <asp:Label ID="lblError" runat="server" ForeColor="Red" Font-Bold="true" Font-Size="X-Large"></asp:Label>
+                </div>                
             </div>
 
             <%--Popup--%>
@@ -60,7 +68,7 @@
                 <p class="popup_header"><asp:Label ID="lblPopupText" runat="server" Text="Please enter your PIN:"></asp:Label></p>
                 <asp:TextBox ID="tbPin" runat="server" CssClass="popup_textbox" Width="70px" TextMode="Number"></asp:TextBox>
                 <br /><br />                
-                <asp:Button ID="btnEnter" runat="server" Text="Enter" CssClass="button" OnClick="btnEnter_Click" /><asp:Button ID="btnCancel" runat="server" OnClick="btnCancel_Click" CssClass="buttonReset" Text="Cancel"></asp:Button>
+                <asp:Button ID="btnLogin" runat="server" Text="Login" CssClass="button" OnClick="btnLogin_Click" /><asp:Button ID="btnCancel" runat="server" OnClick="btnCancel_Click" CssClass="buttonReset" Text="Cancel"></asp:Button>
             </div>
         </div>
         <script type="text/javascript" src="../../Scripts/Scripts.js"></script>

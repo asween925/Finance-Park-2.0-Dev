@@ -23,6 +23,7 @@ public partial class Daily_Totals : Page
     private Class_SchoolHeader SchoolHeader = new Class_SchoolHeader();
     private Class_GridviewFunctions Gridviews = new Class_GridviewFunctions();
     private Class_TeacherData TeacherData = new Class_TeacherData();
+    private Class_SVC SVC = new Class_SVC();
     private int VisitID;
 
     public Daily_Totals()
@@ -59,6 +60,9 @@ public partial class Daily_Totals : Page
         string SchoolName = ddlSchoolName.SelectedValue;
         string TeacherName = ddlTeacherName.SelectedValue;       
         string StudentCount = VisitData.LoadVisitInfoFromDate(VisitDate, "studentCount").ToString();
+        int VisitID = int.Parse(VisitData.GetVisitIDFromDate(VisitDate).ToString());
+        int SchoolID = SchoolData.GetSchoolID(SchoolName);
+        int Workbooks = SVC.GetWorkbooks(VisitID, SchoolID);
         string Email = "";
 
         //If teacher name is not blank, assign first and last name and get email
@@ -66,7 +70,7 @@ public partial class Daily_Totals : Page
         {
             string TeacherFirst = TeacherName.Split(' ')[0];
             string TeacherLast = TeacherName.Split(' ')[1];
-            Email = TeacherData.GetTeacherEmail(Int16.Parse(TeacherData.GetTeacherIDFromName(TeacherFirst, TeacherLast).ToString())).ToString();
+            Email = TeacherData.GetTeacherEmail(int.Parse(TeacherData.GetTeacherIDFromName(TeacherFirst, TeacherLast).ToString())).ToString();
         }
 
         //Check if private or public
@@ -89,6 +93,7 @@ public partial class Daily_Totals : Page
         lblSchoolName.Text = SchoolName;
         lblSchoolNamePri1.Text = SchoolName;
         lblEmail.Text = Email;
+        lblBooksRec.Text = Workbooks.ToString();
         
     }
 
@@ -129,7 +134,7 @@ public partial class Daily_Totals : Page
             ddlTeacherName.Items.Clear();
 
             //Load teacher name ddl
-            TeacherData.LoadTeacherNamesFromVID(Int16.Parse(VisitData.GetVisitIDFromDate(tbVisitDate.Text).ToString()), Int16.Parse(SchoolData.GetSchoolID(ddlSchoolName.SelectedValue).ToString()), ddlTeacherName);
+            TeacherData.LoadTeacherNamesFromVID(int.Parse(SchoolData.GetSchoolID(ddlSchoolName.SelectedValue).ToString()), ddlTeacherName);
             ddlTeacherName.Items.Insert(0, "");
 
             //Load Data

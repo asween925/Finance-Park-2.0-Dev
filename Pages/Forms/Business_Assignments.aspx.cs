@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
@@ -23,7 +24,7 @@ public partial class Business_Assignments : Page
     private Class_SchoolData SchoolData = new Class_SchoolData();
     private Class_SchoolHeader SchoolHeader = new Class_SchoolHeader();
     private Class_GridviewFunctions Gridviews = new Class_GridviewFunctions();
-    private Class_BusinessData BusinessData = new Class_BusinessData();
+    private Class_SponsorData Sponsors = new Class_SponsorData();
     private int VisitID;
 
     public Business_Assignments()
@@ -55,17 +56,26 @@ public partial class Business_Assignments : Page
 
     public void LoadData()
     {
-        int BusinessID = int.Parse(BusinessData.GetBusinessID(ddlBusinessName.SelectedValue).ToString());
+        string SponsorName = ddlSponsorName.SelectedValue;
+        int SponsorID = Sponsors.GetSponsorID(SponsorName);
         int VisitID = int.Parse(VisitData.GetVisitIDFromDate(tbVisitDate.Text).ToString());
         DateTime VisitDate = DateTime.Parse(tbVisitDate.Text);
-        string SQLStatement = @"SELECT s.id, s.accountNum, a.pin, CONCAT(s.firstName, ' ', s.lastName) as studentName
+        string LogoPath = Sponsors.GetSponsorLogo(SponsorID);
+        string SQLStatement = @"SELECT DISTINCT s.id, s.accountNum, a.pin, CONCAT(s.firstName, ' ', s.lastName) as studentName
                                 FROM studentInfoFP s 
-                                JOIN accountNumsFP a ON s.accountNum = a.accountNum 
-								JOIN businessInfoFP b ON b.id = s.businessID								
-                                WHERE s.visitID='" + VisitID + "' AND s.businessID='" + BusinessID + "' ORDER BY s.accountNum ASC";
+                                INNER JOIN accountNumsFP a ON s.accountNum = a.accountNum 
+								INNER JOIN sponsorsFP b ON s.id = s.sponsorID
+                                WHERE s.visitID='" + VisitID + "' AND s.sponsorID='" + SponsorID + "' ORDER BY s.accountNum ASC";
 
         //Clear error label
         lblError.Text = "";
+
+        //Make fields visible
+        divBusinessLogo.Visible = true;
+        divBusinessName.Visible = true;
+        divPrintHeader.Visible = true;
+        divStudents.Visible = true;
+        imgStavrosLogo.Visible = true;
 
         //Clear teacher table
         dgvStudents.DataSource = null;
@@ -94,27 +104,8 @@ public partial class Business_Assignments : Page
             return;
         }
 
-        //Select and load business logo
-        switch (BusinessID)
-        {
-            case 1:
-                {
-                    imgBusinessLogo.Attributes["src"] = ResolveUrl("~/Media/FP_SI_Logo.png");
-                    break;
-                }
-            case 2:
-                {
-                    break;
-                }
-            case 3:
-                {
-                    break;
-                }
-            case 4:
-                {
-                    break;
-                }
-        }
+        //Load business logo
+        imgBusinessLogo.Attributes["src"] = ResolveUrl(LogoPath);
     }
 
 
@@ -134,6 +125,7 @@ public partial class Business_Assignments : Page
     }
 
 
+
     protected void tbVisitDate_TextChanged(object sender, EventArgs e)
     {
         if (tbVisitDate.Text != "")
@@ -146,7 +138,7 @@ public partial class Business_Assignments : Page
             }
 
             //Load businesses of visit date
-            BusinessData.LoadBusinessNamesDDL(ddlBusinessName);
+            Sponsors.LoadSponsorNamesDDL(ddlSponsorName);
 
             //Show schools div
             divBusinessName.Visible = true;
@@ -155,9 +147,9 @@ public partial class Business_Assignments : Page
 
 
 
-    protected void ddlBusinessName_SelectedIndexChanged(object sender, EventArgs e)
+    protected void ddlSponsorName_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (ddlBusinessName.SelectedIndex != 0)
+        if (ddlSponsorName.SelectedIndex != 0)
         { 
             LoadData();
         }      

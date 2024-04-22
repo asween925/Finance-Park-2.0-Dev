@@ -24,12 +24,12 @@ public partial class Create_Simulation : System.Web.UI.Page
     string sqldatabase = System.Configuration.ConfigurationManager.AppSettings["FP_DB"];
     string sqluser = System.Configuration.ConfigurationManager.AppSettings["db_user"];
     string sqlpassword = System.Configuration.ConfigurationManager.AppSettings["db_password"];
-    string connection_string;
+    string ConnectionString;
     int visit;
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
+        ConnectionString = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
        
         //Check if user is logged in
         if (HttpContext.Current.Session["LoggedIn"] == null)
@@ -49,17 +49,14 @@ public partial class Create_Simulation : System.Web.UI.Page
             lblHeaderSchoolName.Text = (SchoolHeader.GetSchoolHeader()).ToString();
 
             //Populate schools 1-5 DDL
-            SchoolData.LoadSchoolsDDL(ddlSchools);
-            SchoolData.LoadSchoolsDDL(ddlSchools2);
-            SchoolData.LoadSchoolsDDL(ddlSchools3);
-            SchoolData.LoadSchoolsDDL(ddlSchools4);
-            SchoolData.LoadSchoolsDDL(ddlSchools5);
+            SchoolData.LoadSchoolsDDL(ddlSchools, false);
+            SchoolData.LoadSchoolsDDL(ddlSchools2, false);
+            SchoolData.LoadSchoolsDDL(ddlSchools3, false);
+            SchoolData.LoadSchoolsDDL(ddlSchools4, false);
+            SchoolData.LoadSchoolsDDL(ddlSchools5, false);
 
             //Populate visit time DDL
-            SchoolSchedule.LoadVisitTimeDDL(ddlVisitTime);
-
-            //Insert no school scheduled into first school DDL
-            ddlSchools.Items.Insert(1, "No School Scheduled");
+            SchoolSchedule.LoadVisitTimeDDL(ddlVisitTime);           
         }
     }
 
@@ -112,7 +109,7 @@ public partial class Create_Simulation : System.Web.UI.Page
         // Inserting new visit date into DB
         try
         {
-            using (SqlConnection con = new SqlConnection(connection_string))
+            using (SqlConnection con = new SqlConnection(ConnectionString))
             {
                 using (SqlCommand cmd = new SqlCommand(@"INSERT INTO visitInfoFP(school, vTrainingTime, visitDate, studentCount, school2, school3, school4, visitTime, school5, dueBy)
 										            
@@ -165,7 +162,7 @@ public partial class Create_Simulation : System.Web.UI.Page
         //Insert openStatusFP
         try
         {
-            using (SqlConnection con = new SqlConnection(connection_string))
+            using (SqlConnection con = new SqlConnection(ConnectionString))
             {
                 using (SqlCommand cmd = new SqlCommand(@"INSERT INTO openStatusFP(visitID, open1, open6, open7, open8, open9, open10, open11, open12, open13, open14, open15, open16, open17, open18, open19, open20, open21, open22, open23, open24, open25, open26, open27, open28, open29, open30, open31, open32 )
 										            

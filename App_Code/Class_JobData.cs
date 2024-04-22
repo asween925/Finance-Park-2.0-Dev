@@ -70,4 +70,36 @@ public class Class_JobData
         return JobID;
     }
 
+    public (string JobTitle, int BusinessID, string EducationBG, string JobDuties, decimal EdDebt, string Advancement) JobLookup (int JobID)
+    {
+        string JT = "";
+        int BID = 0;
+        string EBG = "";
+        string JD = "";
+        decimal ED = 0;
+        string A = "";
+        string SQL = "SELECT * FROM jobsFP WHERE id='" + JobID + "'";
+
+        con.ConnectionString = ConnectionString;
+        con.Open();
+        cmd.CommandText = SQL;
+        cmd.Connection = con;
+        dr = cmd.ExecuteReader();
+
+        while (dr.Read())
+        {
+            JT = dr["jobTitle"].ToString();
+            BID = int.Parse(dr["businessID"].ToString());
+            EBG = dr["educationBG"].ToString();
+            JD = dr["jobduties"].ToString();
+            ED = decimal.Parse(dr["edDebt"].ToString());
+            A = dr["advancement"].ToString();
+        }
+
+        cmd.Dispose();
+        con.Close();
+
+        return (JT, BID, EBG, JD, ED, A);
+    }
+
 }

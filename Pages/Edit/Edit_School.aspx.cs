@@ -41,7 +41,7 @@ public partial class Edit_School : Page
         if (!IsPostBack)
         {
             //Populate school name ddl
-            SchoolData.LoadSchoolsDDL(ddlSchoolName);
+            SchoolData.LoadSchoolsDDL(ddlSchoolName, false);
 
             // Populating school header
             lblHeaderSchoolName.Text = (SchoolHeader.GetSchoolHeader()).ToString();

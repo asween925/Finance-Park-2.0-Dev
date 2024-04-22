@@ -45,8 +45,8 @@
 
             <%--School Name Section--%>
             <div id="divBusinessName" runat="server" visible="false" class="no-print">
-                <p>Business Name:</p>
-                <asp:DropDownList ID="ddlBusinessName" runat="server" CssClass="ddl" AutoPostBack="true" OnSelectedIndexChanged="ddlBusinessName_SelectedIndexChanged"></asp:DropDownList>
+                <p>Sponsor Name:</p>
+                <asp:DropDownList ID="ddlSponsorName" runat="server" CssClass="ddl" AutoPostBack="true" OnSelectedIndexChanged="ddlSponsorName_SelectedIndexChanged"></asp:DropDownList>
                 <br />
                 <br />
                 <asp:Button ID="btnPrint" runat="server" Text="Print" CssClass="button no-print" OnClick="btnPrint_Click" />&ensp;<asp:Button ID="btnRefresh" runat="server" Text="Refresh" CssClass="button no-print" OnClick="btnRefresh_Click" />
@@ -54,18 +54,18 @@
             <br class="no-print" />
 
             <%--Print Only Header--%>
-            <div id="divPrintHeader" runat="server" visible="true">
+            <div id="divPrintHeader" runat="server" visible="false">
                 <h3 class="letter_title">Business Assignment Sheet (<asp:Label ID="lblPrintVisitDate" runat="server"></asp:Label><asp:Label ID="lblPrintSchool" runat="server" ></asp:Label>)</h3>
                 <br /><br />
             </div>
 
             <%--Business Logo--%>
-            <div id="divBusinessLogo" runat="server" visible="true">
+            <div id="divBusinessLogo" runat="server" visible="false">
                 <img id="imgBusinessLogo" runat="server" class="Biz_Assign_Logo_Top" src="~/Media/FP_Logo.png" />
             </div>
 
             <%--Optional Gridview--%>
-            <div id="divStudents" runat="server" visible="true">
+            <div id="divStudents" runat="server" visible="false">
                 <asp:GridView ID="dgvStudents" runat="server" AutoGenerateColumns="False" DataKeyNames="ID" CellPadding="5" Height="50" AllowPaging="True" ShowHeaderWhenEmpty="True" Font-Size="Medium" OnRowDataBound="dgvStudents_OnRowDataBound" OnPageIndexChanging="dgvStudents_PageIndexChanging" PagerStyle-CssClass="pager" HeaderStyle-CssClass="header" RowStyle-CssClass="rows" Visible="true"> 
                     <Columns>
                         <asp:TemplateField HeaderText="Student Count">
@@ -82,7 +82,7 @@
             </div>
 
             <br />
-            <asp:Image ID="imgStavrosLogo" runat="server" ImageUrl="~/Media/FP_SI_Logo.png" CssClass="letter_logo_bottom" />
+            <asp:Image ID="imgStavrosLogo" runat="server" ImageUrl="~/Media/FP_SI_Logo.png" CssClass="letter_logo_bottom" Visible="false" />
         </div>
 
         <asp:HiddenField ID="hfCurrentVisitID" runat="server" />

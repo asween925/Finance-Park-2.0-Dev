@@ -9,26 +9,26 @@ public partial class Class_SchoolSchedule
     string sqldatabase = System.Configuration.ConfigurationManager.AppSettings["FP_DB"];
     string sqluser = System.Configuration.ConfigurationManager.AppSettings["db_user"];
     string sqlpassword = System.Configuration.ConfigurationManager.AppSettings["db_password"];
-    private string connection_string;
+    private string ConnectionString;
     private SqlConnection con = new SqlConnection();
     private SqlCommand cmd = new SqlCommand();
     private SqlDataReader dr;
 
     public Class_SchoolSchedule()
     {
-        connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
+        ConnectionString = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
     }
 
     // Load school schedule table
     public object LoadSchoolSchedule()
     {
-        string connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
+        string ConnectionString = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
         var con = new SqlConnection();
         var cmd = new SqlCommand();
         string sqlStatement = "SELECT * FROM schoolScheduleFP";
 
         // Search and load kit inv table
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd = new SqlCommand();
         cmd.Connection = con;
@@ -58,7 +58,7 @@ public partial class Class_SchoolSchedule
         // Populate visit time DDL
         try
         {
-            con.ConnectionString = connection_string;
+            con.ConnectionString = ConnectionString;
             con.Open();
             cmd.CommandText = "SELECT CONVERT(VARCHAR(5), schoolSchedule, 108) as schoolSchedule FROM schoolScheduleFP";
             cmd.Connection = con;
@@ -88,7 +88,7 @@ public partial class Class_SchoolSchedule
         // Populate visit time DDL
         try
         {
-            con.ConnectionString = connection_string;
+            con.ConnectionString = ConnectionString;
             con.Open();
             cmd.CommandText = "SELECT CONVERT(VARCHAR(5), volArrive, 108) as volArrive FROM schoolScheduleFP WHERE schoolSchedule = '" + VisitTime + "'";
             cmd.Connection = con;
@@ -118,7 +118,7 @@ public partial class Class_SchoolSchedule
         // Populate visit time DDL
         try
         {
-            con.ConnectionString = connection_string;
+            con.ConnectionString = ConnectionString;
             con.Open();
             cmd.CommandText = "SELECT CONVERT(VARCHAR(5), stuArrive, 108) as stuArrive FROM schoolScheduleFP WHERE schoolSchedule = '" + VisitTime + "'";
             cmd.Connection = con;
@@ -148,7 +148,7 @@ public partial class Class_SchoolSchedule
         // Populate visit time DDL
         try
         {
-            con.ConnectionString = connection_string;
+            con.ConnectionString = ConnectionString;
             con.Open();
             cmd.CommandText = "SELECT CONVERT(VARCHAR(5), leave, 108) as leave FROM schoolScheduleFP WHERE schoolSchedule = '" + VisitTime + "'";
             cmd.Connection = con;

@@ -13,15 +13,19 @@ public class Class_SVC
     private SqlDataReader dr;
     private SqlConnection con = new SqlConnection();
     private SqlCommand cmd = new SqlCommand();
-    private string connection_string;
+    private string ConnectionString;
+
+    public Class_SVC()
+    {
+        ConnectionString = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
+    }
 
     public object LoadTable(int VisitID, int SchoolID, string Column)
     {
         string ReturnData = "";
-        string connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
 
         // Get school info from school name
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd.CommandText = "SELECT " + Column + " FROM schoolVisitChecklistFP WHERE visitID = '" + VisitID + "' AND schoolID = '" + SchoolID + "'";
         cmd.Connection = con;
@@ -44,10 +48,10 @@ public class Class_SVC
     public object GetKitNumbers(int VisitID, int SchoolID)
     {
         string ReturnData = "";
-        string connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
+ 
 
         // Get school info from school name
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd.CommandText = "SELECT kitTotal FROM kitsFP WHERE visitID = '" + VisitID + "' AND schoolID = '" + SchoolID + "'";
         cmd.Connection = con;
@@ -67,13 +71,12 @@ public class Class_SVC
         return ReturnData;
     }
 
-    public object GetWorkbooks(int VisitID, int SchoolID)
+    public int GetWorkbooks(int VisitID, int SchoolID)
     {
-        string ReturnData = "";
-        string connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
+        int Workbooks = 0;
 
         // Get school info from school name
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd.CommandText = "SELECT workbooks FROM kitsFP WHERE visitID = '" + VisitID + "' AND schoolID = '" + SchoolID + "'";
         cmd.Connection = con;
@@ -81,25 +84,24 @@ public class Class_SVC
 
         while (dr.Read())
         {
-            ReturnData = dr["workbooks"].ToString();
+            Workbooks = int.Parse(dr["workbooks"].ToString());
             cmd.Dispose();
             con.Close();
-            return ReturnData;
+            return Workbooks;
         }
 
         cmd.Dispose();
         con.Close();
 
-        return ReturnData;
+        return Workbooks;
     }
 
     public object GetKitNumber(int VisitID, int SchoolID, int KitNum)
     {
         string ReturnData = "";
-        string connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
 
         // Get school info from school name
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd.CommandText = "SELECT kit" + KitNum + " as kit FROM kitsFP WHERE visitID = '" + VisitID + "' AND schoolID = '" + SchoolID + "'";
         cmd.Connection = con;
@@ -119,4 +121,38 @@ public class Class_SVC
         return ReturnData;
     }
 
+    public string GetKitNumbersString(int VisitID, int SchoolID)
+    {
+        string Kits = "0";
+        string SQL = @"SELECT CONCAT(
+		                IIF(kit1<>0, kit1, '')
+		                , IIF(kit2<>0, CONCAT(', ', kit2), '')
+		                , IIF(kit3<>0, CONCAT(', ', kit3), '')
+		                , IIF(kit4<>0, CONCAT(', ', kit4), '')
+		                , IIF(kit5<>0, CONCAT(', ', kit5), '')
+		                , IIF(kit6<>0, CONCAT(', ', kit6), '')
+		                , IIF(kit7<>0, CONCAT(', ', kit7), '')
+		                , IIF(kit8<>0, CONCAT(', ', kit8), '')
+		                , IIF(kit9<>0, CONCAT(', ', kit9), '')
+		                , IIF(kit10<>0, CONCAT(', ', kit10), '')) as kits 
+                      FROM kitsFP 
+                      WHERE visitID='" + VisitID + "' AND schoolID='" + SchoolID + "'";
+
+        con.ConnectionString = ConnectionString;
+        con.Open();
+        cmd.CommandText = SQL;
+        cmd.Connection = con;
+        dr = cmd.ExecuteReader();
+
+        while (dr.Read())
+        {
+            Kits = dr["kits"].ToString();
+            return Kits;
+        }
+
+        cmd.Dispose();
+        con.Close();
+
+        return Kits;
+    }
 }

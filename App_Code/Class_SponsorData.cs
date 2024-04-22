@@ -23,6 +23,7 @@ public class Class_SponsorData
         ConnectionString = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
     }
 
+    //Load sponsor name ddl
     public object LoadSponsorNamesDDL(DropDownList sponsorNameDDL)
     {
         // Clear out teacher and school DDLs
@@ -51,4 +52,51 @@ public class Class_SponsorData
 
         return sponsorNameDDL.Items;
     }
+
+
+    //Get sponsor ID from the name
+    public int GetSponsorID(string SponsorName)
+    {
+        int SponsorID = 0;
+
+        con.ConnectionString = ConnectionString;
+        con.Open();
+        cmd.Connection = con;
+        cmd.CommandText = "SELECT id FROM sponsorsFP WHERE sponsorName='" + SponsorName + "'";
+        dr = cmd.ExecuteReader();
+
+        while (dr.Read())
+        {
+            SponsorID = int.Parse(dr["id"].ToString());
+        }
+
+        cmd.Dispose();
+        con.Close();
+
+        return SponsorID;
+    }
+
+
+    //Get logo path
+    public string GetSponsorLogo(int SponsorID)
+    {
+        string Path = "";
+
+        con.ConnectionString = ConnectionString;
+        con.Open();
+        cmd.Connection = con;
+        cmd.CommandText = "SELECT logoPath FROM sponsorsFP WHERE id='" + SponsorID + "'";
+        dr = cmd.ExecuteReader();
+
+        while (dr.Read())
+        {
+            Path = dr["logoPath"].ToString();
+        }
+
+        cmd.Dispose();
+        con.Close();
+
+        return Path;
+    }
+
 }

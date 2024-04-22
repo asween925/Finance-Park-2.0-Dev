@@ -49,7 +49,7 @@ public partial class Edit_Question : Page
 
     public void LoadData()
     {
-        string SQLStatement = "SELECT * FROM questionsFP";
+        string SQLStatement = "SELECT * FROM questionsFP ORDER BY questionOrder";
 
         //Load data
         try
@@ -178,9 +178,15 @@ public partial class Edit_Question : Page
 
 
             Gridviews.AnswerTypes(ddlType, lblType);
-            Gridviews.QuestionOrder(ddlQOrder, lblQOrder);
+            //Gridviews.QuestionOrder(ddlQOrder, lblQOrder);
             Gridviews.QuestionCategory(ddlCat, lblCat);
             Gridviews.QuestionShort(ddlShort, lblShort);
+
+            //Find job type
+            if (lblQOrder != "")
+            {
+                ddlQOrder.Items.FindByValue(lblQOrder).Selected = true;
+            }
         }
     }
 

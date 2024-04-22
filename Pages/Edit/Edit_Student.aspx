@@ -77,20 +77,14 @@
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="School Name">
                             <ItemTemplate>
-                                <asp:Label ID="lblSchoolIDDGV" runat="server" Text='<%#Bind("schoolID") %>' Visible="false"></asp:Label>
+                                <asp:Label ID="lblSchoolIDDGV" runat="server" Text='<%#Bind("schoolID") %>' Visible="true"></asp:Label>
                                 <asp:DropDownList CssClass="ddl" ID="ddlSchoolNameDGV" runat="server" AutoPostBack="true" readonly="false"></asp:DropDownList>
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Business Name">
+                        <asp:TemplateField HeaderText="Sponsor Name">
                             <ItemTemplate>
-                                <asp:Label ID="lblBusinessIDDGV" runat="server" Text='<%#Bind("businessID") %>' Visible="false"></asp:Label>
-                                <asp:DropDownList CssClass="ddl" ID="ddlBusinessNameDGV" runat="server" AutoPostBack="true" readonly="false"></asp:DropDownList>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Job">
-                            <ItemTemplate>
-                                <asp:Label ID="lblJobIDDGV" runat="server" Text='<%#Bind("jobID") %>' Visible="false"></asp:Label>
-                                <asp:DropDownList CssClass="ddl" ID="ddlJobNameDGV" runat="server" AutoPostBack="true" readonly="false"></asp:DropDownList>
+                                <asp:Label ID="lblSponsorIDDGV" runat="server" Text='<%#Bind("sponsorID") %>' Visible="false"></asp:Label>
+                                <asp:DropDownList CssClass="ddl" ID="ddlSponsorNameDGV" runat="server" AutoPostBack="true" readonly="false"></asp:DropDownList>
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="Teacher Name">
@@ -103,6 +97,16 @@
                             <ItemTemplate>
                                 <asp:Label ID="lblPersonaIDDGV" runat="server" Text='<%#Bind("personaID") %>' Visible="false"></asp:Label>
                                 <asp:DropDownList CssClass="ddl" ID="ddlPersonaNameDGV" runat="server" AutoPostBack="true" readonly="false"></asp:DropDownList>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Grade">
+                            <ItemTemplate>
+                                <asp:TextBox ID="tbGradeDGV" runat="server" Width="50px" Text='<%#Bind("grade") %>' TextMode="Number" CssClass="textbox"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Gender">
+                            <ItemTemplate>
+                                <asp:TextBox ID="tbGenderDGV" runat="server" Width="80px" Text='<%#Bind("gender") %>' CssClass="textbox"></asp:TextBox>
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="Lunch Served?">
@@ -125,6 +129,15 @@
             $(".sub-menu a").click(function () {
                 $(this).parent(".sub-menu").children("ul").slideToggle("100");
                 $(this).find(".right").toggleClass("fa-caret-up fa-caret-down");
+            });
+        </script>
+
+        <%--Delete confirmation--%>
+        <script>
+            jQuery("a").filter(function () {
+                return this.innerHTML.indexOf("Delete") == 0;
+            }).click(function () {
+                return confirm("Are you sure you want to delete this student?");
             });
         </script>
 

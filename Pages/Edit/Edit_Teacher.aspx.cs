@@ -45,7 +45,7 @@ public partial class Edit_Teacher : Page
             lblHeaderSchoolName.Text = (SchoolHeader.GetSchoolHeader()).ToString();
 
             //Populate school name DDL
-            SchoolData.LoadSchoolsDDL(ddlSchoolName);
+            SchoolData.LoadSchoolsDDL(ddlSchoolName, false);
 
             //Load teacher table
             LoadData();

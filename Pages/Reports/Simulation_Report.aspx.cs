@@ -41,7 +41,7 @@ public partial class Simulation_Report : Page
         if (!IsPostBack)
         {
             //Populate School DDL
-            SchoolData.LoadSchoolsDDL(ddlSchoolName);
+            SchoolData.LoadSchoolsDDL(ddlSchoolName, false);
 
             // Populating school header
             lblHeaderSchoolName.Text = (SchoolHeader.GetSchoolHeader()).ToString();

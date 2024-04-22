@@ -11,7 +11,7 @@
 
     <link href="CSS/StaffPages.css" rel="stylesheet" media="screen" type="text/css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-    <link rel="shortcut icon" type="image/png" href="Media/faviconFP.png" />
+    <link rel="shortcut icon" type="image/png" href="Media/FP_favicon_2.png" />
 </head>
 
 <body>

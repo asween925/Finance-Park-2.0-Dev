@@ -89,10 +89,8 @@ h3 {
     border: 1px solid gray;
     border-radius: 10px;
     background: white;
-    max-width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 40px;
+    float: right;
+    width: 75%;
 }
 
 .blurArea {
@@ -107,7 +105,7 @@ h3 {
 
 .directionsBlock {
     margin-top: 10px;
-    font-size: 1.5vw;
+    font-size: calc(10px + .8vw);
     margin-left: 30px;
     margin-right: 30px;
 }
@@ -170,6 +168,58 @@ h3 {
     padding: 0px;
     font-weight: bold;
 }
+
+.container {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+    /* Hide the browser's default radio button */
+    .container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    /* On mouse-over, add a grey background color */
+    .container:hover input ~ .checkmark {
+        
+    }
+
+    /* When the radio button is checked, add a blue background */
+    .container input:checked ~ .checkmark {
+        text-decoration: underline;
+        font-weight: bold;
+    }
+
+    /* Style the indicator (dot/circle) */
+    .container .checkmark:after {
+        top: 8px;
+        left: 8px;
+        border: 2px solid #116bfa;
+        width: 230px;
+        height: 230px;
+        border-radius: 25%;
+    }
+
+/* Create a custom radio button */
+.checkmark {
+    padding: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;   
+    font-size: calc(10px + .8vw);
+    display: block;
+}
+
+
 
 /*-----End Main Classes-----*/
 
@@ -331,6 +381,31 @@ h3 {
         background-color: #858585;
     }
 
+.buttonNav {
+    background-color: #00a632;
+    border-radius: 10px;
+    color: white;
+    padding: 7px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: calc(6px + .8vw);
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.2s;
+    /*box-shadow: 1px 2px 10px 0px rgba(0,0,0,0.24),0 17px 500px 0 rgba(0,0,0,0.19);*/
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-bottom: 4px;
+    border: none;
+    box-shadow: 0px 5px 10px -1px #515151;
+}
+
+    .buttonNav:hover {
+        background-color: darkgreen;
+    }
+
+
 /*-----Buttons End-----*/
 
 
@@ -451,8 +526,6 @@ h3 {
 
 
 
-
-
 /*-----Sim Business-----*/
 
 .Sim_Business_Content {
@@ -472,27 +545,217 @@ h3 {
     padding: 10px;
 }
 
-.Sim_Business_Sponsor {
+/*-----Sim Business End-----*/
+
+
+
+/*-----Sim Life Style-----*/
+
+.Sim_Life_Style_QBox {
+    border: 2px solid #8ec851;
+    border-radius: 15px;
+    padding: 5px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.Sim_Life_Style_Question {
+    font-size: calc(15px + .8vw);
+    border-bottom: 1px solid gray;
+    padding-bottom: 10px;
+}
+
+.Sim_Life_Style_Written {
+    
+}
+
+.Sim_Life_Style_TB {
+    border-radius: 15px;
+    border: 1px solid gray;
+    padding: 1px;
+    padding-left: 6px;
+    text-align: left;
+    font-size: 14px;
+    font-family: 'Franklin Gothic Book', sans-serif;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100px;
+}
+
+    .Sim_Life_Style_TB:hover {
+        border: 1px solid #34911e;
+    }
+
+.Sim_Life_Style_Word_Count_A {
+    font-size: 10px;
+}
+
+/*-----Sim Life Style End-----*/
+
+
+
+/*-----Sim Life Scenario-----*/
+
+.Sim_Life_Scenario_Name {
+    font-size: calc(10px + 0.8vw);
+    color: darkgreen;
+    font-weight: bold;   
+}
+
+.Sim_Life_Scenario_Job {
+    font-size: calc(7px + 0.8vw);
+    font-weight: bold;
+}
+/*ASC is age, status children*/
+.Sim_Life_Scenario_ASC { 
+    font-size: calc(6px + 0.8vw);
+    color: gray;
+}
+
+.Sim_Life_Scenario_Acct {
+    font-size: calc(7px + 0.8vw);
+    font-weight: bold;
+    float: right;
+    text-align: right;
+}
+
+.Sim_Life_Scenario_Info {
+    border: 1px solid gray;
+    border-radius: 10px;
+    margin: 5px;
+    margin-bottom: 2.5px;
+    padding: 5px;
+}
+
+.Sim_Life_Scenario_Finances {
+    border: 1px solid gray;
+    border-radius: 10px;
+    margin: 5px;
+    margin-top: 2.5px;
+    margin-bottom: 2.5px;
+}
+
+.Sim_Life_Scenario_BG {
+    border: 1px solid gray;
+    border-radius: 10px;
+    margin: 5px;
+    margin-top: 2.5px;
+    padding: 5px;
+}
+
+.Sim_Life_Scenario_Table {
+    font-weight: bold;
+    font-size: calc(7px + 0.8vw);
+    padding: 5px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.Sim_Life_Scenario_Table_Cat {
+    color: darkgreen;
+}
+
+.Sim_Life_Scenario_Table_Value {
+    color: black;
+    font-weight: bold;
+    float: right;
+    text-align: right;
+}
+
+/*-----Sim Life Scenario End-----*/
+
+
+
+
+
+/*-----Sim Calculations-----*/
+
+.Sim_Calc_Income {
+
+}
+
+.Sim_Calc_Income_Bottom {
+
+}
+
+.Sim_Calc_Button {
+
+}
+
+/*-----Sim Calculations End-----*/
+
+
+/*-----Multiple Sim Pages-----*/
+.Sim_Content_With_Sponsor {
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 40px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.Sim_Content_Right {
     border: 1px solid gray;
     border-radius: 10px;
     background: white;
-    width: 15%;
+    float: right;
+    width: 75%;
+    padding: 5px;
+}
+
+.Sim_Sponsor {
+    border: 1px solid gray;
+    border-radius: 10px;
+    background: white;
+    width: 20%;
     float: left;
     position: relative;
-    height: 10vh;
+    height: auto;
+    display: inline-block;
+    box-sizing: border-box;
 }
 
-.Sim_Business_Sponsor_Header {
-    position: absolute;
-    top: 30%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    margin: 0;
+.Sim_Sponsor_Content {
+    border: 2px solid gray;
+    margin: 5px;
+    box-sizing: border-box;
+}
+
+.Sim_Sponsor_Header {
     border-bottom: 1px solid gray;
     font-size: calc(3px + .8vw);
+    text-align: center;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
-/*-----Sim Business End-----*/
+.Sim_Sponsor_Button {
+    background-color: #00a632;
+    border-radius: 10px;
+    color: white;
+    padding: 7px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: calc(3px + .8vw);
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.2s;
+    /*box-shadow: 1px 2px 10px 0px rgba(0,0,0,0.24),0 17px 500px 0 rgba(0,0,0,0.19);*/
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-bottom: 4px;
+    border: none;
+}
+
+    .Sim_Sponsor_Button:hover {
+        background-color: darkgreen;
+    }
+
+/*-----Multiple Sim Pages End-----*/
 
 /************************ SPECIFIC PAGES CLASSES END *************************/
 

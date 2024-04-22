@@ -240,4 +240,53 @@ public partial class Class_BusinessData
         return ReturnCount;
     }
 
+
+
+    //Load sponsor DDL
+    public object LoadSponsorDDL(DropDownList ddlSponsor)
+    {
+        // Clear out teacher and school DDLs
+        ddlSponsor.Items.Clear();
+
+        // Populate school DDL from entered visit date
+            con.ConnectionString = ConnectionString;
+            con.Open();
+            cmd.CommandText = "SELECT sponsorName FROM sponsorsFP ORDER BY sponsorName ASC";
+            cmd.Connection = con;
+            dr = cmd.ExecuteReader();
+
+            while (dr.Read())
+                ddlSponsor.Items.Add(dr[0].ToString());
+            ddlSponsor.Items.Insert(0, "");
+
+            cmd.Dispose();
+            con.Close();
+
+        return ddlSponsor.Items;
+    }
+
+
+
+    //Get sponsor ID from name
+    public int GetSponsorID(string SponsorName)
+    {
+        int SponsorID = 0;
+
+        // Get job ID from job title
+        con.ConnectionString = ConnectionString;
+        con.Open();
+        cmd.CommandText = "SELECT id FROM sponsorsFP WHERE sponsorName='" + SponsorName + "'";
+        cmd.Connection = con;
+        dr = cmd.ExecuteReader();
+
+        while (dr.Read())
+        {
+            SponsorID = int.Parse(dr["id"].ToString());
+        }
+
+        cmd.Dispose();
+        con.Close();
+
+        return SponsorID;
+    }
 }

@@ -97,7 +97,7 @@
 
                 <%--Kits Only--%>
                 <div id="divKit" runat="server" visible="false">
-                    <p>Kits are going to:</p>
+                    <%--<p>Kits are going to:</p>
                     <table>
                         <tr>
                             <td class="letter_p" style="text-align: center;">Teacher Name</td>
@@ -127,7 +127,7 @@
                             <td>
                                 <asp:Label ID="lblKits4" runat="server"></asp:Label></td>
                         </tr>
-                    </table>
+                    </table>--%>
                     <br />
                     <p>Name of person receiving the Finance Park Kits:<a class="letter_r">_______________________________________</a></p>
                     <br />

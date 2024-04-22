@@ -10,21 +10,21 @@ public partial class Class_SQLCommands
     private string sqldatabase = System.Configuration.ConfigurationManager.AppSettings["FP_DB"].ToString();
     private string sqluser = System.Configuration.ConfigurationManager.AppSettings["db_user"].ToString();
     private string sqlpassword = System.Configuration.ConfigurationManager.AppSettings["db_password"].ToString();
-    private string connection_string;
+    private string ConnectionString;
     private SqlConnection con = new SqlConnection();
     private SqlCommand cmd = new SqlCommand();
     private SqlDataReader dr;
 
     public Class_SQLCommands()
     {
-        connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
+        ConnectionString = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
     }
 
 
     //Inserts a new row into the kit inventory table
     public object InsertIntoKitInventory(string kitNumber, string schoolName, string category, string dateOut, string notes)
     {
-        string connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
+        string ConnectionString = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
         string errorReturn;
         string successReturn = "Submission successful!";
         string sqlStatement = @"INSERT INTO kitInventory (
@@ -71,7 +71,7 @@ public partial class Class_SQLCommands
         // Start INSERT command
         try
         {
-            using (var con = new SqlConnection(connection_string))
+            using (var con = new SqlConnection(ConnectionString))
             {
                 using (var cmd = new SqlCommand(sqlStatement))
                 {
@@ -104,7 +104,7 @@ public partial class Class_SQLCommands
     //Loads the kit inventory table
     public object LoadKitInventory(string searchTerm = "", string searchBy = "id", string columnSort = "id", string orderSort = "ASC")
     {
-        string connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
+        string ConnectionString = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
         var con = new SqlConnection();
         var cmd = new SqlCommand();
         string errorReturn = "";
@@ -123,7 +123,7 @@ public partial class Class_SQLCommands
         }
 
         // Search and load kit inv table
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd = new SqlCommand();
         cmd.Connection = con;
@@ -146,7 +146,7 @@ public partial class Class_SQLCommands
     //Loads the school notes table
     public object LoadSchoolNotes(string schoolName, string columnSort = "id", string orderSort = "DESC")
     {
-        string connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
+        string ConnectionString = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
         var con = new SqlConnection();
         var cmd = new SqlCommand();
         string errorReturn = "";
@@ -157,7 +157,7 @@ public partial class Class_SQLCommands
         sqlStatement += sqlSortStatement;
 
         // Search and load kit inv table
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd = new SqlCommand();
         cmd.Connection = con;
@@ -181,7 +181,7 @@ public partial class Class_SQLCommands
     {
         string returnJob = "";
 
-        con.ConnectionString = connection_string;
+        con.ConnectionString = ConnectionString;
         con.Open();
         cmd.CommandText = "SELECT job FROM adminInfo WHERE username='" + Username + "'";
         cmd.Connection = con;
@@ -203,7 +203,7 @@ public partial class Class_SQLCommands
     {
         string SQLStatement = "UPDATE " + Table + " SET " + Field + "=@" + Field + " WHERE ID=@Id";  
         
-        using (SqlConnection con = new SqlConnection(connection_string))
+        using (SqlConnection con = new SqlConnection(ConnectionString))
         {
             using (SqlCommand cmd = new SqlCommand(SQLStatement))
             {
@@ -221,7 +221,7 @@ public partial class Class_SQLCommands
     //Deletes a row in a gridview
     public void DeleteRow(int ID, string Table)
     {
-        using (SqlConnection con = new SqlConnection(connection_string))
+        using (SqlConnection con = new SqlConnection(ConnectionString))
         {
             using (SqlCommand cmd = new SqlCommand("DELETE FROM " + Table + " WHERE id=@ID"))
             {
@@ -238,9 +238,9 @@ public partial class Class_SQLCommands
     //Executes a non query from a passed string
     public void ExecuteSQL(string SQL)
     {
-        string connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
+        string ConnectionString = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
 
-        using (SqlConnection con = new SqlConnection(connection_string))
+        using (SqlConnection con = new SqlConnection(ConnectionString))
         {
             using (SqlCommand cmd = new SqlCommand(SQL))
             {

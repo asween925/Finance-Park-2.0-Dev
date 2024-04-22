@@ -40,7 +40,7 @@ public partial class School_Report : Page
         if (!IsPostBack)
         {
             //Load schools DDL
-            SchoolData.LoadSchoolsDDL(ddlSchoolName);
+            SchoolData.LoadSchoolsDDL(ddlSchoolName, false);
 
             // Populating school header
             lblHeaderSchoolName.Text = (SchoolHeader.GetSchoolHeader()).ToString();

@@ -26,7 +26,7 @@ public class Class_GridviewFunctions
     //Gets all the school names in the schoolInfoFP and inserts them into a DDL
     public void SchoolNames(DropDownList ddlSchool, string lblSchool)
     {
-        ddlSchool.DataSource = GetData("SELECT ID, schoolName FROM schoolInfoFP ORDER BY schoolName");
+        ddlSchool.DataSource = GetData("SELECT ID, schoolName FROM schoolInfoFP ORDER BY CASE WHEN id=1 THEN 0 ELSE 1 END, schoolName");
         ddlSchool.DataTextField = "schoolName";
         ddlSchool.DataValueField = "id";
         ddlSchool.DataBind();
@@ -235,6 +235,26 @@ public class Class_GridviewFunctions
         else
         {
             ddlPersonas.Items.FindByValue(lblPersonas).Selected = true;
+        }
+    }
+
+
+    //Gets all persona names in the personasFP tabel and inserts them into a DDL
+    public void Sponsors(DropDownList ddlSponsors, string lblSponsors)
+    {
+        ddlSponsors.DataSource = GetData("SELECT DISTINCT id FROM sponsorsFP");
+        ddlSponsors.DataTextField = "id";
+        ddlSponsors.DataValueField = "id";
+        ddlSponsors.DataBind();
+        ddlSponsors.Items.Insert(0, "");
+
+        if (lblSponsors == "0")
+        {
+            ddlSponsors.Items.FindByText("").Selected = true;
+        }
+        else
+        {
+            ddlSponsors.Items.FindByValue(lblSponsors).Selected = true;
         }
     }
 

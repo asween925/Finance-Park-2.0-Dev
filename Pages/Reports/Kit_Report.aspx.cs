@@ -44,7 +44,7 @@ public partial class Kit_Report : Page
             lblHeaderSchoolName.Text = (SchoolHeader.GetSchoolHeader()).ToString();
 
             //Load school name ddl
-            SchoolData.LoadSchoolsDDL(ddlSchoolName);
+            SchoolData.LoadSchoolsDDL(ddlSchoolName, false);
         }
 
         //Load data
