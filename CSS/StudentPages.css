@@ -46,6 +46,7 @@
     transition: all 500ms ease-in-out !important;
     position: absolute;
     font-family: 'Franklin Gothic Book', sans-serif;
+    /*padding-bottom: 50px;*/
 }
 
 #Site_Wrap_Header {
@@ -71,6 +72,7 @@
 body {
     margin: 0;
     background-color: #8ec851;
+    
 }
 
 h3 {
@@ -163,10 +165,18 @@ h3 {
     }
 
 .popup_header {
-    font-size: 18px;
+    font-size: calc(10px + .8vw);
     text-align: center;
     padding: 0px;
     font-weight: bold;
+}
+
+.popup_header_2 {
+    font-size: calc(7px + .8vw);
+    text-align: center;
+    /*padding: 0px;*/
+    font-weight: bold;
+    margin-top: 20px;
 }
 
 .container {
@@ -219,14 +229,40 @@ h3 {
     display: block;
 }
 
+.error_label {
+    color: red;
+    font-weight: bold;
+}
+
+.table {
+    font-weight: bold;
+    font-size: calc(7px + 0.8vw);
+    padding: 5px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.table_cat {
+    text-align: left;
+    color: darkgreen;
+    margin-left: 5px;
+}
+
+.table_data {
+    color: black;
+    float: right;
+    padding: 5px;
+}
 
 
 /*-----End Main Classes-----*/
 
 
 
-/*-----Headers-----*/
 
+
+
+/*-----Headers-----*/
 .headerStart {
     margin-right: auto;
     margin-top: 40px;
@@ -315,7 +351,7 @@ h3 {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
+    font-size: calc(8px + 0.8vw);
     cursor: pointer;
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.2s;
@@ -404,6 +440,35 @@ h3 {
     .buttonNav:hover {
         background-color: darkgreen;
     }
+
+.buttonTable {
+    background-color: #00a632;
+    border-radius: 10px;
+    color: white;
+    padding: 7px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: calc(6px + 0.8vw);
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.2s;
+    /*box-shadow: 1px 2px 10px 0px rgba(0,0,0,0.24),0 17px 500px 0 rgba(0,0,0,0.19);*/
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-bottom: 4px;
+    border: none;
+}
+
+    .buttonTable:hover {
+        background-color: darkgreen;
+    }
+
+    .buttonTable:disabled {
+        background-color: dimgray;
+        cursor: default;
+    }
+
 
 
 /*-----Buttons End-----*/
@@ -672,19 +737,224 @@ h3 {
 
 /*-----Sim Calculations-----*/
 
-.Sim_Calc_Income {
+.Sim_Calc_Top_Income {
+    font-size: calc(10px + 0.8vw);
+    color: darkgreen;
+    font-weight: bold;
+    padding-top: 15px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+}
 
+.Sim_Calc_Top_Income_Data {
+    color: black;
+    float: right;
+}
+
+.Sim_Calc_Taxes {
+    border-radius: 15px;
+    background-color: lightgray;
+    color: white;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    text-align: center;
+}
+
+.Sim_Calc_Taxes_Table {
+    font-weight: bold;
+    font-size: calc(7px + 0.8vw);
+    padding: 5px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.Sim_Calc_Taxes_Table_Category {
+    text-align: left;
+    color: darkgreen;
+    margin-left: 5px;
+}
+
+.Sim_Calc_Taxes_Total {
+    text-align: left;
+    color: darkgreen;
+    background-color: lightgray;
+    border-top: 1px solid gray;
+    padding-top: 5px;
+}
+
+.Sim_Calc_Taxes_Data {
+    color: green;
+    float: right;
+    padding: 5px;
+    margin-right: 5px;
+}
+
+.Sim_Calc_Taxes_Total_Data {
+    color: black;
+    float: right;
 }
 
 .Sim_Calc_Income_Bottom {
-
+    font-size: calc(10px + 0.8vw);
+    color: darkgreen;
+    font-weight: bold;
+    padding-top: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    border-top: 1px solid gray;
 }
 
-.Sim_Calc_Button {
+.Sim_Calc_Income_Bottom_Data {
+    float: right;
+    color: black;
+    font-weight: bold;
+    text-decoration: underline;
+}
 
+.Sim_Calc_Income_Button {
+    float: right;
+    background-color: #00a632;
+    border-radius: 10px;
+    color: white;
+    padding: 7px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: calc(7px + 0.8vw);
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.2s;
+    /*box-shadow: 1px 2px 10px 0px rgba(0,0,0,0.24),0 17px 500px 0 rgba(0,0,0,0.19);*/
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-bottom: 4px;
+    border: none;
+}
+
+    .Sim_Calc_Income_Button:hover {
+        background-color: darkgreen;
+    }
+
+    .Sim_Calc_Income_Button:disabled {
+        background-color: dimgray;
+        cursor: default;
+    }
+
+.Sim_Calc_Taxes_Button {
+    float: right;
+    background-color: #00a632;
+    border-radius: 10px;
+    color: white;
+    padding: 7px 12px;
+    text-align: center;
+    text-decoration: none;
+    font-size: calc(3px + 0.8vw);
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.2s;
+    /*box-shadow: 1px 2px 10px 0px rgba(0,0,0,0.24),0 17px 500px 0 rgba(0,0,0,0.19);*/
+    border: none;
+    display: block;
+    width: 100%;
+}
+
+    .Sim_Calc_Taxes_Button:hover {
+        background-color: darkgreen;
+    }
+
+.Sim_Calc_NMI_TB {
+    border-radius: 15px;
+    border: 1px solid gray;
+    text-align: center;
+    padding: 1px;
+    padding-left: 6px;
+    font-size: 24px;
+    height: 40px;
+    width: 50%;
+    font-family: 'Franklin Gothic Book', sans-serif;
+}
+
+    .Sim_Calc_NMI_TB:hover {
+        border: 1px solid #34911e;
+    }
+
+.Sim_Calc_Popup_Data {
+    font-size: calc(8px + .8vw);
+    color: green;
+    font-weight: bold;
+    float: right;
 }
 
 /*-----Sim Calculations End-----*/
+
+
+
+/*-----Sim Savings-----*/
+
+.Sim_Savings_Section {
+    font-size: calc(10px + 0.8vw);
+    color: darkgreen;
+    font-weight: bold;
+    padding-top: 15px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+}
+
+.Sim_Savings_Table {
+    font-weight: bold;
+    font-size: calc(7px + 0.8vw);
+    padding: 5px;
+    box-sizing: border-box;
+    width: 90%;
+    margin-left: 30px;
+    border: 1px solid gray;
+    border-radius: 10px;
+    background-color: whitesmoke;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    
+}
+
+.Sim_Savings_Table_Header {
+    text-align: left;
+    color: black;
+    margin-left: 5px;
+    text-decoration: underline;
+    padding-bottom: 10px;
+    font-weight: bolder;
+    
+}
+
+.Sim_Savings_Table_Cat {
+    text-align: left;
+    color: darkgreen;
+    margin-left: 5px;
+}
+
+.Sim_Savings_Table_Data {
+    color: black;
+    float: right;
+    padding: 5px;
+}
+
+.Sim_Savings_Text {
+    font-size: calc(7px + 0.8vw);
+    color: black;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.Sim_Savings_Textbox {
+    float: right;
+    text-align: right;
+    width: 15%;
+}
+
+/*-----Sim Savings End-----*/
 
 
 /*-----Multiple Sim Pages-----*/
@@ -719,7 +989,6 @@ h3 {
 }
 
 .Sim_Sponsor_Content {
-    border: 2px solid gray;
     margin: 5px;
     box-sizing: border-box;
 }

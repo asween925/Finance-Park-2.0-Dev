@@ -115,6 +115,99 @@
                     </Columns>
                 </asp:GridView>
             </div>
+            <br /><br />
+
+            <%--Open closed business--%>
+            <div id="divOpen" runat="server" visible="false">
+                <p>Open or Close Businesses:</p>           
+                <table>
+                    <tr>
+                        <td>
+                            <asp:CheckBox ID="Checkbox1" runat="server" Text="Auto Insurance" /></td>
+                        <td>
+                            <asp:CheckBox ID="Checkbox6" runat="server" Text="Bank Mortgage" /></td>
+                        <td>
+                            <asp:CheckBox ID="Checkbox7" runat="server" Text="Bank Savings" /></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <asp:CheckBox ID="Checkbox8" runat="server" Text="Bank Auto Loan" /></td>
+                        <td>
+                            <asp:CheckBox ID="Checkbox9" runat="server" Text="Cable" /></td>
+                        <td>
+                            <asp:CheckBox ID="Checkbox10" runat="server" Text="Childcare" /></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <asp:CheckBox ID="Checkbox11" runat="server" Text="Clothing" /></td>
+                        <td>
+                            <asp:CheckBox ID="Checkbox12" runat="server" Text="Credit Cards" /></td>
+                        <td>
+                            <asp:CheckBox ID="Checkbox13" runat="server" Text="Dining Out" /></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <asp:CheckBox ID="Checkbox14" runat="server" Text="Disability/Life Insurance" /></td>
+                        <td>
+                            <asp:CheckBox ID="Checkbox15" runat="server" Text="Education" /></td>
+                        <td>
+                            <asp:CheckBox ID="Checkbox16" runat="server" Text="Entertainment" /></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <asp:CheckBox ID="Checkbox17" runat="server" Text="Furniture" /></td>
+                        <td>
+                            <asp:CheckBox ID="Checkbox18" runat="server" Text="Gas and Maintenance" /></td>
+                        <td>
+                            <asp:CheckBox ID="Checkbox19" runat="server" Text="Grocery" /></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <asp:CheckBox ID="Checkbox20" runat="server" Text="Health Insurance" /></td>
+                        <td>
+                            <asp:CheckBox ID="Checkbox21" runat="server" Text="Home Improvement" /></td>
+                        <td>
+                            <asp:CheckBox ID="Checkbox22" runat="server" Text="Home Insurance" /></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <asp:CheckBox ID="Checkbox23" runat="server" Text="Housing" /></td>
+                        <td>
+                            <asp:CheckBox ID="Checkbox24" runat="server" Text="Internet" /></td>
+                        <td>
+                            <asp:CheckBox ID="Checkbox25" runat="server" Text="Investments" /></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <asp:CheckBox ID="Checkbox26" runat="server" Text="Philanthropy" /></td>
+                        <td>
+                            <asp:CheckBox ID="Checkbox27" runat="server" Text="Phone" /></td>
+                        <td>
+                            <asp:CheckBox ID="Checkbox28" runat="server" Text="That's Life" /></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <asp:CheckBox ID="Checkbox29" runat="server" Text="Transportation" /></td>
+                        <td>
+                            <asp:CheckBox ID="Checkbox30" runat="server" Text="Utilities - Water/Sewer/Trash" /></td>
+                        <td>
+                            <asp:CheckBox ID="Checkbox31" runat="server" Text="Utilities - Electricity" /></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <asp:CheckBox ID="Checkbox32" runat="server" Text="Utilities - Gas" /></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br />
+                <br />
+                <asp:Button ID="btnOpenAll" runat="server" CssClass="button" Text="Open All Businesses" OnClick="btnOpenAll_Click" />&ensp;<asp:Button ID="btnUpdate" runat="server" Text="Update" CssClass="button" OnClick="btnUpdate_Click"/>
+                <br />
+                <br />
+            </div>
+            
+
         </div>
 
         <asp:HiddenField ID="hfCurrentVisitID" runat="server" />

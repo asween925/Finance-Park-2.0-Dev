@@ -39,7 +39,7 @@
                 Enter the information currently known below. You do not need to fill out all the information, the empty fields will be a default value in the database. You can change this later on the 'Edit Visit' page under 'Edit'.
             </h3>
 
-            <asp:Button ID="Button2" runat="server" Text="School Visit Checklist" PostBackUrl="~/school_visit_checklist.aspx" CssClass="button" />&ensp;<asp:Label runat="server" ID="lblError" Font-Bold="true" Font-Size="X-Large" ForeColor="Red"></asp:Label>
+            <asp:Button ID="Button2" runat="server" Text="School Visit Checklist" PostBackUrl="../Tools/school_visit_checklist.aspx" CssClass="button" />&ensp;<asp:Label runat="server" ID="lblError" Font-Bold="true" Font-Size="X-Large" ForeColor="Red"></asp:Label>
             <p>Visit Date (Required):</p>
             <asp:TextBox ID="tbVisitDate" Width="110px" runat="server" TextMode="Date" CssClass="textbox" AutoPostBack="true" OnTextChanged="tbVisitDate_TextChanged"></asp:TextBox>
             <p>Visit Time (School Schedule):</p>

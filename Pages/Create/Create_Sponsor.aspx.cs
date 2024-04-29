@@ -96,7 +96,7 @@ public partial class Create_Sponsor : Page
         if (fuLogo.HasFile == true)
         {
             Logo = fuLogo.FileName;
-            UploadFile();
+            UploadFile(tbSponsorName.Text);
         }
 
         //insert into sponsorsFP
@@ -135,7 +135,7 @@ public partial class Create_Sponsor : Page
         lblError.Text = "Submission Successful! Refreshing page...";
     }
 
-    public void UploadFile()
+    public void UploadFile(string SponsorName)
     {
         string LogoFolderPath = Server.MapPath(@"~\Media\Sponsor Logos\");
         var fi = new FileInfo(fuLogo.FileName);

@@ -28,6 +28,17 @@ function toggle() {
 
 }
 
+function toggle2() {
+    //Blur the div with the blur id
+    var blur = document.getElementById('blur');
+    blur.classList.toggle('active');
+
+    //Toggle the Sim Research Popup
+    var popup2 = document.getElementById('popup2');
+    popup2.classList.toggle('active');
+
+}
+
 function blurscreen() {
     //Blur the div with the blur id
     var blur = document.getElementById('blur');

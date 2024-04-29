@@ -31,24 +31,44 @@
                 <div class="directionsBlock">
                     <a class="directions">Directions.</a>&ensp;
                     <a class="unlocked">
+                        <asp:Label ID="lblError" runat="server" CssClass="error_label"></asp:Label>
                         <asp:Label ID="lblBusinessUnlocked" runat="server" Font-Bold="true"></asp:Label>
                         of
                         <asp:Label ID="lblTotalBusiness" runat="server" Font-Bold="true"></asp:Label>
                         businesses unlocked.</a>
                 </div>
 
-                <%--Research Table--%>
-                <div class="content_div">
-                    
+                <%--Content--%>
+                <div class="Sim_Content_With_Sponsor">
+
+                    <%--Content - Right Block--%>
+                    <div class="Sim_Content_Right">
+
+                    </div>
+
+                    <%--Content - Left Block--%>
+                    <div class="Sim_Sponsor">
+                        <div class="Sim_Sponsor_Header">
+                            <p>Title</p>
+                        </div>
+                        <div class="Sim_Sponsor_Content">
+                            
+                        </div>
+                    </div>
+                    <br />
+
+                    <%--Next button--%>
+                    <asp:Button ID="btnNext" runat="server" Text="Next" CssClass="button" OnClick="btnNext_Click" Visible="false" />
                 </div>
             </div>
 
             <%--Popup--%>
             <div id="popup">
-                <p class="Sim_Research_Popup_Header">
+                <p class="popup_header">
                     <asp:Label ID="lblPopupText" runat="server" Text="Popup Text"></asp:Label></p>
-                <asp:TextBox ID="tbBusinessID" runat="server" CssClass="popup_textbox" TextMode="Number"></asp:TextBox>
+                <asp:TextBox ID="tbPopupTB" runat="server" CssClass="popup_textbox" TextMode="Number"></asp:TextBox>
                 <br />
+                <asp:Label ID="lblErrorPopup" runat="server" CssClass="error_label"></asp:Label>
                 <br />
                 <asp:Button ID="btnEnter" runat="server" Text="Enter" CssClass="button" OnClick="btnEnter_Click" /><asp:Button ID="btnCancel" runat="server" OnClick="btnCancel_Click" CssClass="buttonReset" Text="Cancel"></asp:Button>
             </div>

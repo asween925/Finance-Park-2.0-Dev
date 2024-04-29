@@ -61,11 +61,11 @@
 
             <%--Business Logo--%>
             <div id="divBusinessLogo" runat="server" visible="false">
-                <img id="imgBusinessLogo" runat="server" class="Biz_Assign_Logo_Top" src="~/Media/FP_Logo.png" />
+                <img id="imgBusinessLogo" runat="server" class="Biz_Assign_Logo_Top Biz_Assign_Logo_Top_Print" src="~/Media/FP_Logo.png" />
             </div>
 
             <%--Optional Gridview--%>
-            <div id="divStudents" runat="server" visible="false">
+            <div id="divStudents" runat="server" visible="false" class="Biz_Assign_Table_Print">
                 <asp:GridView ID="dgvStudents" runat="server" AutoGenerateColumns="False" DataKeyNames="ID" CellPadding="5" Height="50" AllowPaging="True" ShowHeaderWhenEmpty="True" Font-Size="Medium" OnRowDataBound="dgvStudents_OnRowDataBound" OnPageIndexChanging="dgvStudents_PageIndexChanging" PagerStyle-CssClass="pager" HeaderStyle-CssClass="header" RowStyle-CssClass="rows" Visible="true"> 
                     <Columns>
                         <asp:TemplateField HeaderText="Student Count">

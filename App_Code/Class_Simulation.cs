@@ -221,4 +221,32 @@ public class Class_Simulation
         }
     }
 
+    public (string ScreenType, string HeaderText, string Text, string Location, int UnlockCode) GetTransitionData(int Step)
+    {
+        string ScreenType = "";
+        string HeaderText = "";
+        string Text = "";
+        string Location = "";
+        int UnlockCode = 0;
+
+        con.ConnectionString = ConnectionString;
+        con.Open();
+        cmd.Connection = con;
+        cmd.CommandText = "SELECT * FROM transitionsFP WHERE step=" + Step + "";
+        dr = cmd.ExecuteReader();
+
+        while (dr.Read())
+        {
+            ScreenType = dr["screenType"].ToString();
+            HeaderText = dr["headerText"].ToString();
+            Text = dr["text"].ToString();
+            Location = dr["location"].ToString();        
+            UnlockCode = int.Parse(dr["unlockCode"].ToString());
+        }
+
+        cmd.Dispose();
+        con.Close();
+
+        return (ScreenType, HeaderText, Text, Location, UnlockCode);
+    }
 }

@@ -198,7 +198,7 @@ public partial class Class_StudentData
 
 
     // Gets students info of various columns
-    public (int AccountNumber, string FirstName, string LastName, int VisitID, string SchoolName, DateTime VisitDate, string TeacherName, string SponsorName, int PersonaID) StudentLookup(int VisitID, int SID)
+    public (int AccountNumber, string FirstName, string LastName, int VisitID, string SchoolName, DateTime VisitDate, string TeacherName, string SponsorName, int PersonaID, double NMI, double Total, double Retire, double Emerg, double Other) StudentLookup(int VisitID, int SID)
     {
         int ANum = 0;
         string First = "";
@@ -209,7 +209,12 @@ public partial class Class_StudentData
         string Teacher = "";
         string Sponsor = "";
         int PID = 0;
-        string SQLStatement = @"  SELECT s.accountNum, s.firstName, s.lastName, v.id as visitID, sc.schoolName as schoolName, v.visitDate, (t.firstName + ' ' + t.lastName) as teacherName, sp.sponsorName, s.personaID
+        double NMI = 0;
+        double Total = 0;
+        double Retire = 0;
+        double Emerg = 0;
+        double Other = 0;
+        string SQLStatement = @"  SELECT s.accountNum, s.firstName, s.lastName, v.id as visitID, sc.schoolName as schoolName, v.visitDate, (t.firstName + ' ' + t.lastName) as teacherName, sp.sponsorName, s.personaID, s.nmi, s.savingsTotal, s.savingsRetire, s.savingsEmergency, s.savingsOther
                     FROM studentInfoFP s
                     LEFT JOIN visitInfoFP v
 	                    ON v.id = s.visitID
@@ -238,13 +243,18 @@ public partial class Class_StudentData
             Teacher = dr["teacherName"].ToString();
             Sponsor = dr["sponsorName"].ToString();
             PID = int.Parse(dr["personaID"].ToString());
+            NMI = double.Parse(dr["nmi"].ToString());
+            Total = double.Parse(dr["savingsTotal"].ToString());
+            Retire = double.Parse(dr["savingsRetire"].ToString());
+            Emerg = double.Parse(dr["savingsEmergency"].ToString());
+            Other = double.Parse(dr["savingsOther"].ToString());
         }
 
         dr.Close();
         cmd.Dispose();
-        con.Close();
+        con.Close();    
 
-        return (ANum, First, Last, VID, School, VDate, Teacher, Sponsor, PID);
+        return (ANum, First, Last, VID, School, VDate, Teacher, Sponsor, PID, NMI, Total, Retire, Emerg, Other);
     }
 
 
@@ -628,4 +638,105 @@ public partial class Class_StudentData
 
         return (JID, JT, JTy, GAI, Age, MarriageStatus, SpouseAge, NumOfChild, Child1, Child2, CreditScore, NMI, CCDebt, FurnitureLimit, HomeImpLimit, LongSavings, EmergFunds, OtherSavings, AutoLoanAmount, MortAmount, ThatsLifeAmount, Desc);
     }
+
+
+    //Gets taxes calculations
+    public double TaxesCalc(int GMI, string TaxName)
+    {
+        double Tax = 0;
+        string GAIRange1Min = "";
+        string GAIRange1Max = "";
+        string GAIRange2Min = "";
+        string GAIRange2Max = "";
+        string GAIRange3Min = "";
+        string GAIRange3Max = "";
+        string TaxEqual1Left = "";
+        string TaxEqual1Right = "";
+        string TaxEqual2Left = "";
+        string TaxEqual2Right = "";
+        string TaxEqual3Left = "";
+        string TaxEqual3Right = "";
+        string TaxGMI1 = "";
+        string TaxGMI2 = "";
+        string TaxGMI3 = "";
+        string TaxCalc = "";
+        int GAI = GMI * 12;
+        string SQLStatement = "SELECT * FROM taxesFP WHERE taxName='" + TaxName + "'"; 
+
+        //Get taxes info
+        cmd.Connection = con;
+        con.ConnectionString = ConnectionString;
+        con.Open();
+        cmd.CommandText = SQLStatement;
+        dr = cmd.ExecuteReader();
+
+        while (dr.Read())
+        {
+            GAIRange1Min = dr["gaiRange1Min"].ToString();
+            GAIRange1Max = dr["gaiRange1Max"].ToString();
+            GAIRange2Min = dr["gaiRange2Min"].ToString();
+            GAIRange2Max = dr["gaiRange2Max"].ToString();
+            GAIRange3Min = dr["gaiRange3Min"].ToString();
+            GAIRange3Max = dr["gaiRange3Max"].ToString();
+            TaxEqual1Left = dr["taxEqual1Left"].ToString();
+            TaxEqual1Right = dr["taxEqual1Right"].ToString();
+            TaxEqual2Left = dr["taxEqual2Left"].ToString();
+            TaxEqual2Right = dr["taxEqual2Right"].ToString();
+            TaxEqual3Left = dr["taxEqual3Left"].ToString();
+            TaxEqual3Right = dr["taxEqual3Right"].ToString();
+            TaxGMI1 = dr["gmi1"].ToString();
+            TaxGMI2 = dr["gmi2"].ToString();
+            TaxGMI3 = dr["gmi3"].ToString();
+            TaxCalc = dr["taxCalc"].ToString();
+        }
+
+        cmd.Dispose();
+        con.Close();
+
+        //Assign tax based on tax name entered
+        if (TaxName == "Medicare" || TaxName == "Social Security")
+        {
+            Tax = double.Parse(TaxCalc) * GMI;
+        }
+        else if (TaxName == "Single Federal")
+        {
+            //Check for GAI range
+            if (GAI > double.Parse(GAIRange1Min) && GAI < double.Parse(GAIRange1Max))
+            {
+                Tax = double.Parse(TaxEqual1Left) + double.Parse(TaxEqual1Right) * (GMI - double.Parse(TaxGMI1));
+            }
+            else if (GAI > double.Parse(GAIRange2Min) && GAI < double.Parse(GAIRange2Max))
+            {
+                Tax = double.Parse(TaxEqual2Left) + double.Parse(TaxEqual2Right) * (GMI - double.Parse(TaxGMI2));
+            }
+            else
+            {
+                Tax = double.Parse(TaxEqual3Left) + double.Parse(TaxEqual3Right) * (GMI - double.Parse(TaxGMI3));
+            }
+        }
+        else if (TaxName == "Married Federal")
+        {
+            //Check for GAI range
+            if (GAI > double.Parse(GAIRange1Min) && GAI < double.Parse(GAIRange1Max))
+            {
+                Tax = double.Parse(TaxEqual1Left) + double.Parse(TaxEqual1Right) * (GMI - double.Parse(TaxGMI1));
+            }
+            else if (GAI > double.Parse(GAIRange2Min) && GAI < double.Parse(GAIRange2Max))
+            {
+                Tax = double.Parse(TaxEqual2Left) + double.Parse(TaxEqual2Right) * (GMI - double.Parse(TaxGMI2));
+            }
+            else if (GAI > double.Parse(GAIRange3Min) && GAI < double.Parse(GAIRange3Max))
+            {
+                Tax = double.Parse(TaxEqual3Left) + double.Parse(TaxEqual3Right) * (GMI - double.Parse(TaxGMI3));
+            }
+        }
+
+        //Round to nearest int
+        Tax = Math.Round(Tax);
+
+        //return tax
+        return Tax;
+    }
+
+
 }

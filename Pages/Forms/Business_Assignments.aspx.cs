@@ -137,6 +137,9 @@ public partial class Business_Assignments : Page
                 return;
             }
 
+            //Clear error label
+            lblError.Text = "";
+
             //Load businesses of visit date
             Sponsors.LoadSponsorNamesDDL(ddlSponsorName);
 

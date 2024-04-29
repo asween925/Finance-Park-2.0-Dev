@@ -103,6 +103,23 @@ input[type=number] {
 
     /*-----School Visit Checklist End-----*/
 
+
+    /*-----Business Assignment Sheets-----*/
+
+    .Biz_Assign_Logo_Top_Print {
+        padding: 30px;
+        height: 50%;
+        width: 30%;
+        float: left;
+    }
+
+    .Biz_Assign_Table_Print {
+        float: right;
+    }
+
+    /*-----Business Assignment Sheets End-----*/
+
+
     /************************ SPECIFIC PAGES CLASSES END *********************/
 
 
