@@ -249,4 +249,68 @@ public class Class_Simulation
 
         return (ScreenType, HeaderText, Text, Location, UnlockCode);
     }
+
+    public int GetTotalBizUnlocked(int VisitID, int StudentID)
+    {
+        int TotalBizUnlocked = 0;
+
+        con.ConnectionString = ConnectionString;
+        con.Open();
+        cmd.Connection = con;
+        cmd.CommandText = @"SELECT
+		  (CASE WHEN u1=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u6=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u7=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u8=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u9=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u10=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u11=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u12=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u13=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u14=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u15=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u16=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u17=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u18=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u19=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u20=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u21=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u22=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u23=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u24=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u25=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u26=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u27=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u28=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u29=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u30=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u31=1 THEN 1 ELSE 0 END +
+		  CASE WHEN u32=1 THEN 1 ELSE 0 END) as TotalUnlock
+	  FROM businessUnlockFP WHERE visitID='" + VisitID + "' AND studentID='" + StudentID + "'";
+        dr = cmd.ExecuteReader();
+
+        while (dr.Read())
+        {
+            TotalBizUnlocked = int.Parse(dr["TotalUnlock"].ToString());
+        }
+
+        cmd.Dispose();
+        con.Close();
+
+        return TotalBizUnlocked;
+    }
+
+    public void AddUnlockedBusiness (int VisitID, int StudentID, int BusinessID)
+    {
+        string SQL = "UPDATE businessUnlockFP SET u" + BusinessID + "=1 WHERE visitID='" + VisitID + "' AND studentID='" + StudentID + "'";
+
+        con.ConnectionString = ConnectionString;
+        con.Open();
+        cmd.Connection = con;
+        cmd.CommandText = SQL;
+        cmd.ExecuteNonQuery();
+
+        cmd.Dispose();
+        con.Close();
+    }
 }

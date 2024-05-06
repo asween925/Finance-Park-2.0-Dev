@@ -47,6 +47,31 @@ public partial class Class_BusinessData
 
 
 
+    //Get business name from ID
+    public string GetBusinessName(int BusinessID)
+    {
+        string BusinessName = "";
+
+        con.ConnectionString = ConnectionString;
+        con.Open();
+        cmd.Connection = con;
+        cmd.CommandText = "SELECT businessName FROM businessInfoFP WHERE id='" + BusinessID + "'";
+        dr = cmd.ExecuteReader();
+
+        while (dr.Read())
+        {
+            BusinessName = dr["businessName"].ToString();
+        }
+
+        con.Close();
+        cmd.Dispose();
+
+        return BusinessName;
+    }
+
+
+
+    //Load businesses into DDL
     public object LoadBusinessNamesDDL(DropDownList businessNameDDL)
     {
         string errorString;
@@ -289,4 +314,187 @@ public partial class Class_BusinessData
 
         return SponsorID;
     }
+
+
+
+    //Get script data from business ID
+    public (string Kiosk, string Popup, string Main, string Loan, string Shopping) GetBusinessScripts (int BusinessID)
+    {
+        string Kiosk = "";
+        string Popup = "";
+        string Main = "";
+        string Loan = "";
+        string Shopping = "";
+        string SQL = "SELECT kioskScript, researchPopupScript, researchMainScript, loanAppScript, shoppingRule FROM businessInfoFP WHERE id='" + BusinessID + "'";
+
+        con.ConnectionString = ConnectionString;
+        con.Open();
+        cmd.Connection = con;
+        cmd.CommandText = SQL;
+        dr = cmd.ExecuteReader();
+
+        while (dr.Read())
+        {
+            Kiosk = dr["kioskScript"].ToString();
+            Popup = dr["researchPopupScript"].ToString();
+            Main = dr["researchMainScript"].ToString();
+            Loan = dr["loanAppScript"].ToString();
+            Shopping = dr["shoppingRule"].ToString();
+        }
+
+        cmd.Dispose();
+        con.Close();
+        
+        return (Kiosk, Popup, Main, Loan, Shopping);
+    }
+
+
+    
+    //Get other action business data
+    public (int Action, bool Loan, bool Table, bool Retire) GetBusinessActions (int BusinessID)
+    {
+        int Action = 0;
+        bool Loan = false;
+        bool Table = false;
+        bool Retire = false;
+
+        string SQL = "SELECT hasAction, hasLoan, hasTable, hasRetire FROM businessInfoFP WHERE id='" + BusinessID + "'";
+
+        con.ConnectionString = ConnectionString;
+        con.Open();
+        cmd.Connection = con;
+        cmd.CommandText = SQL;
+        dr = cmd.ExecuteReader();
+
+        while (dr.Read())
+        {
+            Action = int.Parse(dr["hasAction"].ToString());
+            Loan = bool.Parse(dr["hasLoan"].ToString());
+            Table = bool.Parse(dr["hasTable"].ToString());
+            Retire = bool.Parse(dr["hasRetire"].ToString());
+        }
+
+        cmd.Dispose();
+        con.Close();
+
+        return (Action, Loan, Table, Retire);
+    }
+
+
+
+    //Get action button data
+    public (string Btn1Text, string BtnText2, string BtnText3, string Btn1A, string Btn2A, string Btn3A) GetActionButtons (int BusinessID)
+    {
+        string Btn1Text = "";
+        string Btn2Text = "";
+        string Btn3Text = "";
+        string Btn1A = "";
+        string Btn2A = "";
+        string Btn3A = "";
+
+        con.ConnectionString = ConnectionString;
+        con.Open();
+        cmd.Connection = con;
+        cmd.CommandText = "SELECT actionBtnText, actionBtnText2, actionBtnText3, actionBtn1Action, actionBtn2Action, actionBtn3Action FROM businessInfoFP WHERE id='" + BusinessID + "'";
+        dr = cmd.ExecuteReader();
+
+        while (dr.Read())
+        {
+            Btn1Text = dr["actionBtnText"].ToString();
+            Btn2Text = dr["actionBtnText2"].ToString();
+            Btn3Text = dr["actionBtnText3"].ToString();
+            Btn1A = dr["actionBtn1Action"].ToString();
+            Btn2A = dr["actionBtn2Action"].ToString();
+            Btn3A = dr["actionBtn3Action"].ToString();
+        }
+
+        cmd.Dispose();
+        con.Close();
+
+        return (Btn1Text, Btn2Text, Btn3Text, Btn1A, Btn2A, Btn3A);
+    }
+
+
+
+    //Get business table data
+    public (string Cat1, string Cat2, string Cat3, string Cat4, string Cat5, string Cat6, string Cat1D1, string Cat1D2, string Cat1D3, string Cat1D4, string Cat2D1, string Cat2D2, string Cat2D3, string Cat2D4, string Cat3D1, string Cat3D2, string Cat3D3, string Cat3D4, string Cat4D1, string Cat4D2, string Cat4D3, string Cat4D4, string Cat5D1, string Cat5D2, string Cat5D3, string Cat5D4, string Cat6D1, string Cat6D2, string Cat6D3, string Cat6D4) GetBusinessTableData (int BusinessID)
+    {
+        string Cat1 = "";
+        string Cat2 = "";
+        string Cat3 = "";
+        string Cat4 = "";
+        string Cat5 = "";
+        string Cat6 = "";
+        string Cat1D1 = "";
+        string Cat1D2 = "";
+        string Cat1D3 = "";
+        string Cat1D4 = "";
+        string Cat2D1 = "";
+        string Cat2D2 = "";
+        string Cat2D3 = "";
+        string Cat2D4 = "";
+        string Cat3D1 = "";
+        string Cat3D2 = "";
+        string Cat3D3 = "";
+        string Cat3D4 = "";
+        string Cat4D1 = "";
+        string Cat4D2 = "";
+        string Cat4D3 = "";
+        string Cat4D4 = "";
+        string Cat5D1 = "";
+        string Cat5D2 = "";
+        string Cat5D3 = "";
+        string Cat5D4 = "";
+        string Cat6D1 = "";
+        string Cat6D2 = "";
+        string Cat6D3 = "";
+        string Cat6D4 = "";
+
+        con.ConnectionString = ConnectionString;
+        con.Open();
+        cmd.Connection = con;
+        cmd.CommandText = "SELECT * FROM businessInfoFP WHERE id='" + BusinessID + "'";
+        dr = cmd.ExecuteReader();
+
+        while (dr.Read())
+        {
+            Cat1 = dr["tblCat1"].ToString();
+            Cat2 = dr["tblCat2"].ToString();
+            Cat3 = dr["tblCat3"].ToString();
+            Cat4 = dr["tblCat4"].ToString();
+            Cat5 = dr["tblCat5"].ToString();
+            Cat6 = dr["tblCat6"].ToString();
+            Cat1D1 = dr["tblCat1Data1"].ToString();
+            Cat1D2 = dr["tblCat1Data2"].ToString();
+            Cat1D3 = dr["tblCat1Data3"].ToString();
+            Cat1D4 = dr["tblCat1Data4"].ToString();
+            Cat2D1 = dr["tblCat2Data1"].ToString();
+            Cat2D2 = dr["tblCat2Data2"].ToString();
+            Cat2D3 = dr["tblCat2Data3"].ToString();
+            Cat2D4 = dr["tblCat2Data4"].ToString();
+            Cat3D1 = dr["tblCat3Data1"].ToString();
+            Cat3D2 = dr["tblCat3Data2"].ToString();
+            Cat3D3 = dr["tblCat3Data3"].ToString();
+            Cat3D4 = dr["tblCat3Data4"].ToString();
+            Cat4D1 = dr["tblCat4Data1"].ToString();
+            Cat4D2 = dr["tblCat4Data2"].ToString();
+            Cat4D3 = dr["tblCat4Data3"].ToString();
+            Cat4D4 = dr["tblCat4Data4"].ToString();
+            Cat5D1 = dr["tblCat5Data1"].ToString();
+            Cat5D2 = dr["tblCat5Data2"].ToString();
+            Cat5D3 = dr["tblCat5Data3"].ToString();
+            Cat5D4 = dr["tblCat5Data4"].ToString();
+            Cat6D1 = dr["tblCat6Data1"].ToString();
+            Cat6D2 = dr["tblCat6Data2"].ToString();
+            Cat6D3 = dr["tblCat6Data3"].ToString();
+            Cat6D4 = dr["tblCat6Data4"].ToString();
+        }
+
+        cmd.Dispose();
+        con.Close();
+
+        return (Cat1, Cat2, Cat3, Cat4, Cat5, Cat6, Cat1D1, Cat1D2, Cat1D3, Cat1D4, Cat2D1, Cat2D2, Cat2D3, Cat2D4, Cat3D1, Cat3D2, Cat3D3, Cat3D4, Cat4D1, Cat4D2, Cat4D3, Cat4D4, Cat5D1, Cat5D2, Cat5D3, Cat5D4, Cat6D1, Cat6D2, Cat6D3, Cat6D4);
+
+    }
+
 }

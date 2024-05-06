@@ -10,7 +10,7 @@ using System.Data;
 using Microsoft.AspNet.Identity;
 using System.Activities.Statements;
 
-public partial class Create_Simulation : System.Web.UI.Page
+public partial class Create_Visit : System.Web.UI.Page
 {
     private SqlConnection con = new SqlConnection();
     private SqlCommand cmd = new SqlCommand();
@@ -219,7 +219,7 @@ public partial class Create_Simulation : System.Web.UI.Page
         // Refresh page
         HtmlMeta meta = new HtmlMeta();
         meta.HttpEquiv = "Refresh";
-        meta.Content = "4;url=create_simulation.aspx";
+        meta.Content = "4;url=create_visit.aspx";
         this.Page.Controls.Add(meta);
         //ScriptManager.RegisterStartupScript(Page, this.GetType(), "ScrollPage", "window.scroll(0,0);", true);
         lblSuccess.Text = "Submission Successful! Refreshing page...";      

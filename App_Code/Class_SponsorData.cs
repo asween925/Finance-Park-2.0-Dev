@@ -77,11 +77,35 @@ public class Class_SponsorData
     }
 
 
-    //Get logo path
-    public string GetSponsorLogo(int SponsorID)
+    //Get the IDs os all sponsors for a business ID
+    public List<int> GetSponsorIDs(int BusinessID)
     {
-        string Path = "";
+        List<int> SponsorIDs = new List<int>();       
 
+        con.ConnectionString = ConnectionString;
+        con.Open();
+        cmd.Connection = con;
+        cmd.CommandText = "SELECT id FROM sponsorsFP WHERE businessID='" + BusinessID + "' OR businessID2='" + BusinessID + "' OR businessID3='" + BusinessID + "' OR businessID4='" + BusinessID + "'";
+        dr = cmd.ExecuteReader();
+
+        while (dr.Read())
+        {
+            SponsorIDs.Add(int.Parse(dr[0].ToString()));
+        }
+
+        cmd.Dispose();
+        con.Close();
+
+        return SponsorIDs;
+    }
+
+
+
+    //Get logo path from sponsor ID
+    public string GetSponsorLogoFromID (int SponsorID)
+    {
+        string Logo = "";
+        
         con.ConnectionString = ConnectionString;
         con.Open();
         cmd.Connection = con;
@@ -90,13 +114,13 @@ public class Class_SponsorData
 
         while (dr.Read())
         {
-            Path = dr["logoPath"].ToString();
+            Logo = dr["logoPath"].ToString();
         }
 
         cmd.Dispose();
         con.Close();
 
-        return Path;
+        return Logo;
     }
 
 }

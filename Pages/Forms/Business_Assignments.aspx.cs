@@ -60,7 +60,7 @@ public partial class Business_Assignments : Page
         int SponsorID = Sponsors.GetSponsorID(SponsorName);
         int VisitID = int.Parse(VisitData.GetVisitIDFromDate(tbVisitDate.Text).ToString());
         DateTime VisitDate = DateTime.Parse(tbVisitDate.Text);
-        string LogoPath = Sponsors.GetSponsorLogo(SponsorID);
+        string LogoPath = Sponsors.GetSponsorLogoFromID(SponsorID);
         string SQLStatement = @"SELECT DISTINCT s.id, s.accountNum, a.pin, CONCAT(s.firstName, ' ', s.lastName) as studentName
                                 FROM studentInfoFP s 
                                 INNER JOIN accountNumsFP a ON s.accountNum = a.accountNum 

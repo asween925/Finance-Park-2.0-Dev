@@ -118,15 +118,15 @@ public partial class Sim_Login : System.Web.UI.Page
         else
         {
             //Insert new student into DB
-            try
-            {
+            //try
+            //{
                 StudentData.NewStudent(VisitID, AcctNum, tbFirstName.Text, tbLastName.Text, ddlGender.SelectedValue, SchoolID, TeacherID, Grade, SponsorID);
-            }
-            catch
-            {
-                lblError.Text = "Error in Login. Could not insert new student into the database. Please see a teacher for help.";
-                return;
-            }
+            //}
+            //catch
+            //{
+            //    lblError.Text = "Error in Login. Could not insert new student into the database. Please see a teacher for help.";
+            //    return;
+            //}
         }
 
         //Redirect to lifestyle questions, add student ID to link

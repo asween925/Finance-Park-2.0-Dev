@@ -87,14 +87,6 @@ h3 {
     font-size: 24px;
 }
 
-.content_div {
-    border: 1px solid gray;
-    border-radius: 10px;
-    background: white;
-    float: right;
-    width: 75%;
-}
-
 .blurArea {
     transition: 0.5s;
 }
@@ -580,6 +572,10 @@ h3 {
         background-color: #bababa;
     }
 
+.Sim_Research_Button_Unlocked {
+    border: 1px solid green;
+}
+
 .Sim_Research_Table {
     margin-left: auto;
     margin-right: auto;
@@ -610,12 +606,191 @@ h3 {
     padding: 10px;
 }
 
+.Sim_Business_Name {
+    font-size: calc(14px + 0.8vw);
+}
+
+/*-----Loan-----*/
+
+.Sim_Business_Loan {
+    border: 2px solid gray;
+    border-radius: 15px;
+    margin: 5px;
+    background-color: whitesmoke;
+    padding: 5px;
+}
+
+.Sim_Business_Loan_Header {
+    font-size: calc(12px + 0.8vw);
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.Sim_Business_Loan_Script {
+    color: green;
+    padding-left: 10px;
+}
+
+.Sim_Business_Loan_Script_Bottom {
+    color: green;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: inline-block;
+}
+
+.Sim_Business_Loan_Left {
+    border: 1px solid lightgray;
+    border-radius: 15px;
+    float: left;
+    margin-left: auto;
+    margin-right: auto;
+    width: 45%;
+    background-color: antiquewhite;
+    padding: 5px;
+    display: inline-block;
+}
+
+.Sim_Business_Loan_Right {
+    border: 1px solid lightgray;
+    border-radius: 15px;
+    float: right;
+    margin-left: auto;
+    margin-right: auto;
+    width: 45%;
+    background-color: antiquewhite;
+    padding: 5px;
+    display: inline-block;
+}
+
+.Sim_Business_Loan_Right_L {
+    float: left;
+    margin-left: auto;
+    margin-right: auto;
+    width: 45%;
+    padding: 5px;
+    display: inline-block;
+}
+
+.Sim_Business_Loan_Right_R {
+    float: right;
+    margin-left: auto;
+    margin-right: auto;
+    width: 45%;
+    padding: 5px;
+    display: inline-block;
+}
+
+.Sim_Business_Loan_Btn_Text {
+    font-size: calc(6px + 0.8vw);
+    padding-bottom: 5px;
+    display: inline-block;
+}
+
+.Sim_Business_Loan_Left_Button {
+    background-color: #80c443;
+    border-radius: 10px;
+    color: white;
+    padding: 7px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: calc(7px + 0.8vw);
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.2s;
+    /*box-shadow: 1px 2px 10px 0px rgba(0,0,0,0.24),0 17px 500px 0 rgba(0,0,0,0.19);*/
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-bottom: 4px;
+    border: none;
+    width: 80%;
+}
+
+    .Sim_Business_Loan_Left_Button:hover {
+        background-color: #6fab38;
+        color: white;
+    }
+
+    .Sim_Business_Loan_Left_Button:disabled {
+        background-color: gray;
+    }
+
+.Sim_Business_Loan_Left_Button2 {
+    background-color: white;
+    border-radius: 10px;
+    color: black;
+    padding: 7px 12px;
+    text-align: left;
+    text-decoration: none;
+    display: inline-block;
+    font-size: calc(7px + 0.8vw);
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.2s;
+    /*box-shadow: 1px 2px 10px 0px rgba(0,0,0,0.24),0 17px 500px 0 rgba(0,0,0,0.19);*/
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-bottom: 4px;
+    border: 1px solid lightgray;
+    width: 80%;
+}
+
+    .Sim_Business_Loan_Left_Button2:hover {
+        background-color: lightgray;       
+    }
+
+    .Sim_Business_Load_Left_Button2:active {
+        border-color: green;
+        border: 2px;
+    }
+
+.Sim_Business_Loan_Right_Button {
+    background-color: #80c443;
+    border-radius: 10px;
+    color: white;
+    padding: 7px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: calc(7px + 0.8vw);
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.2s;
+    /*box-shadow: 1px 2px 10px 0px rgba(0,0,0,0.24),0 17px 500px 0 rgba(0,0,0,0.19);*/
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-bottom: 4px;
+    border: none;
+    /*width: 30%;*/
+}
+
+    .Sim_Business_Loan_Right_Button:hover {
+        background-color: #6fab38;
+        color: white;
+    }
+
+/*-----Retirement Calc-----*/
+
+.Sim_Business_Retire {
+    border: 2px solid gray;
+    border-radius: 15px;
+    margin: 5px;
+    background-color: #aade7a;
+    padding: 10px;
+}
+
+.Sim_Business_Retire_Header {
+    font-size: calc(12px + 0.8vw);
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+
 /*-----Sim Business End-----*/
 
 
 
 /*-----Sim Life Style-----*/
-
 .Sim_Life_Style_QBox {
     border: 2px solid #8ec851;
     border-radius: 15px;
@@ -958,6 +1133,7 @@ h3 {
 
 
 /*-----Multiple Sim Pages-----*/
+
 .Sim_Content_With_Sponsor {
     max-width: 80%;
     margin-left: auto;
@@ -966,6 +1142,20 @@ h3 {
     margin-bottom: 10px;
     display: block;
 }
+
+.Sim_Content {
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 40px;
+    margin-bottom: 10px;
+    display: block;
+    background: white;
+    border: 1px solid gray;
+    border-radius: 10px;
+    padding: 5px;
+}
+
 
 .Sim_Content_Right {
     border: 1px solid gray;
@@ -1023,6 +1213,15 @@ h3 {
     .Sim_Sponsor_Button:hover {
         background-color: darkgreen;
     }
+
+.Sim_Sponsor_Img {
+    box-sizing: border-box;
+    width: 90%;
+    height: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 8px;
+}
 
 /*-----Multiple Sim Pages End-----*/
 

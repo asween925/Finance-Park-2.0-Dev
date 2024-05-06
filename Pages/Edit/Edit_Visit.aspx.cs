@@ -9,7 +9,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class Edit_Simulation : Page
+public partial class Edit_Visit : Page
 {
     private string SQLServer = ConfigurationManager.AppSettings["FP_sfp"].ToString();
     private string SQLDatabase = ConfigurationManager.AppSettings["FP_DB"].ToString();
@@ -25,7 +25,7 @@ public partial class Edit_Simulation : Page
     private Class_GridviewFunctions Gridviews = new Class_GridviewFunctions();
     private int VisitID;
 
-    public Edit_Simulation()
+    public Edit_Visit()
     {
         ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
         Load += Page_Load;

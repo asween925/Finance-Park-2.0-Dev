@@ -56,7 +56,7 @@ public partial class Edit_Sponsor : Page
 
     public void LoadData()
     {
-        string SQLStatement = "SELECT * FROM sponsorsFP";
+        string SQLStatement = "SELECT id, sponsorName, CONCAT('~/Media/', logoPath) as logoPath, businessID, businessID2, businessID3, businessID4 FROM sponsorsFP";
 
         //Clear table
         dgvSponsors.DataSource = null;
@@ -107,7 +107,7 @@ public partial class Edit_Sponsor : Page
     {
         int ID = Convert.ToInt32(dgvSponsors.DataKeys[e.RowIndex].Values[0]); // Gets id number
         string SponsorName = ((TextBox)dgvSponsors.Rows[e.RowIndex].FindControl("tbSponsorNameDGV")).Text;
-        string BusinessName1 = ((DropDownList)dgvSponsors.Rows[e.RowIndex].FindControl("ddlBusinessNameDGV")).SelectedValue;
+        string BusinessName1 = ((DropDownList)dgvSponsors.Rows[e.RowIndex].FindControl("ddlBusinessName1DGV")).SelectedValue;
         string BusinessName2 = ((DropDownList)dgvSponsors.Rows[e.RowIndex].FindControl("ddlBusinessName2DGV")).SelectedValue;
         string BusinessName3 = ((DropDownList)dgvSponsors.Rows[e.RowIndex].FindControl("ddlBusinessName3DGV")).SelectedValue;
         string BusinessName4 = ((DropDownList)dgvSponsors.Rows[e.RowIndex].FindControl("ddlBusinessName4DGV")).SelectedValue;       

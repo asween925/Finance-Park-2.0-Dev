@@ -10,7 +10,7 @@
     <title>Finance Park - </title>
 
     <link href="../../CSS/StudentPages.css" rel="stylesheet" media="screen" type="text/css" />
-    <link rel="shortcut icon" href="../../Media/faviconFP.png" type="image/ico" />
+    <link rel="shortcut icon" href="../../Media/FP_favicon_2.png" type="image/ico" />
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 </head>
 <body>

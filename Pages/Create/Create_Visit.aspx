@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Create_Simulation.aspx.cs" Inherits="Create_Simulation" MaintainScrollPositionOnPostback="true" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Create_Visit.aspx.cs" Inherits="Create_Visit" MaintainScrollPositionOnPostback="true" %>
 
 <!doctype html>
 <html>
@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0; maximum-scale=2.0; user-scalable=0;">
 
-    <title>FP 2.0 - Create a Simulation</title>
+    <title>FP 2.0 - Create a Visit</title>
 
     <link href="../../CSS/StaffPages.css" rel="stylesheet" media="screen" type="text/css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
@@ -32,7 +32,7 @@
 
         <%-- Content--%>
         <div class="content">
-            <h2 class="h2">Create a Simulation</h2>
+            <h2 class="h2">Create a Visit</h2>
             <h3>This page is used to create a new school visit.
                 <br />
                 <br />

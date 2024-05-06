@@ -74,8 +74,8 @@
                                 <asp:DropDownList CssClass="ddl" ID="ddlBusinessName4DGV" runat="server" AutoPostBack="true" readonly="false"></asp:DropDownList>
                             </ItemTemplate>
                         </asp:TemplateField>                       
-                        <asp:ImageField DataImageUrlField="logoPath" HeaderText="Logo">
-                            <ControlStyle></ControlStyle>
+                        <asp:ImageField DataImageUrlField="logoPath" ControlStyle-Width="100" ControlStyle-Height="100" HeaderText="Logo" ReadOnly="true">
+                            <ControlStyle Height="100px" Width="100px"></ControlStyle>
                         </asp:ImageField>
                     </Columns>
                 </asp:GridView>

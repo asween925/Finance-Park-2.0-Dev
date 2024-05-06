@@ -38,7 +38,7 @@ public partial class Sim_Savings : System.Web.UI.Page
             StudentID = int.Parse(Request["b"]);
 
             //Get account number
-            var Student = Students.StudentLookup(20, StudentID);
+            var Student = Students.StudentLookup(VisitID, StudentID);
             AcctNum = Student.AccountNumber;
 
             //Load Data
@@ -48,7 +48,7 @@ public partial class Sim_Savings : System.Web.UI.Page
 
     protected void LoadData(int StudentID)
     {
-        var Student = Students.StudentLookup(20, StudentID);
+        var Student = Students.StudentLookup(VisitID, StudentID);
         var Persona = Students.PersonaLookup(Student.PersonaID);
         double NMI = Student.NMI;
         double HouseNMI = NMI;

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Edit_Simulation.aspx.cs" Inherits="Edit_Simulation" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Edit_Visit.aspx.cs" Inherits="Edit_Visit" %>
 
 <!doctype html>
 <html>
@@ -33,7 +33,7 @@
 
         <%--Content--%>
         <div class="content">
-            <h2 class="h2">Edit Simulation</h2>
+            <h2 class="h2">Edit Visit</h2>
             <h3>This page will allow you to edit the simulation of an existing simulation.
                 <br /><br />
                 Enter an existing simulation visit date in the textbox below, then click the 'Edit' button to edit a simulation.

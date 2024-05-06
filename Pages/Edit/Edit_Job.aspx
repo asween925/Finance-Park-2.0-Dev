@@ -59,7 +59,7 @@
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="Business">
                             <ItemTemplate>
-                               <asp:Label ID="lblBusinessNameDGV" runat="server" Text='<%#Bind("business") %>' Visible="false"></asp:Label>
+                               <asp:Label ID="lblBusinessNameDGV" runat="server" Text='<%#Bind("businessID") %>' Visible="false"></asp:Label>
                                <asp:DropDownList ID="ddlBusinessNameDGV" runat="server" CssClass="ddl" AutoPostBack="true"></asp:DropDownList>
                             </ItemTemplate>
                         </asp:TemplateField>

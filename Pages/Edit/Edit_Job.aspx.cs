@@ -76,8 +76,8 @@ public partial class Edit_Job : Page
         }
 
         //Load schoolInfoFP table
-        try
-        {
+        //try
+        //{
             con.ConnectionString = ConnectionString;
             con.Open();
             Review_sds.ConnectionString = ConnectionString;
@@ -88,12 +88,12 @@ public partial class Edit_Job : Page
             cmd.Dispose();
             con.Close();
 
-        }
-        catch
-        {
-            lblError.Text = "Error in LoadData(). Cannot load jobs table.";
-            return;
-        }
+        //}
+        //catch
+        //{
+        //    lblError.Text = "Error in LoadData(). Cannot load jobs table.";
+        //    return;
+        //}
 
         // Highlight row being edited
         foreach (GridViewRow row in dgvJobs.Rows)

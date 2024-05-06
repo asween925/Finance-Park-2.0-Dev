@@ -444,14 +444,18 @@ public partial class Class_StudentData
 
         //Insert New Student
         InsertNewStudent(VisitID, AcctNum, FirstName, LastName, Gender, SchoolID, TeacherID, Grade, SponsorID, PID);
+
+        //Insert Student into Business Unlock FP table
+        InsertStudentInBizUnlock(VisitID, GetStudentID(VisitID, AcctNum));
     }
 
 
     //Insert new student into studentInfoFP
     public void InsertNewStudent(int VisitID, int AcctNum, string FirstName, string LastName, string Gender, int SchoolID, int TeacherID, int Grade, int SponsorID, int PersonaID)
     {
-        string SQL = @"INSERT INTO studentInfoFP (accountNum, firstName, lastName, visitID, schoolID, teacherID, sponsorID, personaID, grade, gender, lunchServed)
-					   VALUES(@accountNum, @firstName, @lastName, @visitID, @schoolID, @teacherID, @sponsorID, @personaID, @grade, @gender, 0);";
+        string SQL = @"INSERT INTO studentInfoFP (accountNum, firstName, lastName, visitID, schoolID, teacherID, sponsorID, personaID, grade, gender, lunchServed, nmi, savingsTotal, savingsRetire, savingsEmergency, savingsOther, bizUnlocked)
+					   VALUES(@accountNum, @firstName, @lastName, @visitID, @schoolID, @teacherID, @sponsorID, @personaID, @grade, @gender, 0, 0, 0, 0, 0, 0, 0);";
+        int StudentID = 0;       
 
         using (var con = new SqlConnection(ConnectionString))
         {
@@ -468,6 +472,24 @@ public partial class Class_StudentData
                 cmd.Parameters.Add("@grade", SqlDbType.VarChar).Value = Grade;
                 cmd.Parameters.Add("@gender", SqlDbType.VarChar).Value = Gender;
 
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }            
+        }
+    }
+
+    public void InsertStudentInBizUnlock(int VisitID, int StudentID)
+    {
+        //SQL business
+        string SQLBiz = @"INSERT INTO businessUnlockFP (visitID, studentID, u1, u6, u7, u8, u9, u10, u11, u12, u13, u14, u15, u16, u17, u18, u19, u20, u21, u22, u23, u24, u25, u26, u27, u28, u29, u30, u31, u32)
+	                      VALUES (" + VisitID + ", " + StudentID + ", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)";
+
+        using (var con = new SqlConnection(ConnectionString))
+        {
+            using (var cmd = new SqlCommand(SQLBiz))
+            {
                 cmd.Connection = con;
                 con.Open();
                 cmd.ExecuteNonQuery();

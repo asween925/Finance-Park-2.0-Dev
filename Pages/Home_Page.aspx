@@ -54,7 +54,7 @@
                 <div class="Home_Page_Drop_Down_Menu">
                     <button class="Home_Page_Drop_Down_Btn">Create ▼</button>
                     <div class="Home_Page_Drop_Down_Content">
-                        <a href="../Pages/Create/Create_Simulation.aspx">Create a Simulation</a>
+                        <a href="../Pages/Create/Create_Visit.aspx">Create a Visit</a>
                         <a href="../Pages/Create/Create_School.aspx">Create a School</a>
                         <a href="../Pages/Create/Create_Teacher.aspx">Create a Teacher</a>
                         <a href="../Pages/Create/Create_Job.aspx">Create a Job</a>
@@ -67,7 +67,7 @@
                 <div class="Home_Page_Drop_Down_Menu">
                     <button class="Home_Page_Drop_Down_Btn">Edit ▼</button>
                     <div class="Home_Page_Drop_Down_Content">
-                        <a href="../Pages/Edit/edit_Simulation.aspx">Edit Simulation</a>
+                        <a href="../Pages/Edit/Edit_Visit.aspx">Edit Visit</a>
                         <a href="../Pages/Edit/edit_school.aspx">Edit School</a>
                         <a href="../Pages/Edit/edit_teacher.aspx">Edit Teacher</a>
                         <a href="../Pages/Edit/edit_student.aspx">Edit Student</a>
