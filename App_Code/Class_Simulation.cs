@@ -313,4 +313,192 @@ public class Class_Simulation
         cmd.Dispose();
         con.Close();
     }
+
+    public bool CheckBudgets(int VisitID, int StudentID)
+    {
+        bool HasRows = false;
+
+        con.ConnectionString = ConnectionString;
+        con.Open();
+        cmd.CommandText = "SELECT visitID, studentID FROM budgetsFP WHERE visitID='" + VisitID + "' AND studentID='" + StudentID + "'";
+        cmd.Connection = con;
+        dr = cmd.ExecuteReader();
+
+        if (dr.HasRows == true)
+        {
+            HasRows = true;
+        }
+
+        cmd.Dispose();
+        con.Close();
+
+        return HasRows;
+    }
+
+    public void InsertBudget (int VisitID, int StudentID, int BusinessID, string Amount)
+    {
+        //string SQLBudget = "";
+        string SQL = "INSERT INTO budgetsFP (visitID, studentID, budget" + BusinessID + ") VALUES (@visitID, @studentID, @amount)";
+
+        //Check the business id and add it to the SQL string
+        //switch (BusinessID)
+        //{
+        //    case 1:
+        //        SQLBudget = "budget1";
+        //        break;
+        //    case 7:
+        //        SQLBudget = "budget7";
+        //        break;
+        //    case 11:
+        //        SQLBudget = "budget11";
+        //        break;
+        //    case 12:
+        //        SQLBudget = "budget12";
+        //        break;
+        //    case 13:
+        //        SQLBudget = "budget13";
+        //        break;
+        //    case 15:
+        //        SQLBudget = "budget15";
+        //        break;
+        //    case 16:
+        //        SQLBudget = "budget16";
+        //        break;
+        //    case 18:
+        //        SQLBudget = "budget18";
+        //        break;
+        //    case 19:
+        //        SQLBudget = "budget19";
+        //        break;
+        //    case 21:
+        //        SQLBudget = "budget21";
+        //        break;
+        //    case 22:
+        //        SQLBudget = "budget22";
+        //        break;
+        //    case 23:
+        //        SQLBudget = "budget23";
+        //        break;
+        //    case 24:
+        //        SQLBudget = "budget24";
+        //        break;
+        //    case 26:
+        //        SQLBudget = "budget26";
+        //        break;
+        //    case 27:
+        //        SQLBudget = "budget27";
+        //        break;
+        //    case 28:
+        //        SQLBudget = "budget28";
+        //        break;
+        //    case 29:
+        //        SQLBudget = "budget29";
+        //        break;
+        //    case 30:
+        //        SQLBudget = "budget30";
+        //        break;
+        //    case 31:
+        //        SQLBudget = "budget31";
+        //        break;
+
+        //}
+
+
+
+        //Insert new student into budgets table
+        using (var con = new SqlConnection(ConnectionString))
+        {
+            using (var cmd = new SqlCommand(SQL))
+            {
+                cmd.Parameters.Add("@visitID", SqlDbType.Int).Value = VisitID;
+                cmd.Parameters.Add("@studentID", SqlDbType.VarChar).Value = StudentID;
+                cmd.Parameters.Add("@amount", SqlDbType.VarChar).Value = Amount;
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+        }
+    }
+
+    public void UpdateBudget (int VisitID, int StudentID, int BusinessID, string Amount)
+    {
+        string SQL = "UPDATE budgetsFP SET budget" + BusinessID + "=@amount WHERE visitID=@visitID AND studentID=@studentID";
+
+        using (var con = new SqlConnection(ConnectionString))
+        {
+            using (var cmd = new SqlCommand(SQL))
+            {
+                cmd.Parameters.Add("@visitID", SqlDbType.Int).Value = VisitID;
+                cmd.Parameters.Add("@studentID", SqlDbType.VarChar).Value = StudentID;
+                cmd.Parameters.Add("@amount", SqlDbType.Int).Value = Amount;
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+        }
+    }
+
+    public int GetBudgetData (int VisitID, int StudentID, int BusinessID)
+    {
+        int Budget = 0;
+        
+        con.ConnectionString = ConnectionString;
+        con.Open();
+        cmd.Connection = con;
+        cmd.CommandText = "SELECT CASE WHEN budget" + BusinessID + " IS NOT NULL THEN budget" + BusinessID + " ELSE 0 END as budget FROM budgetsFP WHERE visitID='" + VisitID + "' AND studentID='" + StudentID + "'";
+        dr = cmd.ExecuteReader();
+
+        while (dr.Read())
+        {
+            Budget = Convert.ToInt16(dr["budget"].ToString());
+        }
+
+        cmd.Dispose();
+        con.Close();
+
+        return Budget;
+    }
+    
+    public int GetTotalBudget (int VisitID, int StudentID)
+    {
+        int Total = 0;
+
+        con.ConnectionString = ConnectionString;
+        con.Open();
+        cmd.Connection = con;
+        cmd.CommandText = @"SELECT 
+                        (CASE WHEN budget1 IS NOT NULL THEN budget1 ELSE 0 END +
+		                  CASE WHEN budget7 IS NOT NULL THEN budget7 ELSE 0 END +
+		                  CASE WHEN budget11 IS NOT NULL THEN budget11 ELSE 0 END +
+		                  CASE WHEN budget12 IS NOT NULL THEN budget12 ELSE 0 END +
+		                  CASE WHEN budget13 IS NOT NULL THEN budget13 ELSE 0 END +
+		                  CASE WHEN budget15 IS NOT NULL THEN budget15 ELSE 0 END +
+		                  CASE WHEN budget16 IS NOT NULL THEN budget16 ELSE 0 END +
+		                  CASE WHEN budget18 IS NOT NULL THEN budget18 ELSE 0 END +
+		                  CASE WHEN budget19 IS NOT NULL THEN budget19 ELSE 0 END +
+		                  CASE WHEN budget21 IS NOT NULL THEN budget21 ELSE 0 END +
+		                  CASE WHEN budget22 IS NOT NULL THEN budget22 ELSE 0 END +
+		                  CASE WHEN budget23 IS NOT NULL THEN budget23 ELSE 0 END +
+		                  CASE WHEN budget24 IS NOT NULL THEN budget24 ELSE 0 END +
+		                  CASE WHEN budget26 IS NOT NULL THEN budget26 ELSE 0 END +
+		                  CASE WHEN budget27 IS NOT NULL THEN budget27 ELSE 0 END +
+		                  CASE WHEN budget28 IS NOT NULL THEN budget28 ELSE 0 END +
+		                  CASE WHEN budget29 IS NOT NULL THEN budget29 ELSE 0 END +
+		                  CASE WHEN budget30 IS NOT NULL THEN budget30 ELSE 0 END +
+		                  CASE WHEN budget31 IS NOT NULL THEN budget31 ELSE 0 END) as Total 
+                        FROM budgetsFP WHERE visitID='" + VisitID + "' AND studentID='" + StudentID + "'";
+        dr = cmd.ExecuteReader();
+
+        while (dr.Read())
+        {
+            Total = int.Parse(dr["Total"].ToString());
+        }
+
+        cmd.Dispose();
+        con.Close();
+
+        return Total;
+    }
 }

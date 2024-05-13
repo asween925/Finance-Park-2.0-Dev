@@ -103,7 +103,9 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
+                    <br />
+                    <asp:Button ID="btnNext" runat="server" CssClass="button" Text="Continue to Savings" Visible="false" OnClick="btnNext_Click" />
+                </div>               
             </div>
 
             <%--Popup--%>

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
 using System.Linq;
-using System.ServiceModel.Channels;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class Sim_Research : System.Web.UI.Page
+public partial class Sim_Shopping : System.Web.UI.Page
 {
     private string SQLServer = ConfigurationManager.AppSettings["FP_sfp"].ToString();
     private string SQLDatabase = ConfigurationManager.AppSettings["FP_DB"].ToString();
@@ -20,17 +20,11 @@ public partial class Sim_Research : System.Web.UI.Page
     private string ConnectionString;
     private Class_VisitData VisitData = new Class_VisitData();
     private Class_SchoolData SchoolData = new Class_SchoolData();
-    private Class_SchoolHeader SchoolHeader = new Class_SchoolHeader();
     private Class_StudentData Students = new Class_StudentData();
     private Class_Simulation Sim = new Class_Simulation();
     private int VisitID;
     private int StudentID;
     private int AcctNum;
-
-    public Sim_Research()
-    {
-        ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
-    }
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -46,9 +40,25 @@ public partial class Sim_Research : System.Web.UI.Page
             var Student = Students.StudentLookup(23, StudentID);
             AcctNum = Student.AccountNumber;
 
-            //Load Data
-            UnlockBiz(StudentID);
+            if (!IsPostBack)
+            {
+                //Load Data
+                LoadData(StudentID);
+            }         
         }
+    }
+
+    protected void LoadData(int StudentID)
+    {
+        var Student = Students.StudentLookup(23, StudentID);
+
+        //Load NMI, spent amount, and remaining amount
+        lblNMI.Text = Student.NMI.ToString("c");
+        lblSpent.Text = Student.Spent.ToString("c");
+        lblRemaining.Text = (Student.NMI - Student.Spent).ToString("c");
+
+        //Check which businesses have been shopped at
+
     }
 
     protected void UnlockBiz(int StudentID)
@@ -81,10 +91,7 @@ public partial class Sim_Research : System.Web.UI.Page
         bool U30 = false;
         bool U31 = false;
         bool U32 = false;
-        string Attribute = "border: 2px solid green; background-image: url('../../Media/Business Icons/Unlocked.png')";
-
-        //Get total biz that have been unlocked by the student
-        lblBusinessUnlocked.Text = Sim.GetTotalBizUnlocked(23, StudentID).ToString();
+        string Attribute = "border: 2px solid green;";
 
         //Check which businesses have been unlocked
         try
@@ -217,7 +224,7 @@ public partial class Sim_Research : System.Web.UI.Page
         }
         catch
         {
-            lblBusinessUnlocked.Text = "Error.";
+            lblError.Text = "Error.";
             return;
         }
 
@@ -227,21 +234,17 @@ public partial class Sim_Research : System.Web.UI.Page
         {
             btnAutoInsurance.Attributes.Add("style", Attribute);
         }
-        if (U6 == true)
-        {
-            btnBankMort.Attributes.Add("style", Attribute);
-        }
         if (U7 == true)
         {
             btnBankSave.Attributes.Add("style", Attribute);
         }
         if (U8 == true)
         {
-            
+
         }
         if (U9 == true)
         {
-            
+
         }
         if (U10 == true)
         {
@@ -261,7 +264,7 @@ public partial class Sim_Research : System.Web.UI.Page
         }
         if (U14 == true)
         {
-            
+
         }
         if (U15 == true)
         {
@@ -273,7 +276,7 @@ public partial class Sim_Research : System.Web.UI.Page
         }
         if (U17 == true)
         {
-            
+
         }
         if (U18 == true)
         {
@@ -285,7 +288,7 @@ public partial class Sim_Research : System.Web.UI.Page
         }
         if (U20 == true)
         {
-            
+
         }
         if (U21 == true)
         {
@@ -335,111 +338,30 @@ public partial class Sim_Research : System.Web.UI.Page
         {
 
         }
-
-        //Check if 22 of 22 business are unlocked
-        if (lblBusinessUnlocked.Text == "22")
-        {
-            btnNext.Visible = true;
-        }
     }
 
-    protected void OpenBusiness()
+    protected void GoShopping(int BusinessID)
     {
-        string ID;
-        int BusinessID = 0;
-        int BIDHidden = int.Parse(hfBID.Value);
 
-
-        //Get ID from textbox if not blank
-        if (tbBusinessID.Text != "")
-        {
-            ID = tbBusinessID.Text;
-
-            //Check if ID matches the kiosk ID of a business in the DB
-            try
-            {
-                con.ConnectionString = ConnectionString;
-                con.Open();
-                cmd.Connection = con;
-                cmd.CommandText = "SELECT id, kioskID FROM businessInfoFP WHERE kioskID = '" + ID + "'";
-                dr = cmd.ExecuteReader();
-
-                if (dr.HasRows == true)
-                {
-                    while (dr.Read())
-                    {
-                        //get business id
-                        BusinessID = int.Parse(dr["id"].ToString());
-
-                        //Check if Business ID matches the hidden value ID
-                        if (BusinessID == BIDHidden)
-                        {
-                            //redirect to Sim_Business
-                            Response.Redirect("Sim_Business.aspx?b=" + StudentID + "&c=" + BusinessID);
-                        }
-                        else
-                        {
-                            Page.ClientScript.RegisterStartupScript(GetType(), "TogglePopup", "toggle();", true);
-                            lblPopupText.ForeColor = System.Drawing.Color.Red;
-                            lblPopupText.Text = "ID entered is not for this business.";
-                        }
-                        
-                    }                                     
-                }
-                else
-                {
-                    Page.ClientScript.RegisterStartupScript(GetType(), "TogglePopup", "toggle();", true);
-                    lblPopupText.ForeColor = System.Drawing.Color.Red;
-                    lblPopupText.Text = "ID is not tied to a business. Check the number again before entering.";
-                }
-        }
-            catch
-            {
-            Page.ClientScript.RegisterStartupScript(GetType(), "TogglePopup", "toggle();", true);
-            lblPopupText.ForeColor = System.Drawing.Color.Red;
-            lblPopupText.Text = "Could not detect business ID in database. Please find a staff member.";
-            return;
-        }
-    }
-        else
-        {
-            Page.ClientScript.RegisterStartupScript(GetType(), "TogglePopup", "toggle();", true);
-            lblPopupText.ForeColor = System.Drawing.Color.Red;
-            lblPopupText.Text = "No ID entered. Please enter a business ID before submitting.";
-        }
     }
 
 
 
     protected void btnEnter_Click(object sender, EventArgs e)
     {
-        var Trans = Sim.GetTransitionData(5);
 
-        if (lblPopupText.Text != "Please enter the Business ID to proceed:")
-        {
-            //Check if unlock code matches
-            if (tbBusinessID.Text == Trans.UnlockCode.ToString())
-            {
-                Response.Redirect("Sim_Budget.aspx?b=" + StudentID);
-            }
-        }
-        else
-        {
-            OpenBusiness();
-        }
-             
     }
 
     protected void btnCancel_Click(object sender, EventArgs e)
     {
-        //Closes popup window
+        //Automatically closes the popup
     }
 
     protected void btnAutoInsurance_Click(object sender, EventArgs e)
     {
         //Assign business ID to hidden value
         hfBID.Value = "1";
-        
+
         //Open pop up
         Page.ClientScript.RegisterStartupScript(GetType(), "TogglePopup", "toggle();", true);
     }

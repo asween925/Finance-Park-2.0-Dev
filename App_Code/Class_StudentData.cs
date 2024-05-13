@@ -198,7 +198,7 @@ public partial class Class_StudentData
 
 
     // Gets students info of various columns
-    public (int AccountNumber, string FirstName, string LastName, int VisitID, string SchoolName, DateTime VisitDate, string TeacherName, string SponsorName, int PersonaID, double NMI, double Total, double Retire, double Emerg, double Other) StudentLookup(int VisitID, int SID)
+    public (int AccountNumber, string FirstName, string LastName, int VisitID, string SchoolName, DateTime VisitDate, string TeacherName, string SponsorName, int PersonaID, double NMI, double Spent) StudentLookup(int VisitID, int SID)
     {
         int ANum = 0;
         string First = "";
@@ -210,11 +210,8 @@ public partial class Class_StudentData
         string Sponsor = "";
         int PID = 0;
         double NMI = 0;
-        double Total = 0;
-        double Retire = 0;
-        double Emerg = 0;
-        double Other = 0;
-        string SQLStatement = @"  SELECT s.accountNum, s.firstName, s.lastName, v.id as visitID, sc.schoolName as schoolName, v.visitDate, (t.firstName + ' ' + t.lastName) as teacherName, sp.sponsorName, s.personaID, s.nmi, s.savingsTotal, s.savingsRetire, s.savingsEmergency, s.savingsOther
+        double Spent = 0;
+        string SQLStatement = @"  SELECT s.accountNum, s.firstName, s.lastName, v.id as visitID, sc.schoolName as schoolName, v.visitDate, (t.firstName + ' ' + t.lastName) as teacherName, sp.sponsorName, s.personaID, s.nmi, s.spent
                     FROM studentInfoFP s
                     LEFT JOIN visitInfoFP v
 	                    ON v.id = s.visitID
@@ -244,17 +241,14 @@ public partial class Class_StudentData
             Sponsor = dr["sponsorName"].ToString();
             PID = int.Parse(dr["personaID"].ToString());
             NMI = double.Parse(dr["nmi"].ToString());
-            Total = double.Parse(dr["savingsTotal"].ToString());
-            Retire = double.Parse(dr["savingsRetire"].ToString());
-            Emerg = double.Parse(dr["savingsEmergency"].ToString());
-            Other = double.Parse(dr["savingsOther"].ToString());
+            Spent = double.Parse(dr["spent"].ToString());
         }
 
         dr.Close();
         cmd.Dispose();
         con.Close();    
 
-        return (ANum, First, Last, VID, School, VDate, Teacher, Sponsor, PID, NMI, Total, Retire, Emerg, Other);
+        return (ANum, First, Last, VID, School, VDate, Teacher, Sponsor, PID, NMI, Spent);
     }
 
 

@@ -108,30 +108,26 @@ public partial class Class_BusinessData
 
 
     // Update image and title based on business ID
-    public (string ImagePath, string BColor, string BusinessName) GetBusinessLogos(string BusinessID)
+    public string GetBusinessIcon (int BusinessID)
     {
         string I = "";
-        string C = "";
-        string B = "";
-        string logoRoot = "~/media/Logos/";
+        string logoRoot = "~/Media/Business Icons/";
 
         con.ConnectionString = ConnectionString;
         con.Open();
-        cmd.CommandText = "SELECT logoPath, businessColor, businessName FROM businessinfo WHERE ID='" + BusinessID + "'";
+        cmd.CommandText = "SELECT businessIconPath FROM businessInfoFP WHERE ID='" + BusinessID + "'";
         cmd.Connection = con;
         dr = cmd.ExecuteReader();
 
         while (dr.Read())
         {
             I = logoRoot + dr[0].ToString();
-            C = dr[1].ToString();
-            B = dr[2].ToString();
         }
 
         cmd.Dispose();
         con.Close();
 
-        return (I, C, B);
+        return I;
 
     }
 
@@ -215,6 +211,7 @@ public partial class Class_BusinessData
 
         return ClosedBusinesses;
     }
+
 
 
     //Get the business name from the ID
@@ -495,6 +492,34 @@ public partial class Class_BusinessData
 
         return (Cat1, Cat2, Cat3, Cat4, Cat5, Cat6, Cat1D1, Cat1D2, Cat1D3, Cat1D4, Cat2D1, Cat2D2, Cat2D3, Cat2D4, Cat3D1, Cat3D2, Cat3D3, Cat3D4, Cat4D1, Cat4D2, Cat4D3, Cat4D4, Cat5D1, Cat5D2, Cat5D3, Cat5D4, Cat6D1, Cat6D2, Cat6D3, Cat6D4);
 
+    }
+
+
+
+    //Get minimum and maximum percentages for budgeting
+    public (double Min, double Max) GetBudgetPercentages (int BusinessID)
+    {
+        double Min = 0.0;
+        double Max = 0.0;
+
+        string SQL = "SELECT CASE WHEN budgetMinPercent IS NOT NULL THEN budgetMinPercent ELSE 0 END as budgetMinPercent, \r\n  CASE WHEN budgetMaxPercent IS NOT NULL THEN budgetMaxPercent ELSE 0 END as budgetMaxPercent FROM businessInfoFP WHERE id='" + BusinessID + "'";
+
+        con.ConnectionString = ConnectionString;
+        con.Open();
+        cmd.Connection = con;
+        cmd.CommandText = SQL;
+        dr = cmd.ExecuteReader();
+
+        while (dr.Read())
+        {
+            Min = Convert.ToDouble(dr["budgetMinPercent"].ToString());
+            Max = Convert.ToDouble(dr["budgetMaxPercent"].ToString());
+        }
+
+        cmd.Dispose();
+        con.Close();
+
+        return (Min, Max);
     }
 
 }
