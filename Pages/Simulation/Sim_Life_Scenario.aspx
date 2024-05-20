@@ -153,7 +153,8 @@
                                 </tr>
                             </table>
                         </div>
-
+                        <br />
+                        <asp:Button ID="btnNext" runat="server" CssClass="button" Text="Continue to Calculations" OnClick="btnNext_Click" />
                     </div>
 
                     <%--Avatar--%>

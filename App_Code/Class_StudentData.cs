@@ -447,8 +447,8 @@ public partial class Class_StudentData
     //Insert new student into studentInfoFP
     public void InsertNewStudent(int VisitID, int AcctNum, string FirstName, string LastName, string Gender, int SchoolID, int TeacherID, int Grade, int SponsorID, int PersonaID)
     {
-        string SQL = @"INSERT INTO studentInfoFP (accountNum, firstName, lastName, visitID, schoolID, teacherID, sponsorID, personaID, grade, gender, lunchServed, nmi, savingsTotal, savingsRetire, savingsEmergency, savingsOther, bizUnlocked)
-					   VALUES(@accountNum, @firstName, @lastName, @visitID, @schoolID, @teacherID, @sponsorID, @personaID, @grade, @gender, 0, 0, 0, 0, 0, 0, 0);";
+        string SQL = @"INSERT INTO studentInfoFP (accountNum, firstName, lastName, visitID, schoolID, teacherID, sponsorID, personaID, grade, gender, lunchServed, nmi, spent)
+					   VALUES(@accountNum, @firstName, @lastName, @visitID, @schoolID, @teacherID, @sponsorID, @personaID, @grade, @gender, 0, 0, 0);";
         int StudentID = 0;       
 
         using (var con = new SqlConnection(ConnectionString))

@@ -315,14 +315,15 @@ public partial class Class_BusinessData
 
 
     //Get script data from business ID
-    public (string Kiosk, string Popup, string Main, string Loan, string Shopping) GetBusinessScripts (int BusinessID)
+    public (string Kiosk, string Popup, string Main, string Loan, string Shopping, string Shopping2) GetBusinessScripts (int BusinessID)
     {
         string Kiosk = "";
         string Popup = "";
         string Main = "";
         string Loan = "";
         string Shopping = "";
-        string SQL = "SELECT kioskScript, researchPopupScript, researchMainScript, loanAppScript, shoppingRule FROM businessInfoFP WHERE id='" + BusinessID + "'";
+        string Shopping2 = "";
+        string SQL = "SELECT kioskScript, researchPopupScript, researchMainScript, loanAppScript, shoppingScript, shoppingScript2 FROM businessInfoFP WHERE id='" + BusinessID + "'";
 
         con.ConnectionString = ConnectionString;
         con.Open();
@@ -336,13 +337,14 @@ public partial class Class_BusinessData
             Popup = dr["researchPopupScript"].ToString();
             Main = dr["researchMainScript"].ToString();
             Loan = dr["loanAppScript"].ToString();
-            Shopping = dr["shoppingRule"].ToString();
+            Shopping = dr["shoppingScript"].ToString();
+            Shopping2 = dr["shoppingScript2"].ToString();
         }
 
         cmd.Dispose();
         con.Close();
         
-        return (Kiosk, Popup, Main, Loan, Shopping);
+        return (Kiosk, Popup, Main, Loan, Shopping, Shopping2);
     }
 
 

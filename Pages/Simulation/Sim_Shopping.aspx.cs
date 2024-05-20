@@ -26,6 +26,11 @@ public partial class Sim_Shopping : System.Web.UI.Page
     private int StudentID;
     private int AcctNum;
 
+    public Sim_Shopping()
+    {
+        ConnectionString = "Server=" + SQLServer + ";database=" + SQLDatabase + ";uid=" + SQLUser + ";pwd=" + SQLPassword + ";Connection Timeout=20;";
+    }
+
     protected void Page_Load(object sender, EventArgs e)
     {
         //Get current visit ID and student ID
@@ -37,7 +42,7 @@ public partial class Sim_Shopping : System.Web.UI.Page
             StudentID = int.Parse(Request["b"]);
 
             //Get account number
-            var Student = Students.StudentLookup(23, StudentID);
+            var Student = Students.StudentLookup(25, StudentID);
             AcctNum = Student.AccountNumber;
 
             if (!IsPostBack)
@@ -50,7 +55,7 @@ public partial class Sim_Shopping : System.Web.UI.Page
 
     protected void LoadData(int StudentID)
     {
-        var Student = Students.StudentLookup(23, StudentID);
+        var Student = Students.StudentLookup(25, StudentID);
 
         //Load NMI, spent amount, and remaining amount
         lblNMI.Text = Student.NMI.ToString("c");
@@ -81,7 +86,7 @@ public partial class Sim_Shopping : System.Web.UI.Page
         bool U20 = false;
         bool U21 = false;
         bool U22 = false;
-        bool U23 = false;
+        bool UVisitID = false;
         bool U24 = false;
         bool U25 = false;
         bool U26 = false;
@@ -99,7 +104,7 @@ public partial class Sim_Shopping : System.Web.UI.Page
             con.ConnectionString = ConnectionString;
             con.Open();
             cmd.Connection = con;
-            cmd.CommandText = "SELECT * FROM businessUnlockFP WHERE visitID='" + 23 + "' AND studentID='" + StudentID + "'";
+            cmd.CommandText = "SELECT * FROM businessUnlockFP WHERE visitID='" + 25 + "' AND studentID='" + StudentID + "'";
             dr = cmd.ExecuteReader();
 
             //Prolly a better way to do this but fuck it
@@ -177,9 +182,9 @@ public partial class Sim_Shopping : System.Web.UI.Page
                 {
                     U22 = true;
                 }
-                if (dr["u23"].ToString() == "True")
+                if (dr["uVisitID"].ToString() == "True")
                 {
-                    U23 = true;
+                    UVisitID = true;
                 }
                 if (dr["u24"].ToString() == "True")
                 {
@@ -298,7 +303,7 @@ public partial class Sim_Shopping : System.Web.UI.Page
         {
             btnHomeins.Attributes.Add("style", Attribute);
         }
-        if (U23 == true)
+        if (UVisitID == true)
         {
             btnHousing.Attributes.Add("style", Attribute);
         }
@@ -340,16 +345,90 @@ public partial class Sim_Shopping : System.Web.UI.Page
         }
     }
 
-    protected void GoShopping(int BusinessID)
+    protected void GoShopping()
     {
+        string ID;
+        int BusinessID = 0;
+        int BIDHidden = int.Parse(hfBID.Value);
 
+
+        //Get ID from textbox if not blank
+        if (tbPopupTB.Text != "")
+        {
+            ID = tbPopupTB.Text;
+
+            //Check if ID matches the kiosk ID of a business in the DB
+            try
+            {
+                con.ConnectionString = ConnectionString;
+                con.Open();
+                cmd.Connection = con;
+                cmd.CommandText = "SELECT id, kioskID FROM businessInfoFP WHERE kioskID = '" + ID + "'";
+                dr = cmd.ExecuteReader();
+
+                if (dr.HasRows == true)
+                {
+                    while (dr.Read())
+                    {
+                        //get business id
+                        BusinessID = int.Parse(dr["id"].ToString());
+
+                        //Check if Business ID matches the hidden value ID
+                        if (BusinessID == BIDHidden)
+                        {
+                            //redirect to Sim_Business
+                            Response.Redirect("Sim_Shopping_Business.aspx?b=" + StudentID + "&c=" + BusinessID);
+                        }
+                        else
+                        {
+                            Page.ClientScript.RegisterStartupScript(GetType(), "TogglePopup", "toggle();", true);
+                            lblPopupText.ForeColor = System.Drawing.Color.Red;
+                            lblPopupText.Text = "ID entered is not for this business.";
+                        }
+
+                    }
+                }
+                else
+                {
+                    Page.ClientScript.RegisterStartupScript(GetType(), "TogglePopup", "toggle();", true);
+                    lblPopupText.ForeColor = System.Drawing.Color.Red;
+                    lblPopupText.Text = "ID is not tied to a business. Check the number again before entering.";
+                }
+            }
+            catch
+            {
+                Page.ClientScript.RegisterStartupScript(GetType(), "TogglePopup", "toggle();", true);
+                lblPopupText.ForeColor = System.Drawing.Color.Red;
+                lblPopupText.Text = "Could not detect business ID in database. Please find a staff member.";
+                return;
+            }
+        }
+        else
+        {
+            Page.ClientScript.RegisterStartupScript(GetType(), "TogglePopup", "toggle();", true);
+            lblPopupText.ForeColor = System.Drawing.Color.Red;
+            lblPopupText.Text = "No ID entered. Please enter a business ID before submitting.";
+        }
     }
 
 
 
     protected void btnEnter_Click(object sender, EventArgs e)
     {
+        var Trans = Sim.GetTransitionData(6);
 
+        if (lblPopupText.Text != "Please enter the Business ID to proceed:")
+        {
+            //Check if unlock code matches
+            if (tbPopupTB.Text == Trans.UnlockCode.ToString())
+            {
+                Response.Redirect("Sim_Final.aspx?b=" + StudentID);
+            }
+        }
+        else
+        {
+            GoShopping();
+        }
     }
 
     protected void btnCancel_Click(object sender, EventArgs e)

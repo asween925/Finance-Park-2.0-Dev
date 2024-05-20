@@ -87,4 +87,9 @@ public partial class Sim_Life_Scenario: System.Web.UI.Page
 
     }
 
+
+    protected void btnNext_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("Sim_Calculations.aspx?b=" + StudentID);
+    }
 }

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="false" CodeFile="Home_Page.aspx.cs" Inherits="Home_Page" %>
+﻿<%@ Page Language="C#" AutoEventWireup="false" CodeFile="Home_Page.aspx.cs" Async="true" Inherits="Home_Page" %>
 
 <!doctype html>
 <html>
@@ -281,6 +281,22 @@
             function myFunction2() {
                 var popup = document.getElementById("myPopup2");
                 popup.classList.toggle("Home_Page_Weather_Popup_Show");
+            }
+
+            //Testing out APIs with getting the coordinates
+            function getLocation() {
+                const myElem = document.getElementById("lblError");
+
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(showPosition);
+                }
+                else {
+                    myElem.innerHTML = "Geolocation is not supported by this browser.";
+                }
+            }
+
+            function showPosition(position) {
+                myElem.innerHTML = "Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude;
             }
 
         </script>

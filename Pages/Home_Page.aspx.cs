@@ -1,4 +1,6 @@
 ﻿using FP2Dev;
+using Microsoft.Ajax.Utilities;
+using Newtonsoft.Json;
 using System;
 using System.Activities.Expressions;
 using System.Collections.Generic;
@@ -6,6 +8,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Net.Http;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -23,6 +26,7 @@ public partial class Home_Page : System.Web.UI.Page
     Class_VisitData VisitData = new Class_VisitData();
     Class_SchoolData SchoolData = new Class_SchoolData();
     Class_SchoolHeader SchoolHeader = new Class_SchoolHeader();
+    ValuesController1 APIs = new ValuesController1();
 
     //Dim SchoolData As New Class_SchoolData
     //Dim SQL As New Class_SQLCommands
@@ -43,7 +47,7 @@ public partial class Home_Page : System.Web.UI.Page
         Load += Page_Load;
     }
 
-    protected void Page_Load(object sender, EventArgs e)
+    protected async void Page_Load(object sender, EventArgs e)
     {       
        lblVisitID.Text = VisitData.GetVisitID().ToString();
 
@@ -54,5 +58,26 @@ public partial class Home_Page : System.Web.UI.Page
 
         // Populating school header
         lblHeaderSchoolName.Text = SchoolHeader.GetSchoolHeader().ToString();
+
+        //Test api values
+        var client = new HttpClient();
+
+        var request = new HttpRequestMessage(HttpMethod.Get, "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/Largo%2C%20FL?unitGroup=metric&key=US8HBUA3APA562EDF8A4K7W2L&contentType=json");
+        //var request = new HttpRequestMessage(HttpMethod.Get, "https://www.dnd5eapi.co/api/ability-scores/cha");
+        var response = await client.SendAsync(request);
+        response.EnsureSuccessStatusCode(); //Throw exception if error
+
+        var body = await response.Content.ReadAsStringAsync();
+
+        dynamic weather = JsonConvert.DeserializeObject(body);
+
+        var day = weather.days;
+
+        double MaxTemp = day[0].tempmax;
+
+        //Convert to F
+        MaxTemp = (MaxTemp * 9) / 5 + 32;
+
+        lblError.Text = MaxTemp.ToString();
     }
 }
