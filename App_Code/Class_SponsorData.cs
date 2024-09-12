@@ -54,6 +54,29 @@ public class Class_SponsorData
     }
 
 
+    //Gets sponsor name
+    public string GetSponsorName(int SponsorID)
+    {
+        string SponsorName = "";
+
+        con.ConnectionString = ConnectionString;
+        con.Open();
+        cmd.Connection = con;
+        cmd.CommandText = "SELECT sponsorName FROM sponsorsFP WHERE id='" + SponsorID + "'";
+        dr = cmd.ExecuteReader();
+
+        while (dr.Read())
+        {
+            SponsorName = dr["sponsorName"].ToString();
+        }
+
+        cmd.Dispose();
+        con.Close();
+
+        return SponsorName;
+    }
+
+
     //Get sponsor ID from the name
     public int GetSponsorID(string SponsorName)
     {
@@ -98,7 +121,6 @@ public class Class_SponsorData
 
         return SponsorIDs;
     }
-
 
 
     //Get logo path from sponsor ID

@@ -1,0 +1,3303 @@
+﻿using System;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.Linq;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Xml.Linq;
+using Microsoft.VisualBasic.CompilerServices;
+
+public partial class Global.Volunteer_Database : Page
+{
+    private string sqlserver = ConfigurationManager.AppSettings["FP_sfp"].ToString();
+    private string sqldatabase = ConfigurationManager.AppSettings["FP_DB"].ToString();
+    private string sqluser = ConfigurationManager.AppSettings["db_user"].ToString();
+    private string sqlpassword = ConfigurationManager.AppSettings["db_password"].ToString();
+    private SqlConnection con = new SqlConnection();
+    private SqlCommand cmd = new SqlCommand();
+    private SqlDataReader dr;
+    private string connection_string;
+    private Class_VisitData VisitData = new Class_VisitData();
+    private Class_BusinessData BusinessData = new Class_BusinessData();
+    private Class_SchoolData SchoolData = new Class_SchoolData();
+    private Class_SchoolHeader SH = new Class_SchoolHeader();
+    private int VisitID;
+    private DataTable ScheduleVolTable;
+
+    public Volunteer_Database()
+    {
+        connection_string = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
+        VisitID = VisitData.GetVisitID();
+        Load += Page_Load;
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+
+        //Check if user is logged in
+        if (HttpContext.Current.Session["LoggedIn"] == null)
+        {
+            Response.Redirect("../../Default.aspx");
+        }
+
+        if (!IsPostBack)
+        {
+
+            // Set session for scheduled vol gridviews
+            ScheduleVolTable = new DataTable();
+            ScheduleVolTable.Columns.Add("Volunteer ID");
+            ScheduleVolTable.Columns.Add("Volunteer Name");
+            Session["dt"] = ScheduleVolTable;
+
+            // Populating school header
+            headerSchoolName_lbl.Text = SH.GetSchoolHeader();
+
+            // Populate school name ddl in Add New Volunteer
+            SchoolData.LoadSchoolsDDL(schoolNameAdd_ddl);
+            SchoolData.LoadSchoolsDDL(schoolNameSchedule_ddl);
+
+            // Populate volunteer names in ddl in Schedule Volunteers
+            LoadVolunteerNameDDL(volNameSchedule_ddl);
+
+            // Populate regular volunteer DDLs
+            PopulateVolDDL();
+
+            // Load data
+            LoadData();
+        }
+        else
+        {
+            ScheduleVolTable = (DataTable)Session["dt"];
+        }
+    }
+
+    // Loads the volunteer gridview based on what button was clicked at the top of the page / what section is currently visible 
+    public void LoadData()
+    {
+        int VIDOfDate;
+        int SchoolID;
+        DateTime VisitDateFromID;
+        string SQLStatement = @"SELECT vo.id, vo.firstName, vo.lastName, vo.businessID, FORMAT(v.visitDate, 'yyyy-MM-dd') as visitDate, vo.schoolID, vo.pr, vo.svHours, vo.notes, vo.regular
+										  FROM volunteers vo
+										  JOIN volunteersSchedule vs ON vo.id = vs.volunteerID
+										  JOIN visitInfo v ON v.id = vs.visitID";
+
+        // Clear error and reset all fields
+        error_lbl.Text = "";
+        totalSVHours_lbl.Text = "-";
+        viewVol_div.Visible = false;
+        schoolNameCheckin_ddl.Visible = false;
+
+        // Check which section is visible
+        // Add Volunteer
+        if (addVol_div.Visible == true)
+        {
+            viewVol_div.Visible = true;
+        }
+
+        // Schedule Volunteer
+        else if (scheduleVol_div.Visible == true)
+        {
+
+            // Check if visit date has been entered
+            if (volNameSchedule_ddl.SelectedIndex == 0)
+            {
+                SQLStatement = SQLStatement;
+            }
+        }
+
+        // Check In Volunteer
+        else if (checkIn_div.Visible == true)
+        {
+
+            // Check if current date is a visit date
+            if (visitDateCheckin_tb.Text != "")
+            {
+
+                // Assign SQL statement
+                VIDOfDate = Conversions.ToInteger(VisitData.GetVisitIDFromDate(visitDateCheckin_tb.Text));
+                SQLStatement = SQLStatement + " WHERE vs.visitID = '" + VIDOfDate + "'";
+
+                // Load total SV hours
+                totalSVHours_lbl.Text = TotalSVHours(visitDateCheckin_tb.Text);
+
+                // Enable checkboxes
+                Checkboxes(VIDOfDate);
+
+                // Load volunteer check in information
+                LoadVolCheckIn(visitDateCheckin_tb.Text);
+
+                // Make volunteers div visible
+                viewVol_div.Visible = true;
+
+                // Make school name ddl visible
+                schoolNameCheckin_ddl.Visible = true;
+                schoolNameCheckin_a.Visible = true;
+            }
+
+            else if (VisitID != 0)
+            {
+
+                // Load visit date into text box
+                VisitDateFromID = Conversions.ToDate(VisitData.GetVisitDateFromID(VisitID.ToString()));
+                visitDateCheckin_tb.Text = VisitDateFromID.ToString("yyyy-MM-dd");
+
+                // Assign SQL statement
+                SQLStatement = SQLStatement + " WHERE vs.visitID = '" + VisitID + "'";
+
+                // Load visiting schools
+                SchoolData.LoadVisitDateSchoolsDDL(VisitDateFromID, schoolNameCheckin_ddl);
+                schoolNameCheckin_ddl.Items.RemoveAt(0);
+                schoolNameCheckin_ddl.Items.Insert(0, "Show All Schools");
+
+                // Load total SV hours
+                totalSVHours_lbl.Text = TotalSVHours(visitDateCheckin_tb.Text);
+
+                // Enable checkboxes
+                Checkboxes(VisitID);
+
+                // Load volunteer check in information
+                LoadVolCheckIn(visitDateCheckin_tb.Text);
+
+                // Make volunteers div visible
+                viewVol_div.Visible = true;
+
+                // Make school name ddl visible
+                schoolNameCheckin_ddl.Visible = true;
+                schoolNameCheckin_a.Visible = true;
+
+                // Assign colors to school DDL text
+                switch (schoolNameCheckin_ddl.Items.Count)
+                {
+                    case 1:
+                        {
+                            break;
+                        }
+                    // The first item in the DDL is the Show All Schools item, does not need to change color
+                    case 2:
+                        {
+                            schoolNameCheckin_ddl.Items(1).Attributes.CssStyle.Add("background-color", "#afd8ff");
+                            break;
+                        }
+                    case 3:
+                        {
+                            schoolNameCheckin_ddl.Items(1).Attributes.CssStyle.Add("background-color", "#afd8ff");
+                            schoolNameCheckin_ddl.Items(2).Attributes.CssStyle.Add("background-color", "#ffafaf");
+                            break;
+                        }
+
+                    case 4:
+                        {
+                            schoolNameCheckin_ddl.Items(1).Attributes.CssStyle.Add("background-color", "#afd8ff");
+                            schoolNameCheckin_ddl.Items(2).Attributes.CssStyle.Add("background-color", "#ffafaf");
+                            schoolNameCheckin_ddl.Items(3).Attributes.CssStyle.Add("background-color", "#bfffaf");
+                            break;
+                        }
+                    case 5:
+                        {
+                            schoolNameCheckin_ddl.Items(1).Attributes.CssStyle.Add("background-color", "#afd8ff");
+                            schoolNameCheckin_ddl.Items(2).Attributes.CssStyle.Add("background-color", "#ffafaf");
+                            schoolNameCheckin_ddl.Items(3).Attributes.CssStyle.Add("background-color", "#bfffaf");
+                            schoolNameCheckin_ddl.Items(4).Attributes.CssStyle.Add("background-color", "#afc3ff");
+                            break;
+                        }
+                    case 6:
+                        {
+                            schoolNameCheckin_ddl.Items(1).Attributes.CssStyle.Add("background-color", "#afd8ff");
+                            schoolNameCheckin_ddl.Items(2).Attributes.CssStyle.Add("background-color", "#ffafaf");
+                            schoolNameCheckin_ddl.Items(3).Attributes.CssStyle.Add("background-color", "#bfffaf");
+                            schoolNameCheckin_ddl.Items(4).Attributes.CssStyle.Add("background-color", "#afc3ff");
+                            schoolNameCheckin_ddl.Items(5).Attributes.CssStyle.Add("background-color", "#ffd8af");
+                            break;
+                        }
+                }
+            }
+
+            else
+            {
+
+                // Make volunteers div visible
+                viewVol_div.Visible = true;
+
+            }
+        }
+
+        else
+        {
+            viewVol_div.Visible = true;
+        }
+
+        // Check if search bar is filled
+        if (search_tb.Text != default | search_tb.Text != "")
+        {
+            SQLStatement = SQLStatement + " WHERE vo.firstName LIKE '%" + search_tb.Text + "%' OR vo.lastName LIKE '%" + search_tb.Text + "%'";
+        }
+        else
+        {
+            SQLStatement = SQLStatement;
+        }
+
+        // Add order by to SQLStatement
+        SQLStatement = SQLStatement + " ORDER BY ";
+
+        // Check sorting DDLs
+        if (sortBy_ddl.SelectedValue == "Recently Added")
+        {
+            SQLStatement = SQLStatement + "vo.id ";
+        }
+        else if (sortBy_ddl.SelectedValue == "First Name")
+        {
+            SQLStatement = SQLStatement + "vo.firstName ";
+        }
+        else if (sortBy_ddl.SelectedValue == "Last Name")
+        {
+            SQLStatement = SQLStatement + "vo.lastName ";
+        }
+        else if (sortBy_ddl.SelectedValue == "Business Name")
+        {
+            SQLStatement = SQLStatement + "vo.businessID ";
+        }
+        else if (sortBy_ddl.SelectedValue == "School Name")
+        {
+            SQLStatement = SQLStatement + "vo.schoolName ";
+        }
+        else if (sortBy_ddl.SelectedValue == "Visit Date")
+        {
+            SQLStatement = SQLStatement + "v.visitDate ";
+        }
+        else if (sortBy_ddl.SelectedValue == "PR")
+        {
+            SQLStatement = SQLStatement + "vo.pr ";
+        }
+        else if (sortBy_ddl.SelectedValue == "SV Hours")
+        {
+            SQLStatement = SQLStatement + "vo.svHours ";
+        }
+        else if (sortBy_ddl.SelectedValue == "Regular Volunteer")
+        {
+            SQLStatement = SQLStatement + "vo.regular ";
+        }
+
+        if (ascDesc_ddl.SelectedValue == "Ascending")
+        {
+            SQLStatement = SQLStatement + "ASC";
+        }
+        else if (ascDesc_ddl.SelectedValue == "Descending")
+        {
+            SQLStatement = SQLStatement + "DESC";
+        }
+
+        // Load data from volunteers table
+        try
+        {
+            con.Close();
+            con.ConnectionString = connection_string;
+            con.Open();
+            cmd.CommandText = SQLStatement;
+            cmd.Connection = con;
+
+            var da = new SqlDataAdapter();
+            da.SelectCommand = cmd;
+            var dt = new DataTable();
+            da.Fill(dt);
+            volunteers_dgv.DataSource = dt;
+            volunteers_dgv.DataBind();
+
+            cmd.Dispose();
+            con.Close();
+        }
+        catch
+        {
+            error_lbl.Text = "Error in LoadData(). Could not load volunteer data into table.";
+            return;
+        }
+
+        // Highlight row being edited
+        foreach (GridViewRow row in volunteers_dgv.Rows)
+        {
+            if (row.RowIndex == volunteers_dgv.EditIndex)
+            {
+                row.BackColor = ColorTranslator.FromHtml("#ebe534");
+                // row.BorderColor = ColorTranslator.FromHtml("#ffffff")
+                row.BorderWidth = 2;
+            }
+        }
+
+    }
+
+    // Loads the seperate viewVolCtrl gridview used for view volunteers from a specific visit date or viewing volunteer's muiltiple visits
+    public void LoadViewVolCtrlGridview()
+    {
+        int VIDOfDate;
+        string VisitDate;
+        var TotalHours = default(string);
+        string[] VolNameWithID;
+        string VolName;
+        string[] VolIDWithParentheses;
+        string VolID;
+        string SQLStatement = @"SELECT vs.id, vs.volunteerID, vo.firstName, vo.lastName, FORMAT(v.visitDate, 'MM/dd/yyyy') as visitDate, s.schoolName, vo.pr, vo.svHours, vo.notes, vo.regular
+										FROM volunteers vo
+										JOIN volunteersSchedule vs ON vo.id = vs.volunteerID
+										JOIN visitInfo v ON v.id = vs.visitID
+										JOIN schoolInfo s ON s.id = vo.schoolID";
+
+        // Clear error and reset all fields
+        error_lbl.Text = "";
+        totalSVHours_lbl.Text = "-";
+        viewVol_div.Visible = false;
+        viewVolControls_div.Visible = false;
+        schoolNameCheckin_ddl.Visible = false;
+
+        // Check if school name or visit date is loaded
+        if (visitDateViewVolCtrl_tb.Text != default)
+        {
+
+            // Assign visit date
+            VisitDate = visitDateViewVolCtrl_tb.Text;
+
+            // Get VID of date
+            VIDOfDate = Conversions.ToInteger(VisitData.GetVisitIDFromDate(VisitDate));
+
+            // Update SQL statement
+            SQLStatement = SQLStatement + " WHERE vs.visitID='" + VIDOfDate + "'";
+
+            // Assign total hours
+            TotalHours = Conversions.ToString(TotalSVHours(VisitDate));
+        }
+
+        else if (volNameViewVolCtrl_ddl.SelectedIndex != 0)
+        {
+            VolNameWithID = volNameViewVolCtrl_ddl.SelectedValue.Split("(");
+            VolName = VolNameWithID[0];
+            VolIDWithParentheses = VolNameWithID[1].Split(')');
+            VolID = VolIDWithParentheses[0];
+
+            // Update SQL statement
+            SQLStatement = SQLStatement + " WHERE vs.volunteerID='" + VolID + "'";
+
+        }
+
+        // Load view control gridview
+        try
+        {
+            con.Close();
+            con.ConnectionString = connection_string;
+            con.Open();
+            cmd.CommandText = SQLStatement;
+            cmd.Connection = con;
+
+            var da = new SqlDataAdapter();
+            da.SelectCommand = cmd;
+            var dt = new DataTable();
+            da.Fill(dt);
+            viewVolCtrl_dgv.DataSource = dt;
+            viewVolCtrl_dgv.DataBind();
+
+            cmd.Dispose();
+            con.Close();
+        }
+        catch
+        {
+            error_lbl.Text = "Error in LoadViewVolCtrl(). Could not load volunteer data into table.";
+            return;
+        }
+
+        // assign total SV hours to label
+        totalSVHoursCtrl_lbl.Text = TotalHours;
+
+        // Make view vol ctrl div visible
+        viewVolCtrlDGV_div.Visible = true;
+        viewVolControls_div.Visible = true;
+
+    }
+
+    // Gets an updated list of regular volunteers and assigns them by first name to a passed through ddl
+    public object LoadRegVolDDL(DropDownList DDL)
+    {
+
+        // Get all first names of regular volunteers from volunteers table and load them into the check in DDLs
+        try
+        {
+            con.ConnectionString = connection_string;
+            con.Open();
+            cmd.CommandText = "SELECT firstName FROM volunteers WHERE regular=1 ORDER BY firstName ASC";
+            cmd.Connection = con;
+            dr = cmd.ExecuteReader();
+
+            while (dr.Read())
+                DDL.Items.Add(dr[0].ToString());
+            DDL.Items.Insert(0, "None");
+
+            cmd.Dispose();
+            con.Close();
+
+            return DDL.Items;
+        }
+
+        catch (Exception ex)
+        {
+            error_lbl.Text = "Error in LoadRegVolDDL(). Could not load regular volunteer DDLs.";
+            return default;
+        }
+
+        return DDL.Items;
+
+    }
+
+    // Load data from volunteers Check in table and checks off the checkboxes based on amount of volunteers assigned to that business. Also loads the selected regular volunteer into the DDL for the business
+    public void LoadVolCheckIn(string VisitDate)
+    {
+        int VIDOfDate = Conversions.ToInteger(VisitData.GetVisitIDFromDate(VisitDate));
+        string CheckInSQL = "SELECT * FROM volunteersCheckIn WHERE visitID = '" + VIDOfDate + "'";
+        string AchVol = default, AchReg, AstVol = default, AstReg, BayVol = default, BayReg, BBBVol = default, BBBReg, BicVol = default, BicReg, CitVol = default, CitReg, MixVol = default, MixReg, UPSVol = default, UPSReg, CVSVol = default, CVSReg, DitVol = default, DitReg, DukeVol = default, DukeReg, HSNVol = default, HSNReg, KanesVol = default, KanesReg, McDVol = default, McDReg, UWVol = default, UWReg, DaliVol = default, DaliReg, PCSWVol = default, PCSWReg, KnowVol = default, KnowReg, BucsVol = default, BucsReg, RaysVol = default, RaysReg, TimesVol = default, TimesReg, TDVol = default, TDReg, PCUVol = default, PCUReg;
+
+        // Clear checkboxes
+        foreach (Control cBox in checkIn_div.Controls)
+        {
+            if (cBox is CheckBox)
+            {
+                ((CheckBox)cBox).Checked = false;
+            }
+        }
+
+        // Reset DDLs
+        regVolAch_ddl.SelectedIndex = 0;
+        regVolAstro_ddl.SelectedIndex = 0;
+        regVolBaycare_ddl.SelectedIndex = 0;
+        regVolBBB_ddl.SelectedIndex = 0;
+        regVolBic_ddl.SelectedIndex = 0;
+        regVolBucs_ddl.SelectedIndex = 0;
+        regVolCity_ddl.SelectedIndex = 0;
+        regVolCVS_ddl.SelectedIndex = 0;
+        regVolDali_ddl.SelectedIndex = 0;
+        regVolDitek_ddl.SelectedIndex = 0;
+        regVolDuke_ddl.SelectedIndex = 0;
+        regVolPCSN_ddl.SelectedIndex = 0;
+        regVolKanes_ddl.SelectedIndex = 0;
+        regVolKnow_ddl.SelectedIndex = 0;
+        regVolMcdonalds_ddl.SelectedIndex = 0;
+        regVolMix_ddl.SelectedIndex = 0;
+        regVolPCSW_ddl.SelectedIndex = 0;
+        regVolPCU_ddl.SelectedIndex = 0;
+        regVolRays_ddl.SelectedIndex = 0;
+        regVolTD_ddl.SelectedIndex = 0;
+        regVolPower_ddl.SelectedIndex = 0;
+        regVolUnited_ddl.SelectedIndex = 0;
+        regVolUPS_ddl.SelectedIndex = 0;
+
+        // Load data from volunteers Check in table and assign it to the variables and DDLs
+        try
+        {
+            con.ConnectionString = connection_string;
+            con.Open();
+            cmd.CommandText = CheckInSQL;
+            cmd.Connection = con;
+            dr = cmd.ExecuteReader();
+
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+                    AchVol = dr["achVol"].ToString();
+                    regVolAch_ddl.SelectedValue = dr["achReg"].ToString();
+                    AstVol = dr["astroVol"].ToString();
+                    regVolAstro_ddl.SelectedValue = dr["astroReg"].ToString();
+                    BayVol = dr["baycareVol"].ToString();
+                    regVolBaycare_ddl.SelectedValue = dr["baycareReg"].ToString();
+                    BBBVol = dr["bbbVol"].ToString();
+                    regVolBBB_ddl.SelectedValue = dr["bbbReg"].ToString();
+                    BicVol = dr["bicVol"].ToString();
+                    regVolBic_ddl.SelectedValue = dr["bicReg"].ToString();
+                    CitVol = dr["cityVol"].ToString();
+                    regVolCity_ddl.SelectedValue = dr["cityReg"].ToString();
+                    CVSVol = dr["cvsVol"].ToString();
+                    regVolCVS_ddl.SelectedValue = dr["cvsReg"].ToString();
+                    DitVol = dr["ditekVol"].ToString();
+                    regVolDitek_ddl.SelectedValue = dr["ditekReg"].ToString();
+                    DukeVol = dr["dukeVol"].ToString();
+                    regVolDuke_ddl.SelectedValue = dr["dukeReg"].ToString();
+                    KanesVol = dr["kanesVol"].ToString();
+                    regVolKanes_ddl.SelectedValue = dr["kanesReg"].ToString();
+                    KnowVol = dr["knowVol"].ToString();
+                    regVolKnow_ddl.SelectedValue = dr["knowReg"].ToString();
+                    DaliVol = dr["daliVol"].ToString();
+                    regVolDali_ddl.SelectedValue = dr["daliReg"].ToString();
+                    McDVol = dr["mcdVol"].ToString();
+                    regVolMcdonalds_ddl.SelectedValue = dr["mcdReg"].ToString();
+                    MixVol = dr["mixVol"].ToString();
+                    regVolMix_ddl.SelectedValue = dr["mixReg"].ToString();
+                    PCUVol = dr["pcuVol"].ToString();
+                    regVolPCU_ddl.SelectedValue = dr["pcuReg"].ToString();
+                    PCSWVol = dr["pcswVol"].ToString();
+                    regVolPCSW_ddl.SelectedValue = dr["pcswReg"].ToString();
+                    BucsVol = dr["tbbucsVol"].ToString();
+                    regVolBucs_ddl.SelectedValue = dr["tbbucsReg"].ToString();
+                    RaysVol = dr["tbraysVol"].ToString();
+                    regVolRays_ddl.SelectedValue = dr["tbraysReg"].ToString();
+                    TimesVol = dr["tbtimesVol"].ToString();
+                    regVolPower_ddl.SelectedValue = dr["tbtimesReg"].ToString();
+                    TDVol = dr["tdVol"].ToString();
+                    regVolTD_ddl.SelectedValue = dr["tdReg"].ToString();
+                    UPSVol = dr["upsVol"].ToString();
+                    regVolUPS_ddl.SelectedValue = dr["upsReg"].ToString();
+                    UWVol = dr["unitedVol"].ToString();
+                    regVolUnited_ddl.SelectedValue = dr["unitedReg"].ToString();
+                    HSNVol = dr["hsnVol"].ToString();
+                    regVolPCSN_ddl.SelectedValue = dr["hsnReg"].ToString();
+                }
+
+                // Change submit button to update
+                submitCheckIn_btn.Text = "Update";
+            }
+
+            else
+            {
+                // Change submit button to update
+                submitCheckIn_btn.Text = "Submit";
+            }
+
+            cmd.Dispose();
+            con.Close();
+        }
+        catch
+        {
+            error_lbl.Text = "Error in LoadData(). Could not load volunteer check in information.";
+            return;
+        }
+
+        cmd.Dispose();
+        con.Close();
+
+        // Assign values to checkboxes
+        switch (AchVol ?? "")
+        {
+            case "1":
+                {
+                    ach1_chk.Checked = true;
+                    break;
+                }
+            case "2":
+                {
+                    ach1_chk.Checked = true;
+                    ach2_chk.Checked = true;
+                    break;
+                }
+            case "3":
+                {
+                    ach1_chk.Checked = true;
+                    ach2_chk.Checked = true;
+                    ach3_chk.Checked = true;
+                    break;
+                }
+            case "4":
+                {
+                    ach1_chk.Checked = true;
+                    ach2_chk.Checked = true;
+                    ach3_chk.Checked = true;
+                    ach4_chk.Checked = true;
+                    break;
+                }
+        }
+
+        switch (AstVol ?? "")
+        {
+            case "1":
+                {
+                    astro1_chk.Checked = true;
+                    break;
+                }
+            case "2":
+                {
+                    astro1_chk.Checked = true;
+                    astro2_chk.Checked = true;
+                    break;
+                }
+        }
+
+        switch (BayVol ?? "")
+        {
+            case "1":
+                {
+                    baycare1_chk.Checked = true;
+                    break;
+                }
+            case "2":
+                {
+                    baycare1_chk.Checked = true;
+                    baycare2_chk.Checked = true;
+                    break;
+                }
+        }
+
+        switch (BBBVol ?? "")
+        {
+            case "1":
+                {
+                    bbb1_chk.Checked = true;
+                    break;
+                }
+            case "2":
+                {
+                    bbb1_chk.Checked = true;
+                    bbb2_chk.Checked = true;
+                    break;
+                }
+        }
+
+        switch (BicVol ?? "")
+        {
+            case "1":
+                {
+                    bic1_chk.Checked = true;
+                    break;
+                }
+            case "2":
+                {
+                    bic1_chk.Checked = true;
+                    bic2_chk.Checked = true;
+                    break;
+                }
+            case "3":
+                {
+                    bic1_chk.Checked = true;
+                    bic2_chk.Checked = true;
+                    bic3_chk.Checked = true;
+                    break;
+                }
+        }
+
+        switch (CitVol ?? "")
+        {
+            case "1":
+                {
+                    city1_chk.Checked = true;
+                    break;
+                }
+            case "2":
+                {
+                    city1_chk.Checked = true;
+                    city2_chk.Checked = true;
+                    break;
+                }
+            case "3":
+                {
+                    city1_chk.Checked = true;
+                    city2_chk.Checked = true;
+                    city3_chk.Checked = true;
+                    break;
+                }
+        }
+
+        switch (MixVol ?? "")
+        {
+            case "1":
+                {
+                    mix1_chk.Checked = true;
+                    break;
+                }
+            case "2":
+                {
+                    mix1_chk.Checked = true;
+                    mix2_chk.Checked = true;
+                    break;
+                }
+        }
+
+        switch (UPSVol ?? "")
+        {
+            case "1":
+                {
+                    ups_chk.Checked = true;
+                    break;
+                }
+        }
+
+        switch (CVSVol ?? "")
+        {
+            case "1":
+                {
+                    cvs1_chk.Checked = true;
+                    break;
+                }
+            case "2":
+                {
+                    cvs1_chk.Checked = true;
+                    cvs2_chk.Checked = true;
+                    break;
+                }
+            case "3":
+                {
+                    cvs1_chk.Checked = true;
+                    cvs2_chk.Checked = true;
+                    cvs3_chk.Checked = true;
+                    break;
+                }
+        }
+
+        switch (DitVol ?? "")
+        {
+            case "1":
+                {
+                    ditek1_chk.Checked = true;
+                    break;
+                }
+            case "2":
+                {
+                    ditek1_chk.Checked = true;
+                    ditek2_chk.Checked = true;
+                    break;
+                }
+        }
+
+        switch (DukeVol ?? "")
+        {
+            case "1":
+                {
+                    duke1_chk.Checked = true;
+                    break;
+                }
+            case "2":
+                {
+                    duke1_chk.Checked = true;
+                    duke2_chk.Checked = true;
+                    break;
+                }
+        }
+
+        switch (HSNVol ?? "")
+        {
+            case "1":
+                {
+                    pcsn1_chk.Checked = true;
+                    break;
+                }
+            case "2":
+                {
+                    pcsn1_chk.Checked = true;
+                    pcsn2_chk.Checked = true;
+                    break;
+                }
+        }
+
+        switch (KanesVol ?? "")
+        {
+            case "1":
+                {
+                    kanes1_chk.Checked = true;
+                    break;
+                }
+            case "2":
+                {
+                    kanes1_chk.Checked = true;
+                    kanes2_chk.Checked = true;
+                    break;
+                }
+        }
+
+        switch (McDVol ?? "")
+        {
+            case "1":
+                {
+                    mcd1_chk.Checked = true;
+                    break;
+                }
+            case "2":
+                {
+                    mcd1_chk.Checked = true;
+                    mcd2_chk.Checked = true;
+                    break;
+                }
+            case "3":
+                {
+                    mcd1_chk.Checked = true;
+                    mcd2_chk.Checked = true;
+                    mcd3_chk.Checked = true;
+                    break;
+                }
+        }
+
+        switch (UWVol ?? "")
+        {
+            case "1":
+                {
+                    uw1_chk.Checked = true;
+                    break;
+                }
+            case "2":
+                {
+                    uw1_chk.Checked = true;
+                    uw2_chk.Checked = true;
+                    break;
+                }
+            case "3":
+                {
+                    uw1_chk.Checked = true;
+                    uw2_chk.Checked = true;
+                    uw3_chk.Checked = true;
+                    break;
+                }
+        }
+
+        switch (DaliVol ?? "")
+        {
+            case "1":
+                {
+                    dali_chk.Checked = true;
+                    break;
+                }
+        }
+
+        switch (PCSWVol ?? "")
+        {
+            case "1":
+                {
+                    pcsw1_chk.Checked = true;
+                    break;
+                }
+            case "2":
+                {
+                    pcsw1_chk.Checked = true;
+                    pcsw2_chk.Checked = true;
+                    break;
+                }
+        }
+
+        switch (KnowVol ?? "")
+        {
+            case "1":
+                {
+                    know1_chk.Checked = true;
+                    break;
+                }
+            case "2":
+                {
+                    know1_chk.Checked = true;
+                    know2_chk.Checked = true;
+                    break;
+                }
+        }
+
+        switch (BucsVol ?? "")
+        {
+            case "1":
+                {
+                    bucs1_chk.Checked = true;
+                    break;
+                }
+            case "2":
+                {
+                    bucs1_chk.Checked = true;
+                    bucs2_chk.Checked = true;
+                    break;
+                }
+        }
+
+        switch (RaysVol ?? "")
+        {
+            case "1":
+                {
+                    rays1_chk.Checked = true;
+                    break;
+                }
+            case "2":
+                {
+                    rays1_chk.Checked = true;
+                    rays2_chk.Checked = true;
+                    break;
+                }
+            case "3":
+                {
+                    rays1_chk.Checked = true;
+                    rays2_chk.Checked = true;
+                    rays3_chk.Checked = true;
+                    break;
+                }
+        }
+
+        switch (TimesVol ?? "")
+        {
+            case "1":
+                {
+                    power1_chk.Checked = true;
+                    break;
+                }
+            case "2":
+                {
+                    power1_chk.Checked = true;
+                    power2_chk.Checked = true;
+                    break;
+                }
+            case "3":
+                {
+                    power1_chk.Checked = true;
+                    power2_chk.Checked = true;
+                    power3_chk.Checked = true;
+                    break;
+                }
+        }
+
+        switch (TDVol ?? "")
+        {
+            case "1":
+                {
+                    td1_chk.Checked = true;
+                    break;
+                }
+            case "2":
+                {
+                    td1_chk.Checked = true;
+                    td2_chk.Checked = true;
+                    break;
+                }
+            case "3":
+                {
+                    td1_chk.Checked = true;
+                    td2_chk.Checked = true;
+                    td3_chk.Checked = true;
+                    break;
+                }
+        }
+
+        switch (PCUVol ?? "")
+        {
+            case "1":
+                {
+                    pcu1_chk.Checked = true;
+                    break;
+                }
+            case "2":
+                {
+                    pcu1_chk.Checked = true;
+                    pcu2_chk.Checked = true;
+                    break;
+                }
+        }
+
+    }
+
+    // Loads a ddl with all volunteer names, first and last, with their ID in parentheses and returns it
+    public object LoadVolunteerNameDDL(DropDownList VolNamesDDL, string SchoolID = null)
+    {
+        string SQLStatement = "SELECT CONCAT(lastName, ', ', firstName, ' (', id, ')') as volName FROM volunteers";
+
+        // Clear volunteer names ddl
+        volNameSchedule_ddl.Items.Clear();
+
+        // Check if schoolID is not null
+        if (!string.IsNullOrEmpty(SchoolID))
+        {
+            SQLStatement = SQLStatement + " WHERE schoolID='" + SchoolID + "'";
+        }
+
+        // Add ORDER BY clause
+        SQLStatement = SQLStatement + " ORDER BY lastName ASC";
+
+        // Populates a DDL with student names and their account numbers at the beginning of the name
+        con.ConnectionString = connection_string;
+        con.Open();
+        cmd.CommandText = SQLStatement;
+        cmd.Connection = con;
+        dr = cmd.ExecuteReader();
+
+        while (dr.Read())
+            VolNamesDDL.Items.Add(dr[0].ToString());
+        VolNamesDDL.Items.Insert(0, "");
+
+        cmd.Dispose();
+        con.Close();
+
+        return VolNamesDDL.Items;
+    }
+
+    // Adds a new volunteer into the volunteers table in the database
+    public void SubmitAddNewVolunteer()
+    {
+        string FirstName;
+        string LastName;
+        string SchoolName;
+        int SchoolID;
+        string PR;
+        string SVHours = "6";
+        bool Regular = false;
+        string Notes;
+
+        // Check for empty fields    Or businessName_ddl.SelectedIndex = 0 Or regularVol_ddl.SelectedIndex = 0 
+        if (firstName_tb.Text == default | lastName_tb.Text == default)
+        {
+            error_lbl.Text = "Please enter a first name, last name, business, visit date, school name and regular volunteer status before submitting.";
+            return;
+        }
+
+        // Assign fields to variables
+        SchoolName = schoolNameAdd_ddl.SelectedValue;
+        SchoolID = SchoolData.GetSchoolID(SchoolName);
+        FirstName = firstName_tb.Text;
+        LastName = lastName_tb.Text;
+        PR = pr_ddl.SelectedValue;
+        Notes = notes_tb.Text;
+
+        // Check if volunteer first and last name are already apart of the selected school
+        try
+        {
+            con.ConnectionString = connection_string;
+            con.Open();
+            cmd.Connection = con;
+            cmd.CommandText = "SELECT firstName, lastName, schoolID FROM volunteers WHERE firstName LIKE '%" + FirstName + "%' AND lastName LIKE '%" + LastName + "%' AND schoolID='" + SchoolID + "'";
+            dr = cmd.ExecuteReader();
+
+            if (dr.HasRows)
+            {
+                error_lbl.Text = "A volunteer by that name has already been added to the database. To schedule them, click on the Schedule Volunteers button and find their name in the drop down list.";
+                return;
+            }
+
+            cmd.Dispose();
+            con.Close();
+        }
+        catch
+        {
+
+        }
+
+        // Insert data into DB
+        try
+        {
+            con.ConnectionString = connection_string;
+            con.Open();
+            cmd.Connection = con;
+            cmd.CommandText = @"INSERT INTO volunteers (schoolID, businessID, firstName, lastName, pr, svHours, notes, regular)
+                                VALUES ('" + SchoolID + "', '0','" + FirstName + "', '" + LastName + "', '" + PR + "', '" + SVHours + "', '" + Notes + "', '" + Regular + "')";
+
+            cmd.ExecuteNonQuery();
+            cmd.Dispose();
+            con.Close();
+        }
+        catch
+        {
+            error_lbl.Text = "Error in SubmitVolunteer(). Could not add the volunteer.";
+            return;
+        }
+
+        // Clear out text boxes and set cursor to first name
+        firstName_tb.Text = "";
+        lastName_tb.Text = "";
+        firstName_tb.Focus();
+
+        // Load table
+        LoadData();
+
+        // Show success message
+        error_lbl.Text = "Volunteer successfully added.";
+
+    }
+
+    // Adds all volunteer IDs from the schedule volunteers table, to the volunteersSchedule table, found in the database. Used for loading in the volunteers in the check in section
+    public void SubmitScheduleVolunteers()
+    {
+        string VisitDate;
+        string VisitID;
+        int CountOfVolunteers;
+        int VolunteerID;
+        string SQLInsertQuery = "INSERT INTO volunteersSchedule (volunteerID, visitID) VALUES";
+        string SQLRemoveBusiness = "UPDATE volunteers SET businessID=0 WHERE ";
+
+        // Check if the visit date is not blank
+        if (visitDateSchedule_tb.Text != "")
+        {
+            VisitDate = visitDateSchedule_tb.Text;
+        }
+        else
+        {
+            error_lbl.Text = "Please enter a visit date before submitting.";
+            return;
+        }
+
+        // Get visit ID (if found)
+        VisitID = Conversions.ToString(VisitData.GetVisitIDFromDate(VisitDate));
+
+        if (VisitID == "0" | string.IsNullOrEmpty(VisitID))
+        {
+            error_lbl.Text = "Visit date entered has not been created. Please check with an EV teacher to confirm that the visit date you have entered has been created.";
+            return;
+        }
+
+        // Get the total number of volunteers in the table
+        CountOfVolunteers = scheduledVol_dgv.Rows.Count;
+
+        // Start a for loop to add volunteer IDs and visit IDs to the insert query
+        for (int i = 0, loopTo = CountOfVolunteers - 1; i <= loopTo; i++)
+        {
+
+            // Assign volunteer ID
+            VolunteerID = scheduledVol_dgv.Rows(i).Cells(0).Text;
+
+            // Check if volunteer ID is already assigned to visitID
+            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(CheckVolunteerSchedule(VolunteerID, Conversions.ToInteger(VisitID)), true, false)))
+            {
+                continue;
+            }
+
+            // If adding data for the first row, do not add a comma to the beginning of the query
+            if (i == 0 | !SQLInsertQuery.Contains("VALUES ("))
+            {
+                SQLInsertQuery = SQLInsertQuery + " (" + VolunteerID + ", " + VisitID + ")";
+            }
+            else
+            {
+                SQLInsertQuery = SQLInsertQuery + ", (" + VolunteerID + ", " + VisitID + ")";
+            }
+
+            // Remove business ID from exsiting volunteers (if they are being added into the insert 
+            if (i == 0 | !SQLRemoveBusiness.Contains("WHERE id"))
+            {
+                SQLRemoveBusiness = SQLRemoveBusiness + " id=" + VolunteerID + " ";
+            }
+            else
+            {
+                SQLRemoveBusiness = SQLRemoveBusiness + "AND id=" + VolunteerID + "";
+            }
+        }
+
+        // Insert into volunteerSchedule table in the database
+        try
+        {
+            con.ConnectionString = connection_string;
+            con.Open();
+            cmd.Connection = con;
+            cmd.CommandText = SQLInsertQuery;
+            cmd.ExecuteNonQuery();
+            cmd.Dispose();
+            con.Close();
+        }
+        catch
+        {
+            error_lbl.Text = "Error in submission for Schedule Volunteers. Cannot insert volunteers into database.";
+            return;
+        }
+
+        // Update volunteers database to remove old business from table
+        try
+        {
+            con.ConnectionString = connection_string;
+            con.Open();
+            cmd.Connection = con;
+            cmd.CommandText = SQLRemoveBusiness;
+            cmd.ExecuteNonQuery();
+            cmd.Dispose();
+            con.Close();
+        }
+        catch
+        {
+            error_lbl.Text = "Error in submission for Schedule Volunteers. Cannot remove old assigned business into database.";
+            return;
+        }
+
+        // Show success message and refresh
+        error_lbl.Text = "Volunteers scheduled for " + VisitDate;
+        var meta = new HtmlMeta();
+        meta.HttpEquiv = "Refresh";
+        meta.Content = "3;url=volunteer_database.aspx";
+        Page.Controls.Add(meta);
+
+    }
+
+    // Assigns the regular volunteer that was selected from the DDL on the check in section, found next to the checkboxes
+    public void SubmitCheckIn(int VIDOfDate)
+    {
+        string SQLStatement;
+        // Dim VisitDate As String = visitDateCheckin_tb.Text
+        // Dim VIDOfDate As Integer = VisitData.GetVisitIDFromDate(VisitDate)
+        int BusinessCount = 1;
+        string AchVol = default, AchReg, AstVol = default, AstReg, BayVol = default, BayReg, BBBVol = default, BBBReg, BicVol = default, BicReg, CitVol = default, CitReg, MixVol = default, MixReg, UPSVol = default, UPSReg, CVSVol = default, CVSReg, DitVol = default, DitReg, DukeVol = default, DukeReg, HSNVol = default, HSNReg, KanesVol = default, KanesReg, McDVol = default, McDReg, UWVol = default, UWReg, DaliVol = default, DaliReg, PCSWVol = default, PCSWReg, KnowVol = default, KnowReg, BucsVol = default, BucsReg, RaysVol = default, RaysReg, TimesVol = default, TimesReg, TDVol = default, TDReg, PCUVol = default, PCUReg;
+
+        // Check for bodies and assign variables
+
+        // Check for achieva bodies
+        if (regVolAch_ddl.SelectedIndex != 0)
+        {
+            AchReg = regVolAch_ddl.SelectedValue;
+        }
+        else
+        {
+            AchReg = "None";
+        }
+
+
+        // Check for astro bodies
+        if (regVolAstro_ddl.SelectedIndex != 0)
+        {
+            AstReg = regVolAstro_ddl.SelectedValue;
+        }
+        else
+        {
+            AstReg = "None";
+        }
+
+
+        // Check for Baycare bodies
+        if (regVolBaycare_ddl.SelectedIndex != 0)
+        {
+            BayReg = regVolBaycare_ddl.SelectedValue;
+        }
+        else
+        {
+            BayReg = "None";
+        }
+
+
+        // Check bbb bodies
+        if (regVolBBB_ddl.SelectedIndex != 0)
+        {
+            BBBReg = regVolBBB_ddl.SelectedValue;
+        }
+        else
+        {
+            BBBReg = "None";
+        }
+
+
+        // Check koozie bodies
+        if (regVolBic_ddl.SelectedIndex != 0)
+        {
+            BicReg = regVolBic_ddl.SelectedValue;
+        }
+        else
+        {
+            BicReg = "None";
+        }
+
+
+        // Check for city hall bodies
+        if (regVolCity_ddl.SelectedIndex != 0)
+        {
+            CitReg = regVolCity_ddl.SelectedValue;
+        }
+        else
+        {
+            CitReg = "None";
+        }
+
+
+        // Check for mix bodies
+        if (regVolMix_ddl.SelectedIndex != 0)
+        {
+            MixReg = regVolMix_ddl.SelectedValue;
+        }
+        else
+        {
+            MixReg = "None";
+        }
+
+
+        // Check for ups bodies
+        if (regVolUPS_ddl.SelectedIndex != 0)
+        {
+            UPSReg = regVolUPS_ddl.SelectedValue;
+        }
+        else
+        {
+            UPSReg = "None";
+        }
+
+
+        // Check cvs bodies
+        if (regVolCVS_ddl.SelectedIndex != 0)
+        {
+            CVSReg = regVolCVS_ddl.SelectedValue;
+        }
+        else
+        {
+            CVSReg = "None";
+        }
+
+
+        // Check ditek bodies
+        if (regVolDitek_ddl.SelectedIndex != 0)
+        {
+            DitReg = regVolDitek_ddl.SelectedValue;
+        }
+        else
+        {
+            DitReg = "None";
+        }
+
+
+        // Check duke energy bodies
+        if (regVolDuke_ddl.SelectedIndex != 0)
+        {
+            DukeReg = regVolDuke_ddl.SelectedValue;
+        }
+        else
+        {
+            DukeReg = "None";
+        }
+
+
+        // Check hsn / pcs newsroom bodies
+        if (regVolPCSN_ddl.SelectedIndex != 0)
+        {
+            HSNReg = regVolPCSN_ddl.SelectedValue;
+        }
+        else
+        {
+            HSNReg = "None";
+        }
+
+
+        // Check kanes bodies
+        if (regVolKanes_ddl.SelectedIndex != 0)
+        {
+            KanesReg = regVolKanes_ddl.SelectedValue;
+        }
+        else
+        {
+            KanesReg = "None";
+        }
+
+
+        // Check mcdonalds bodies
+        if (regVolMcdonalds_ddl.SelectedIndex != 0)
+        {
+            McDReg = regVolMcdonalds_ddl.SelectedValue;
+        }
+        else
+        {
+            McDReg = "None";
+        }
+
+
+        // Check united way bodies
+        if (regVolUnited_ddl.SelectedIndex != 0)
+        {
+            UWReg = regVolUnited_ddl.SelectedValue;
+        }
+        else
+        {
+            UWReg = "None";
+        }
+
+
+        // Check dali bodies
+        if (regVolDali_ddl.SelectedIndex != 0)
+        {
+            DaliReg = regVolDali_ddl.SelectedValue;
+        }
+        else
+        {
+            DaliReg = "None";
+        }
+
+
+        // Check pcsw bodies
+        if (regVolPCSW_ddl.SelectedIndex != 0)
+        {
+            PCSWReg = regVolPCSW_ddl.SelectedValue;
+        }
+        else
+        {
+            PCSWReg = "None";
+        }
+
+
+        // Check knowbe4 bodies
+        if (regVolKnow_ddl.SelectedIndex != 0)
+        {
+            KnowReg = regVolKnow_ddl.SelectedValue;
+        }
+        else
+        {
+            KnowReg = "None";
+        }
+
+
+        // Check bucs bodies
+        if (regVolBucs_ddl.SelectedIndex != 0)
+        {
+            BucsReg = regVolBucs_ddl.SelectedValue;
+        }
+        else
+        {
+            BucsReg = "None";
+        }
+
+
+        // Check rays bodies
+        if (regVolRays_ddl.SelectedIndex != 0)
+        {
+            RaysReg = regVolRays_ddl.SelectedValue;
+        }
+        else
+        {
+            RaysReg = "None";
+        }
+
+        // Check times /power design bodies
+        if (regVolPower_ddl.SelectedIndex != 0)
+        {
+            TimesReg = regVolPower_ddl.SelectedValue;
+        }
+        else
+        {
+            TimesReg = "None";
+        }
+
+        // Check td synnex bodies
+        if (regVolTD_ddl.SelectedIndex != 0)
+        {
+            TDReg = regVolTD_ddl.SelectedValue;
+        }
+        else
+        {
+            TDReg = "None";
+        }
+
+        // Check pcu bodies
+        if (regVolPCU_ddl.SelectedIndex != 0)
+        {
+            PCUReg = regVolPCU_ddl.SelectedValue;
+        }
+        else
+        {
+            PCUReg = "None";
+        }
+
+        // Calculuate amount of volunteers in each business
+        while (BusinessCount < 25)
+        {
+
+            // Check if business ID is not 4 (no business for ID 4)
+            if (BusinessCount == 4)
+            {
+                BusinessCount += 1;
+            }
+
+            // Get the count 
+            try
+            {
+                con.ConnectionString = connection_string;
+                con.Open();
+                cmd.CommandText = @"SELECT COUNT(*) as occur FROM volunteers v
+									  WHERE v.visitID='" + VIDOfDate + "' AND v.businessID='" + BusinessCount + @"'
+									  GROUP BY v.businessID";
+                cmd.Connection = con;
+                dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+
+                    // Checking if there are volunteers in that business
+                    if (dr.HasRows)
+                    {
+
+                        // Assign count to variable based on business
+                        switch (BusinessCount)
+                        {
+                            case 1:
+                                {
+                                    BucsVol = dr["occur"].ToString();
+                                    break;
+                                }
+                            case 2:
+                                {
+                                    RaysVol = dr["occur"].ToString();
+                                    break;
+                                }
+                            case 3:
+                                {
+                                    CVSVol = dr["occur"].ToString();
+                                    break;
+                                }
+                            case 5:
+                                {
+                                    KanesVol = dr["occur"].ToString();
+                                    break;
+                                }
+                            case 6:
+                                {
+                                    BicVol = dr["occur"].ToString();
+                                    break;
+                                }
+                            case 7:
+                                {
+                                    TDVol = dr["occur"].ToString();
+                                    break;
+                                }
+                            case 8:
+                                {
+                                    HSNVol = dr["occur"].ToString();
+                                    break;
+                                }
+                            case 9:
+                                {
+                                    BBBVol = dr["occur"].ToString();
+                                    break;
+                                }
+                            case 10:
+                                {
+                                    AstVol = dr["occur"].ToString();
+                                    break;
+                                }
+                            case 11:
+                                {
+                                    DitVol = dr["occur"].ToString();
+                                    break;
+                                }
+                            case 12:
+                                {
+                                    AchVol = dr["occur"].ToString();
+                                    break;
+                                }
+                            case 13:
+                                {
+                                    BayVol = dr["occur"].ToString();
+                                    break;
+                                }
+                            case 14:
+                                {
+                                    CitVol = dr["occur"].ToString();
+                                    break;
+                                }
+                            case 15:
+                                {
+                                    DaliVol = dr["occur"].ToString();
+                                    break;
+                                }
+                            case 16:
+                                {
+                                    DukeVol = dr["occur"].ToString();
+                                    break;
+                                }
+                            case 17:
+                                {
+                                    McDVol = dr["occur"].ToString();
+                                    break;
+                                }
+                            case 18:
+                                {
+                                    MixVol = dr["occur"].ToString();
+                                    break;
+                                }
+                            case 19:
+                                {
+                                    PCSWVol = dr["occur"].ToString();
+                                    break;
+                                }
+                            case 20:
+                                {
+                                    PCUVol = dr["occur"].ToString();
+                                    break;
+                                }
+                            case 21:
+                                {
+                                    KnowVol = dr["occur"].ToString();
+                                    break;
+                                }
+                            case 22:
+                                {
+                                    TimesVol = dr["occur"].ToString();
+                                    break;
+                                }
+                            case 23:
+                                {
+                                    UPSVol = dr["occur"].ToString();
+                                    break;
+                                }
+                            case 24:
+                                {
+                                    UWVol = dr["occur"].ToString();
+                                    break;
+                                }
+                        }
+
+                    }
+
+                }
+
+                cmd.Dispose();
+                con.Close();
+            }
+
+            catch (Exception ex)
+            {
+                error_lbl.Text = "Error in SubmitCheckIn(). Could not assign volunteer count.";
+                return;
+            }
+
+            // add 1 to count
+            BusinessCount += 1;
+
+        }
+
+        cmd.Dispose();
+        con.Close();
+
+        // Check if visit date exists, if not, insert new entry, otherwise update existing entry
+        try
+        {
+            con.ConnectionString = connection_string;
+            con.Open();
+            cmd.CommandText = "SELECT visitID FROM volunteersCheckIn WHERE visitID='" + VIDOfDate + "'";
+            cmd.Connection = con;
+            dr = cmd.ExecuteReader();
+
+            if (dr.HasRows)
+            {
+                SQLStatement = @"UPDATE volunteersCheckIn 
+								SET achVol='" + AchVol + "', achReg='" + AchReg + "', astroVol='" + AstVol + "', astroReg='" + AstReg + "', baycareVol='" + BayVol + @"'
+								, baycareReg='" + BayReg + "', bbbVol='" + BBBVol + "', bbbReg='" + BBBReg + "', bicVol='" + BicVol + "', bicReg='" + BicReg + @"'
+								, cityVol='" + CitVol + "', cityReg='" + CitReg + "', cvsVol='" + CVSVol + "', cvsReg='" + CVSReg + "', ditekVol='" + DitVol + @"'
+								, ditekReg='" + DitReg + "', dukeVol='" + DukeVol + "', dukeReg='" + DukeReg + "', kanesVol='" + KanesVol + "', kanesReg='" + KanesReg + @"'
+								, knowVol='" + KnowVol + "', knowReg='" + KnowReg + "', daliVol='" + DaliVol + "', daliReg='" + DaliReg + "', mcdVol='" + McDVol + @"'
+								, mcdReg='" + McDReg + "', mixVol='" + MixVol + "', mixReg='" + MixReg + "', pcuVol='" + PCUVol + "', pcuReg='" + PCUReg + @"'
+								, pcswVol='" + PCSWVol + "', pcswReg='" + PCSWReg + "', tbbucsVol='" + BucsVol + "', tbbucsReg='" + BucsReg + "', tbraysVol='" + RaysVol + @"'
+								, tbraysReg='" + RaysReg + "', tbtimesVol='" + TimesVol + "', tbtimesReg='" + TimesReg + "', tdVol='" + TDVol + "', tdReg='" + TDReg + @"'
+								, upsVol='" + UPSVol + "', upsReg='" + UPSReg + "', unitedVol='" + UWVol + "', unitedReg='" + UWReg + "', hsnVol='" + HSNVol + "', hsnReg='" + HSNReg + @"'  
+								WHERE visitID='" + VIDOfDate + "'";
+            }
+            else
+            {
+                SQLStatement = @"INSERT INTO volunteersCheckIn 
+								(visitID, achVol, achReg, astroVol, astroReg, baycareVol, baycareReg, bbbVol, bbbReg, bicVol, bicReg, cityVol, cityReg,
+								cvsVol, cvsReg, ditekVol, ditekReg, dukeVol, dukeReg, kanesVol, kanesReg, knowVol, knowReg, daliVol, daliReg, mcdVol, 
+								mcdReg, mixVol, mixReg, pcuVol, pcuReg, pcswVol, pcswReg, tbbucsVol, tbbucsReg, tbraysVol, tbraysReg, tbtimesVol, 
+								tbtimesReg, tdVol, tdReg, upsVol, upsReg, unitedVol, unitedReg, hsnVol, hsnReg)
+                                VALUES ('" + VIDOfDate + "', '" + AchVol + "', '" + AchReg + "', '" + AstVol + "', '" + AstReg + "', '" + BayVol + "', '" + BayReg + "', '" + BBBVol + "', '" + BBBReg + @"'
+								, '" + BicVol + "', '" + BicReg + "', '" + CitVol + "', '" + CitReg + "', '" + CVSVol + "', '" + CVSReg + "', '" + DitVol + "', '" + DitReg + "', '" + DukeVol + @"'
+								, '" + DukeReg + "', '" + KanesVol + "', '" + KanesReg + "', '" + KnowVol + "', '" + KnowReg + "', '" + DaliVol + "', '" + DaliReg + "', '" + McDVol + "', '" + McDReg + @"'
+								, '" + MixVol + "', '" + MixReg + "', '" + PCUVol + "', '" + PCUReg + "', '" + PCSWVol + "', '" + PCSWReg + "', '" + BucsVol + "', '" + BucsReg + "', '" + RaysVol + @"'
+								, '" + RaysReg + "', '" + TimesVol + "', '" + TimesReg + "', '" + TDVol + "', '" + TDReg + "', '" + UPSVol + "', '" + UPSReg + "', '" + UWVol + "', '" + UWReg + "', '" + HSNVol + "', '" + HSNReg + "')";
+            }
+
+            cmd.Dispose();
+            con.Close();
+        }
+        catch
+        {
+            error_lbl.Text = "Error in SubmitCheckIn(). Could not detect selected visit date in database.";
+            return;
+        }
+
+        cmd.Dispose();
+        con.Close();
+
+        // Submit data into SQL server
+        try
+        {
+            con.ConnectionString = connection_string;
+            con.Open();
+            cmd.Connection = con;
+            cmd.CommandText = SQLStatement;
+
+            cmd.ExecuteNonQuery();
+
+            error_lbl.Text = "Successfully updated volunteer check in.";
+
+            cmd.Dispose();
+            con.Close();
+        }
+        catch
+        {
+            error_lbl.Text = "Error in SubmitCheckIn(). Could not complete the check in process.";
+            return;
+        }
+
+        // Refresh page
+        var meta = new HtmlMeta();
+        meta.HttpEquiv = "Refresh";
+        meta.Content = "3;url=volunteer_database.aspx";
+        Page.Controls.Add(meta);
+
+    }
+
+    // Loads a volunteer from a vol name DDL into a gridview found in the schedule volunteers section
+    public void AddVolIntoTable()
+    {
+        string[] VolNameWithID = volNameSchedule_ddl.SelectedValue.Split("(");
+        string VolName = VolNameWithID[0];
+        string[] VolIDWithParentheses = VolNameWithID[1].Split(')');
+        string VolID = VolIDWithParentheses[0];
+        var ScheduledVolRow = ScheduleVolTable.NewRow();
+
+        ScheduledVolRow["Volunteer ID"] = VolID;
+        ScheduledVolRow["Volunteer Name"] = VolName;
+
+        ScheduleVolTable.Rows.Add(ScheduledVolRow);
+        scheduledVol_dgv.DataSource = ScheduleVolTable;
+        scheduledVol_dgv.DataBind();
+
+        Session["dt"] = ScheduleVolTable;
+
+    }
+
+    // Enables the regular vol ddls and assigns the colors for the checkboxes based on what business is open for the entered visit date in the check in section
+    public void Checkboxes(int VIDOfDate)
+    {
+        int count = 1;
+        // Dim VIDOfDate As Integer = VisitData.GetVisitIDFromDate(visitDateCheckin_tb.Text)
+
+        // Clear checkboxes
+        foreach (Control cBox in checkIn_div.Controls)
+        {
+            if (cBox is CheckBox)
+            {
+                ((CheckBox)cBox).Checked = false;
+            }
+        }
+
+        // Reset DDLs
+        regVolAch_ddl.SelectedIndex = 0;
+        regVolAstro_ddl.SelectedIndex = 0;
+        regVolBaycare_ddl.SelectedIndex = 0;
+        regVolBBB_ddl.SelectedIndex = 0;
+        regVolBic_ddl.SelectedIndex = 0;
+        regVolBucs_ddl.SelectedIndex = 0;
+        regVolCity_ddl.SelectedIndex = 0;
+        regVolCVS_ddl.SelectedIndex = 0;
+        regVolDali_ddl.SelectedIndex = 0;
+        regVolDitek_ddl.SelectedIndex = 0;
+        regVolDuke_ddl.SelectedIndex = 0;
+        regVolPCSN_ddl.SelectedIndex = 0;
+        regVolKanes_ddl.SelectedIndex = 0;
+        regVolKnow_ddl.SelectedIndex = 0;
+        regVolMcdonalds_ddl.SelectedIndex = 0;
+        regVolMix_ddl.SelectedIndex = 0;
+        regVolPCSW_ddl.SelectedIndex = 0;
+        regVolPCU_ddl.SelectedIndex = 0;
+        regVolRays_ddl.SelectedIndex = 0;
+        regVolTD_ddl.SelectedIndex = 0;
+        regVolPower_ddl.SelectedIndex = 0;
+        regVolUnited_ddl.SelectedIndex = 0;
+        regVolUPS_ddl.SelectedIndex = 0;
+
+        // Get opened and closed businesses for selected visit date and enable checkboxes for opened businesses
+        while (count < 25)
+        {
+            if (count == 4)
+            {
+                count = count + 1;
+            }
+            else
+            {
+                try
+                {
+                    con.ConnectionString = connection_string;
+                    con.Open();
+                    cmd.CommandText = @"SELECT o.businessID, o.openstatus, s.schoolName
+								FROM businessVisitInfo o
+								INNER JOIN schoolInfo s
+								ON s.id = o.schoolID
+								WHERE o.visitID='" + VIDOfDate + "' AND o.businessID='" + count + @"' 
+								AND o.openstatus=1
+								ORDER BY o.businessID";
+                    cmd.Connection = con;
+                    dr = cmd.ExecuteReader();
+
+                    while (dr.Read())
+                    {
+
+                        // Check for rows
+                        if (dr.HasRows == true)
+                        {
+
+                            // If business ID equals the count number then check the boxes
+                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(dr["businessID"], count, false)))
+                            {
+                                businessCount_ddl.SelectedValue = count;
+
+                                switch (businessCount_ddl.SelectedValue)
+                                {
+                                    case "1":
+                                        {
+                                            regVolBucs_ddl.Enabled = true;
+
+                                            // Set color of text based on school assigned
+                                            if (Operators.ConditionalCompareObjectEqual(dr["schoolName"], schoolNameCheckin_ddl.Items(1).Value, false))
+                                            {
+                                                bucs_a.Attributes.CssStyle.Add("color", "blue");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(2).Value)
+                                            {
+                                                bucs_a.Attributes.CssStyle.Add("color", "red");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(3).Value)
+                                            {
+                                                bucs_a.Attributes.CssStyle.Add("color", "green");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(4).Value)
+                                            {
+                                                bucs_a.Attributes.CssStyle.Add("color", "magenta");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(5).Value)
+                                            {
+                                                bucs_a.Attributes.CssStyle.Add("color", "orange");
+                                            }
+
+                                            break;
+                                        }
+
+                                    case "2":
+                                        {
+                                            regVolRays_ddl.Enabled = true;
+
+                                            // Set color of text based on school assigned
+                                            if (Operators.ConditionalCompareObjectEqual(dr["schoolName"], schoolNameCheckin_ddl.Items(1).Value, false))
+                                            {
+                                                rays_a.Attributes.CssStyle.Add("color", "blue");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(2).Value)
+                                            {
+                                                rays_a.Attributes.CssStyle.Add("color", "red");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(3).Value)
+                                            {
+                                                rays_a.Attributes.CssStyle.Add("color", "green");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(4).Value)
+                                            {
+                                                rays_a.Attributes.CssStyle.Add("color", "magenta");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(5).Value)
+                                            {
+                                                rays_a.Attributes.CssStyle.Add("color", "orange");
+                                            }
+
+                                            break;
+                                        }
+
+                                    case "3":
+                                        {
+                                            regVolCVS_ddl.Enabled = true;
+
+                                            // Set color of text based on school assigned
+                                            if (Operators.ConditionalCompareObjectEqual(dr["schoolName"], schoolNameCheckin_ddl.Items(1).Value, false))
+                                            {
+                                                cvs_a.Attributes.CssStyle.Add("color", "blue");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(2).Value)
+                                            {
+                                                cvs_a.Attributes.CssStyle.Add("color", "red");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(3).Value)
+                                            {
+                                                cvs_a.Attributes.CssStyle.Add("color", "green");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(4).Value)
+                                            {
+                                                cvs_a.Attributes.CssStyle.Add("color", "magenta");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(5).Value)
+                                            {
+                                                cvs_a.Attributes.CssStyle.Add("color", "orange");
+                                            }
+
+                                            break;
+                                        }
+
+                                    case "5":
+                                        {
+                                            regVolKanes_ddl.Enabled = true;
+
+                                            // Set color of text based on school assigned
+                                            if (Operators.ConditionalCompareObjectEqual(dr["schoolName"], schoolNameCheckin_ddl.Items(1).Value, false))
+                                            {
+                                                kanes_a.Attributes.CssStyle.Add("color", "blue");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(2).Value)
+                                            {
+                                                kanes_a.Attributes.CssStyle.Add("color", "red");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(3).Value)
+                                            {
+                                                kanes_a.Attributes.CssStyle.Add("color", "green");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(4).Value)
+                                            {
+                                                kanes_a.Attributes.CssStyle.Add("color", "magenta");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(5).Value)
+                                            {
+                                                kanes_a.Attributes.CssStyle.Add("color", "orange");
+                                            }
+
+                                            break;
+                                        }
+
+                                    case "6":
+                                        {
+                                            regVolBic_ddl.Enabled = true;
+
+                                            // Set color of text based on school assigned
+                                            if (Operators.ConditionalCompareObjectEqual(dr["schoolName"], schoolNameCheckin_ddl.Items(1).Value, false))
+                                            {
+                                                bic_a.Attributes.CssStyle.Add("color", "blue");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(2).Value)
+                                            {
+                                                bic_a.Attributes.CssStyle.Add("color", "red");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(3).Value)
+                                            {
+                                                bic_a.Attributes.CssStyle.Add("color", "green");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(4).Value)
+                                            {
+                                                bic_a.Attributes.CssStyle.Add("color", "magenta");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(5).Value)
+                                            {
+                                                bic_a.Attributes.CssStyle.Add("color", "orange");
+                                            }
+
+                                            break;
+                                        }
+
+                                    case "7":
+                                        {
+                                            regVolTD_ddl.Enabled = true;
+
+                                            // Set color of text based on school assigned
+                                            if (Operators.ConditionalCompareObjectEqual(dr["schoolName"], schoolNameCheckin_ddl.Items(1).Value, false))
+                                            {
+                                                td_a.Attributes.CssStyle.Add("color", "blue");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(2).Value)
+                                            {
+                                                td_a.Attributes.CssStyle.Add("color", "red");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(3).Value)
+                                            {
+                                                td_a.Attributes.CssStyle.Add("color", "green");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(4).Value)
+                                            {
+                                                td_a.Attributes.CssStyle.Add("color", "magenta");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(5).Value)
+                                            {
+                                                td_a.Attributes.CssStyle.Add("color", "orange");
+                                            }
+
+                                            break;
+                                        }
+
+                                    case "8":
+                                        {
+                                            regVolPCSN_ddl.Enabled = true;
+
+                                            // Set color of text based on school assigned
+                                            if (Operators.ConditionalCompareObjectEqual(dr["schoolName"], schoolNameCheckin_ddl.Items(1).Value, false))
+                                            {
+                                                pcsn_a.Attributes.CssStyle.Add("color", "blue");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(2).Value)
+                                            {
+                                                pcsn_a.Attributes.CssStyle.Add("color", "red");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(3).Value)
+                                            {
+                                                pcsn_a.Attributes.CssStyle.Add("color", "green");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(4).Value)
+                                            {
+                                                pcsn_a.Attributes.CssStyle.Add("color", "magenta");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(5).Value)
+                                            {
+                                                pcsn_a.Attributes.CssStyle.Add("color", "orange");
+                                            }
+
+                                            break;
+                                        }
+
+                                    case "9":
+                                        {
+                                            regVolBBB_ddl.Enabled = true;
+
+                                            // Set color of text based on school assigned
+                                            if (Operators.ConditionalCompareObjectEqual(dr["schoolName"], schoolNameCheckin_ddl.Items(1).Value, false))
+                                            {
+                                                bbb_a.Attributes.CssStyle.Add("color", "blue");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(2).Value)
+                                            {
+                                                bbb_a.Attributes.CssStyle.Add("color", "red");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(3).Value)
+                                            {
+                                                bbb_a.Attributes.CssStyle.Add("color", "green");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(4).Value)
+                                            {
+                                                bbb_a.Attributes.CssStyle.Add("color", "magenta");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(5).Value)
+                                            {
+                                                bbb_a.Attributes.CssStyle.Add("color", "orange");
+                                            }
+
+                                            break;
+                                        }
+
+                                    case "10":
+                                        {
+                                            regVolAstro_ddl.Enabled = true;
+
+                                            // Set color of text based on school assigned
+                                            if (Operators.ConditionalCompareObjectEqual(dr["schoolName"], schoolNameCheckin_ddl.Items(1).Value, false))
+                                            {
+                                                astro_a.Attributes.CssStyle.Add("color", "blue");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(2).Value)
+                                            {
+                                                astro_a.Attributes.CssStyle.Add("color", "red");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(3).Value)
+                                            {
+                                                astro_a.Attributes.CssStyle.Add("color", "green");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(4).Value)
+                                            {
+                                                astro_a.Attributes.CssStyle.Add("color", "magenta");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(5).Value)
+                                            {
+                                                astro_a.Attributes.CssStyle.Add("color", "orange");
+                                            }
+
+                                            break;
+                                        }
+
+                                    case "11":
+                                        {
+                                            regVolDitek_ddl.Enabled = true;
+
+                                            // Set color of text based on school assigned
+                                            if (Operators.ConditionalCompareObjectEqual(dr["schoolName"], schoolNameCheckin_ddl.Items(1).Value, false))
+                                            {
+                                                ditek_a.Attributes.CssStyle.Add("color", "blue");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(2).Value)
+                                            {
+                                                ditek_a.Attributes.CssStyle.Add("color", "red");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(3).Value)
+                                            {
+                                                ditek_a.Attributes.CssStyle.Add("color", "green");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(4).Value)
+                                            {
+                                                ditek_a.Attributes.CssStyle.Add("color", "magenta");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(5).Value)
+                                            {
+                                                ditek_a.Attributes.CssStyle.Add("color", "orange");
+                                            }
+
+                                            break;
+                                        }
+
+                                    case "12":
+                                        {
+                                            regVolAch_ddl.Enabled = true;
+
+                                            // Set color of text based on school assigned
+                                            if (Operators.ConditionalCompareObjectEqual(dr["schoolName"], schoolNameCheckin_ddl.Items(1).Value, false))
+                                            {
+                                                ach_a.Attributes.CssStyle.Add("color", "blue");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(2).Value)
+                                            {
+                                                ach_a.Attributes.CssStyle.Add("color", "red");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(3).Value)
+                                            {
+                                                ach_a.Attributes.CssStyle.Add("color", "green");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(4).Value)
+                                            {
+                                                ach_a.Attributes.CssStyle.Add("color", "magenta");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(5).Value)
+                                            {
+                                                ach_a.Attributes.CssStyle.Add("color", "orange");
+                                            }
+
+                                            break;
+                                        }
+
+                                    case "13":
+                                        {
+                                            regVolBaycare_ddl.Enabled = true;
+
+                                            // Set color of text based on school assigned
+                                            if (Operators.ConditionalCompareObjectEqual(dr["schoolName"], schoolNameCheckin_ddl.Items(1).Value, false))
+                                            {
+                                                baycare_a.Attributes.CssStyle.Add("color", "blue");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(2).Value)
+                                            {
+                                                baycare_a.Attributes.CssStyle.Add("color", "red");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(3).Value)
+                                            {
+                                                baycare_a.Attributes.CssStyle.Add("color", "green");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(4).Value)
+                                            {
+                                                baycare_a.Attributes.CssStyle.Add("color", "magenta");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(5).Value)
+                                            {
+                                                baycare_a.Attributes.CssStyle.Add("color", "orange");
+                                            }
+
+                                            break;
+                                        }
+
+                                    case "14":
+                                        {
+                                            regVolCity_ddl.Enabled = true;
+
+                                            // Set color of text based on school assigned
+                                            if (Operators.ConditionalCompareObjectEqual(dr["schoolName"], schoolNameCheckin_ddl.Items(1).Value, false))
+                                            {
+                                                city_a.Attributes.CssStyle.Add("color", "blue");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(2).Value)
+                                            {
+                                                city_a.Attributes.CssStyle.Add("color", "red");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(3).Value)
+                                            {
+                                                city_a.Attributes.CssStyle.Add("color", "green");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(4).Value)
+                                            {
+                                                city_a.Attributes.CssStyle.Add("color", "magenta");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(5).Value)
+                                            {
+                                                city_a.Attributes.CssStyle.Add("color", "orange");
+                                            }
+
+                                            break;
+                                        }
+
+                                    case "15":
+                                        {
+                                            regVolDali_ddl.Enabled = true;
+
+                                            // Set color of text based on school assigned
+                                            if (Operators.ConditionalCompareObjectEqual(dr["schoolName"], schoolNameCheckin_ddl.Items(1).Value, false))
+                                            {
+                                                dali_a.Attributes.CssStyle.Add("color", "blue");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(2).Value)
+                                            {
+                                                dali_a.Attributes.CssStyle.Add("color", "red");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(3).Value)
+                                            {
+                                                dali_a.Attributes.CssStyle.Add("color", "green");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(4).Value)
+                                            {
+                                                dali_a.Attributes.CssStyle.Add("color", "magenta");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(5).Value)
+                                            {
+                                                dali_a.Attributes.CssStyle.Add("color", "orange");
+                                            }
+
+                                            break;
+                                        }
+
+                                    case "16":
+                                        {
+                                            regVolDuke_ddl.Enabled = true;
+
+                                            // Set color of text based on school assigned
+                                            if (Operators.ConditionalCompareObjectEqual(dr["schoolName"], schoolNameCheckin_ddl.Items(1).Value, false))
+                                            {
+                                                duke_a.Attributes.CssStyle.Add("color", "blue");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(2).Value)
+                                            {
+                                                duke_a.Attributes.CssStyle.Add("color", "red");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(3).Value)
+                                            {
+                                                duke_a.Attributes.CssStyle.Add("color", "green");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(4).Value)
+                                            {
+                                                duke_a.Attributes.CssStyle.Add("color", "magenta");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(5).Value)
+                                            {
+                                                duke_a.Attributes.CssStyle.Add("color", "orange");
+                                            }
+
+                                            break;
+                                        }
+
+                                    case "17":
+                                        {
+                                            regVolMcdonalds_ddl.Enabled = true;
+
+                                            // Set color of text based on school assigned
+                                            if (Operators.ConditionalCompareObjectEqual(dr["schoolName"], schoolNameCheckin_ddl.Items(1).Value, false))
+                                            {
+                                                mcdonalds_a.Attributes.CssStyle.Add("color", "blue");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(2).Value)
+                                            {
+                                                mcdonalds_a.Attributes.CssStyle.Add("color", "red");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(3).Value)
+                                            {
+                                                mcdonalds_a.Attributes.CssStyle.Add("color", "green");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(4).Value)
+                                            {
+                                                mcdonalds_a.Attributes.CssStyle.Add("color", "magenta");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(5).Value)
+                                            {
+                                                mcdonalds_a.Attributes.CssStyle.Add("color", "orange");
+                                            }
+
+                                            break;
+                                        }
+
+                                    case "18":
+                                        {
+                                            regVolMix_ddl.Enabled = true;
+
+                                            // Set color of text based on school assigned
+                                            if (Operators.ConditionalCompareObjectEqual(dr["schoolName"], schoolNameCheckin_ddl.Items(1).Value, false))
+                                            {
+                                                mix_a.Attributes.CssStyle.Add("color", "blue");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(2).Value)
+                                            {
+                                                mix_a.Attributes.CssStyle.Add("color", "red");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(3).Value)
+                                            {
+                                                mix_a.Attributes.CssStyle.Add("color", "green");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(4).Value)
+                                            {
+                                                mix_a.Attributes.CssStyle.Add("color", "magenta");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(5).Value)
+                                            {
+                                                mix_a.Attributes.CssStyle.Add("color", "orange");
+                                            }
+
+                                            break;
+                                        }
+
+                                    case "19":
+                                        {
+                                            regVolPCSW_ddl.Enabled = true;
+
+                                            // Set color of text based on school assigned
+                                            if (Operators.ConditionalCompareObjectEqual(dr["schoolName"], schoolNameCheckin_ddl.Items(1).Value, false))
+                                            {
+                                                pcsw_a.Attributes.CssStyle.Add("color", "blue");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(2).Value)
+                                            {
+                                                pcsw_a.Attributes.CssStyle.Add("color", "red");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(3).Value)
+                                            {
+                                                pcsw_a.Attributes.CssStyle.Add("color", "green");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(4).Value)
+                                            {
+                                                pcsw_a.Attributes.CssStyle.Add("color", "magenta");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(5).Value)
+                                            {
+                                                pcsw_a.Attributes.CssStyle.Add("color", "orange");
+                                            }
+
+                                            break;
+                                        }
+
+                                    case "20":
+                                        {
+                                            regVolPCU_ddl.Enabled = true;
+
+                                            // Set color of text based on school assigned
+                                            if (Operators.ConditionalCompareObjectEqual(dr["schoolName"], schoolNameCheckin_ddl.Items(1).Value, false))
+                                            {
+                                                pcu_a.Attributes.CssStyle.Add("color", "blue");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(2).Value)
+                                            {
+                                                pcu_a.Attributes.CssStyle.Add("color", "red");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(3).Value)
+                                            {
+                                                pcu_a.Attributes.CssStyle.Add("color", "green");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(4).Value)
+                                            {
+                                                pcu_a.Attributes.CssStyle.Add("color", "magenta");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(5).Value)
+                                            {
+                                                pcu_a.Attributes.CssStyle.Add("color", "orange");
+                                            }
+
+                                            break;
+                                        }
+
+                                    case "21":
+                                        {
+                                            regVolKnow_ddl.Enabled = true;
+
+                                            // Set color of text based on school assigned
+                                            if (Operators.ConditionalCompareObjectEqual(dr["schoolName"], schoolNameCheckin_ddl.Items(1).Value, false))
+                                            {
+                                                know_a.Attributes.CssStyle.Add("color", "blue");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(2).Value)
+                                            {
+                                                know_a.Attributes.CssStyle.Add("color", "red");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(3).Value)
+                                            {
+                                                know_a.Attributes.CssStyle.Add("color", "green");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(4).Value)
+                                            {
+                                                know_a.Attributes.CssStyle.Add("color", "magenta");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(5).Value)
+                                            {
+                                                know_a.Attributes.CssStyle.Add("color", "orange");
+                                            }
+
+                                            break;
+                                        }
+
+                                    case "22":
+                                        {
+                                            regVolPower_ddl.Enabled = true;
+
+                                            // Set color of text based on school assigned
+                                            if (Operators.ConditionalCompareObjectEqual(dr["schoolName"], schoolNameCheckin_ddl.Items(1).Value, false))
+                                            {
+                                                power_a.Attributes.CssStyle.Add("color", "blue");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(2).Value)
+                                            {
+                                                power_a.Attributes.CssStyle.Add("color", "red");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(3).Value)
+                                            {
+                                                power_a.Attributes.CssStyle.Add("color", "green");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(4).Value)
+                                            {
+                                                power_a.Attributes.CssStyle.Add("color", "magenta");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(5).Value)
+                                            {
+                                                power_a.Attributes.CssStyle.Add("color", "orange");
+                                            }
+
+                                            break;
+                                        }
+
+                                    case "23":
+                                        {
+                                            regVolUPS_ddl.Enabled = true;
+
+                                            // Set color of text based on school assigned
+                                            if (Operators.ConditionalCompareObjectEqual(dr["schoolName"], schoolNameCheckin_ddl.Items(1).Value, false))
+                                            {
+                                                ups_a.Attributes.CssStyle.Add("color", "blue");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(2).Value)
+                                            {
+                                                ups_a.Attributes.CssStyle.Add("color", "red");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(3).Value)
+                                            {
+                                                ups_a.Attributes.CssStyle.Add("color", "green");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(4).Value)
+                                            {
+                                                ups_a.Attributes.CssStyle.Add("color", "magenta");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(5).Value)
+                                            {
+                                                ups_a.Attributes.CssStyle.Add("color", "orange");
+                                            }
+
+                                            break;
+                                        }
+
+                                    case "24":
+                                        {
+                                            regVolUnited_ddl.Enabled = true;
+
+                                            // Set color of text based on school assigned
+                                            if (Operators.ConditionalCompareObjectEqual(dr["schoolName"], schoolNameCheckin_ddl.Items(1).Value, false))
+                                            {
+                                                united_a.Attributes.CssStyle.Add("color", "blue");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(2).Value)
+                                            {
+                                                united_a.Attributes.CssStyle.Add("color", "red");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(3).Value)
+                                            {
+                                                united_a.Attributes.CssStyle.Add("color", "green");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(4).Value)
+                                            {
+                                                united_a.Attributes.CssStyle.Add("color", "magenta");
+                                            }
+                                            else if (dr["schoolName"].ToString() == schoolNameCheckin_ddl.Items(5).Value)
+                                            {
+                                                united_a.Attributes.CssStyle.Add("color", "orange");
+                                            }
+
+                                            break;
+                                        }
+
+                                }
+
+                            }
+                        }
+                        else
+                        {
+
+                            break;
+                        }
+
+                    }
+
+                    cmd.Dispose();
+                    con.Close();
+                }
+                catch
+                {
+                    error_lbl.Text = "Error in Checkboxes(). Could not get business open information.";
+                    cmd.Dispose();
+                    con.Close();
+                    return;
+                }
+
+                cmd.Dispose();
+                con.Close();
+
+                // Increase count number
+                count = count + 1;
+            }
+        }
+
+        // LoadData()
+
+    }
+
+    // Gets the total amount of SV hours of a visit, school, or volunteer (currently volunteer isn't working - 8/29/2024)
+    public object TotalSVHours(string VisitDate = null, string SchoolName = null, string VolID = null)
+    {
+        string SQLStatement = "SELECT SUM(svHours) as svHours FROM volunteers WHERE ";
+        int VIDOfDate = Conversions.ToInteger(VisitData.GetVisitIDFromDate(VisitDate));
+        int SchoolID = SchoolData.GetSchoolID(SchoolName);
+        var Total = default(string);
+
+        // Check if load by visit date or load by school name is active
+        if (!string.IsNullOrEmpty(VisitDate))
+        {
+            SQLStatement += "visitID= '" + VIDOfDate + "' ";
+
+            if (!string.IsNullOrEmpty(SchoolName))
+            {
+                SQLStatement += " AND schoolID= '" + SchoolID + "' ";
+            }
+            else if (!string.IsNullOrEmpty(VolID))
+            {
+                SQLStatement += " AND id= '" + VolID + "' ";
+            }
+        }
+        else if (!string.IsNullOrEmpty(SchoolName))
+        {
+            SQLStatement += "schoolID = '" + SchoolID + "' ";
+
+            if (!string.IsNullOrEmpty(VisitDate))
+            {
+                SQLStatement += " AND visitID = '" + VIDOfDate + "' ";
+            }
+            else if (!string.IsNullOrEmpty(VolID))
+            {
+                SQLStatement += " AND id='" + VolID + "'";
+            }
+        }
+        else if (!string.IsNullOrEmpty(VolID))
+        {
+            SQLStatement += "id = '" + VolID + "' ";
+
+            if (VisitID != default)
+            {
+                SQLStatement += " AND visitID = '" + VIDOfDate + "' ";
+            }
+            else if (SchoolID != default)
+            {
+                SQLStatement += " AND schoolID = '" + SchoolID + "' ";
+            }
+        }
+
+        // Get total hours and apply it to label
+        try
+        {
+            con.Close();
+            con.ConnectionString = connection_string;
+            con.Open();
+            cmd.CommandText = SQLStatement;
+            cmd.Connection = con;
+            dr = cmd.ExecuteReader();
+
+            while (dr.Read())
+                Total = dr["svHours"].ToString();
+        }
+
+        catch (Exception ex)
+        {
+            error_lbl.Text = "Error in TotalSVHours(). Could not get total sv hours.";
+            return default;
+        }
+
+        cmd.Dispose();
+        con.Close();
+
+        return Total;
+    }
+
+    // Uses the LoadRegVolDDL function to populate all regular volunteer DDLs found in the check in section
+    public void PopulateVolDDL()
+    {
+        LoadRegVolDDL(regVolAch_ddl);
+        LoadRegVolDDL(regVolAstro_ddl);
+        LoadRegVolDDL(regVolBaycare_ddl);
+        LoadRegVolDDL(regVolBBB_ddl);
+        LoadRegVolDDL(regVolBic_ddl);
+        LoadRegVolDDL(regVolBucs_ddl);
+        LoadRegVolDDL(regVolCity_ddl);
+        LoadRegVolDDL(regVolCVS_ddl);
+        LoadRegVolDDL(regVolDali_ddl);
+        LoadRegVolDDL(regVolDitek_ddl);
+        LoadRegVolDDL(regVolDuke_ddl);
+        LoadRegVolDDL(regVolPCSN_ddl);
+        LoadRegVolDDL(regVolKanes_ddl);
+        LoadRegVolDDL(regVolKnow_ddl);
+        LoadRegVolDDL(regVolMcdonalds_ddl);
+        LoadRegVolDDL(regVolMix_ddl);
+        LoadRegVolDDL(regVolPCSW_ddl);
+        LoadRegVolDDL(regVolPCU_ddl);
+        LoadRegVolDDL(regVolRays_ddl);
+        LoadRegVolDDL(regVolTD_ddl);
+        LoadRegVolDDL(regVolPower_ddl);
+        LoadRegVolDDL(regVolUnited_ddl);
+        LoadRegVolDDL(regVolUPS_ddl);
+    }
+
+    // Returns a true or false value for if a passed through volunteer ID is already in the volunteersSchedule table in the database assigned to the passed through visit ID
+    public object CheckVolunteerSchedule(int VolunteerID, int VisitID)
+    {
+        bool Check = false;
+
+        try
+        {
+            con.ConnectionString = connection_string;
+            con.Open();
+            cmd.CommandText = "SELECT id FROM volunteersSchedule WHERE volunteerID='" + VolunteerID + "' AND visitID='" + VisitID + "'";
+            cmd.Connection = con;
+            dr = cmd.ExecuteReader();
+
+            if (dr.HasRows == true)
+            {
+                Check = true;
+            }
+            else
+            {
+                Check = false;
+            }
+
+            cmd.Dispose();
+            con.Close();
+        }
+        catch
+        {
+            error_lbl.Text = "Error in LoadRegVolDDL(). Could not load regular volunteer DDLs.";
+            return default;
+        }
+
+        return Check;
+    }
+
+    // Gets data (tbh idk what this does but its in everything)
+    private DataSet GetData(string query)
+    {
+        var cmd = new SqlCommand(query);
+        using (var con = new SqlConnection(connection_string))
+        {
+            using (var sda = new SqlDataAdapter())
+            {
+                cmd.Connection = con;
+                sda.SelectCommand = cmd;
+                using (var ds = new DataSet())
+                {
+                    sda.Fill(ds);
+                    return ds;
+                }
+            }
+        }
+    }
+
+
+
+    // All of the volunteers gridview modules
+    private void volunteers_dgv_RowUpdating(object sender, GridViewUpdateEventArgs e)
+    {
+        GridViewRow row = volunteers_dgv.Rows(0);                           // Code is used to enable the editing prodecure
+        int ID = Convert.ToInt32(volunteers_dgv.DataKeys(e.RowIndex).Values(0)); // Gets id number
+        string firstName = (volunteers_dgv.Rows(e.RowIndex).FindControl("firstNameDGV_tb") as TextBox).Text; // Try cast is used to try to convert - gets item from ddl
+        string lastName = (volunteers_dgv.Rows(e.RowIndex).FindControl("lastNameDGV_tb") as TextBox).Text;
+        string businessID = (volunteers_dgv.Rows(e.RowIndex).FindControl("businessNameDGV_ddl") as DropDownList).SelectedValue.ToString;
+        string schoolID = (volunteers_dgv.Rows(e.RowIndex).FindControl("schoolNameDGV_ddl") as DropDownList).SelectedValue.ToString;
+        string visitDate = (volunteers_dgv.Rows(e.RowIndex).FindControl("visitDateDGV_tb") as TextBox).Text;
+        string pr = (volunteers_dgv.Rows(e.RowIndex).FindControl("prDGV_ddl") as DropDownList).SelectedValue.ToString;
+        string svHours = (volunteers_dgv.Rows(e.RowIndex).FindControl("svHoursDGV_tb") as TextBox).Text;
+        string notes = (volunteers_dgv.Rows(e.RowIndex).FindControl("notesDGV_tb") as TextBox).Text;
+        string regular = (volunteers_dgv.Rows(e.RowIndex).FindControl("regularDGV_chk") as CheckBox).Checked;
+        string VIDOfDate;
+
+        // Get visit ID of date
+        try
+        {
+            VIDOfDate = Conversions.ToString(VisitData.GetVisitIDFromDate(visitDate));
+        }
+        catch (Exception ex)
+        {
+            error_lbl.Text = "Error in Updating(). Could not get visit ID of date entered.";
+            return;
+        }
+
+        // Check if visit date entered is an existing visit date
+        if (string.IsNullOrEmpty(VIDOfDate) | VIDOfDate == "0")
+        {
+            error_lbl.Text = "No visit scheduled for entered visit date. Please create a visit for that date or enter a different date that has already been created.";
+            return;
+        }
+
+        // Update volunteers table
+        try
+        {
+            using (var con = new SqlConnection(connection_string))
+            {
+                using (var cmd = new SqlCommand("UPDATE volunteers SET firstName=@firstName, lastName=@lastName, businessID=@businessID, schoolID=@schoolID, visitID=@visitID, pr=@pr, svHours=@svHours, notes=@notes, regular=@regular WHERE ID=@Id"))
+                {
+                    cmd.Parameters.AddWithValue("@ID", ID);
+                    cmd.Parameters.AddWithValue("@firstName", firstName);
+                    cmd.Parameters.AddWithValue("@lastName", lastName);
+                    cmd.Parameters.AddWithValue("@businessID", businessID);
+                    cmd.Parameters.AddWithValue("@schoolID", schoolID);
+                    cmd.Parameters.AddWithValue("@visitID", VIDOfDate);
+                    cmd.Parameters.AddWithValue("@pr", pr);
+                    cmd.Parameters.AddWithValue("@svHours", svHours);
+                    cmd.Parameters.AddWithValue("@notes", notes);
+                    cmd.Parameters.AddWithValue("@regular", regular);
+                    cmd.Connection = con;
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                }
+            }
+            volunteers_dgv.EditIndex = -1; // reset the grid after editing
+            LoadData();
+        }
+        catch (Exception ex)
+        {
+            error_lbl.Text = "Error with updating table.";
+            return;
+        }
+
+        // Update checkboxes if check in is visible
+        if (checkIn_div.Visible == true)
+        {
+
+            // Update checkboxes
+            SubmitCheckIn(Conversions.ToInteger(VIDOfDate));
+
+        }
+
+    }
+
+    private void volunteers_dgv_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+
+            // School Dropdown
+            DropDownList ddlSchool = (DropDownList)e.Row.FindControl("schoolNameDGV_ddl");
+            string lblSchool = ((Label)e.Row.FindControl("schoolNameDGV_lbl")).Text;
+            string VisitDate;
+
+            if (visitDateCheckin_tb.Text != "")
+            {
+                VisitDate = visitDateCheckin_tb.Text;
+            }
+            else
+            {
+                VisitDate = "";
+            }
+
+            ddlSchool.DataSource = GetData("SELECT id, schoolName FROM schoolInfo WHERE NOT (schoolName = 'A1 No School Scheduled') AND NOT id='505' ORDER BY schoolName ASC");
+
+            ddlSchool.DataTextField = "schoolName";
+            ddlSchool.DataValueField = "id";
+            ddlSchool.DataBind();
+            ddlSchool.Items.Insert(0, " ");
+
+            // Select index 0 if school ID is 0, otherwise, select the school name associated with the ID
+            if (lblSchool == "0")
+            {
+                ddlSchool.Items[0].Selected = true;
+            }
+            else
+            {
+                ddlSchool.Items.FindByValue(lblSchool).Selected = true;
+            }
+
+            // Assign different colors for visit dates
+            // If schoolNameSchedule_ddl.Visible = True And schoolNameCheckin_ddl.Visible = False Then
+            // Select Case schoolNameSchedule_ddl.Items.Count
+            // Case 2
+            // If lblSchool = SchoolData.GetSchoolID(schoolNameSchedule_ddl.Items(1).Value) Then
+            // e.Row.BackColor = ColorTranslator.FromHtml("#afd8ff")
+            // End If
+
+            // ddlSchool.Items(1).Attributes.CssStyle.Add("background-color", "#afd8ff")
+            // Case 3
+            // If lblSchool = SchoolData.GetSchoolID(schoolNameSchedule_ddl.Items(1).Value) Then
+            // e.Row.BackColor = ColorTranslator.FromHtml("#afd8ff")
+            // ElseIf lblSchool = SchoolData.GetSchoolID(schoolNameSchedule_ddl.Items(2).Value) Then
+            // e.Row.BackColor = ColorTranslator.FromHtml("#ffafaf")
+            // End If
+
+            // ddlSchool.Items(1).Attributes.CssStyle.Add("background-color", "#afd8ff")
+            // ddlSchool.Items(2).Attributes.CssStyle.Add("background-color", "#ffafaf")
+            // Case 4
+            // If lblSchool = SchoolData.GetSchoolID(schoolNameSchedule_ddl.Items(1).Value) Then
+            // e.Row.BackColor = ColorTranslator.FromHtml("#afd8ff")
+            // ElseIf lblSchool = SchoolData.GetSchoolID(schoolNameSchedule_ddl.Items(2).Value) Then
+            // e.Row.BackColor = ColorTranslator.FromHtml("#ffafaf")
+            // ElseIf lblSchool = SchoolData.GetSchoolID(schoolNameSchedule_ddl.Items(3).Value) Then
+            // e.Row.BackColor = ColorTranslator.FromHtml("#bfffaf")
+            // End If
+
+            // ddlSchool.Items(1).Attributes.CssStyle.Add("background-color", "#afd8ff")
+            // ddlSchool.Items(2).Attributes.CssStyle.Add("background-color", "#ffafaf")
+            // ddlSchool.Items(3).Attributes.CssStyle.Add("background-color", "#bfffaf")
+            // Case 5
+            // If lblSchool = SchoolData.GetSchoolID(schoolNameSchedule_ddl.Items(1).Value) Then
+            // e.Row.BackColor = ColorTranslator.FromHtml("#afd8ff")
+            // ElseIf lblSchool = SchoolData.GetSchoolID(schoolNameSchedule_ddl.Items(2).Value) Then
+            // e.Row.BackColor = ColorTranslator.FromHtml("#ffafaf")
+            // ElseIf lblSchool = SchoolData.GetSchoolID(schoolNameSchedule_ddl.Items(3).Value) Then
+            // e.Row.BackColor = ColorTranslator.FromHtml("#bfffaf")
+            // ElseIf lblSchool = SchoolData.GetSchoolID(schoolNameSchedule_ddl.Items(4).Value) Then
+            // e.Row.BackColor = ColorTranslator.FromHtml("#afc3ff")
+            // End If
+
+            // ddlSchool.Items(1).Attributes.CssStyle.Add("background-color", "#afd8ff")
+            // ddlSchool.Items(2).Attributes.CssStyle.Add("background-color", "#ffafaf")
+            // ddlSchool.Items(3).Attributes.CssStyle.Add("background-color", "#bfffaf")
+            // ddlSchool.Items(4).Attributes.CssStyle.Add("background-color", "#afc3ff")
+            // Case 6
+            // If lblSchool = SchoolData.GetSchoolID(schoolNameSchedule_ddl.Items(1).Value) Then
+            // e.Row.BackColor = ColorTranslator.FromHtml("#afd8ff")
+            // ElseIf lblSchool = SchoolData.GetSchoolID(schoolNameSchedule_ddl.Items(2).Value) Then
+            // e.Row.BackColor = ColorTranslator.FromHtml("#ffafaf")
+            // ElseIf lblSchool = SchoolData.GetSchoolID(schoolNameSchedule_ddl.Items(3).Value) Then
+            // e.Row.BackColor = ColorTranslator.FromHtml("#bfffaf")
+            // ElseIf lblSchool = SchoolData.GetSchoolID(schoolNameSchedule_ddl.Items(4).Value) Then
+            // e.Row.BackColor = ColorTranslator.FromHtml("#afc3ff")
+            // ElseIf lblSchool = SchoolData.GetSchoolID(schoolNameSchedule_ddl.Items(5).Value) Then
+            // e.Row.BackColor = ColorTranslator.FromHtml("#ffd8af")
+            // End If
+
+            // ddlSchool.Items(1).Attributes.CssStyle.Add("background-color", "#afd8ff")
+            // ddlSchool.Items(2).Attributes.CssStyle.Add("background-color", "#ffafaf")
+            // ddlSchool.Items(3).Attributes.CssStyle.Add("background-color", "#bfffaf")
+            // ddlSchool.Items(4).Attributes.CssStyle.Add("background-color", "#afc3ff")
+            // ddlSchool.Items(5).Attributes.CssStyle.Add("background-color", "#ffd8af")
+            // End Select
+            if (schoolNameCheckin_ddl.Visible == true) // And schoolNameSchedule_ddl.Visible = False
+            {
+                switch (schoolNameCheckin_ddl.Items.Count)
+                {
+                    case 2:
+                        {
+                            if (Conversions.ToDouble(lblSchool) == (double)SchoolData.GetSchoolID(schoolNameCheckin_ddl.Items(1).Value))
+                            {
+                                e.Row.BackColor = ColorTranslator.FromHtml("#afd8ff");
+                            }
+
+                            ddlSchool.Items[1].Attributes.CssStyle.Add("background-color", "#afd8ff");
+                            break;
+                        }
+                    case 3:
+                        {
+                            if (Conversions.ToDouble(lblSchool) == (double)SchoolData.GetSchoolID(schoolNameCheckin_ddl.Items(1).Value))
+                            {
+                                e.Row.BackColor = ColorTranslator.FromHtml("#afd8ff");
+                            }
+                            else if (Conversions.ToDouble(lblSchool) == (double)SchoolData.GetSchoolID(schoolNameCheckin_ddl.Items(2).Value))
+                            {
+                                e.Row.BackColor = ColorTranslator.FromHtml("#ffafaf");
+                            }
+
+                            ddlSchool.Items[1].Attributes.CssStyle.Add("background-color", "#afd8ff");
+                            ddlSchool.Items[2].Attributes.CssStyle.Add("background-color", "#ffafaf");
+                            break;
+                        }
+                    case 4:
+                        {
+                            if (Conversions.ToDouble(lblSchool) == (double)SchoolData.GetSchoolID(schoolNameCheckin_ddl.Items(1).Value))
+                            {
+                                e.Row.BackColor = ColorTranslator.FromHtml("#afd8ff");
+                            }
+                            else if (Conversions.ToDouble(lblSchool) == (double)SchoolData.GetSchoolID(schoolNameCheckin_ddl.Items(2).Value))
+                            {
+                                e.Row.BackColor = ColorTranslator.FromHtml("#ffafaf");
+                            }
+                            else if (Conversions.ToDouble(lblSchool) == (double)SchoolData.GetSchoolID(schoolNameCheckin_ddl.Items(3).Value))
+                            {
+                                e.Row.BackColor = ColorTranslator.FromHtml("#bfffaf");
+                            }
+
+                            ddlSchool.Items[1].Attributes.CssStyle.Add("background-color", "#afd8ff");
+                            ddlSchool.Items[2].Attributes.CssStyle.Add("background-color", "#ffafaf");
+                            ddlSchool.Items[3].Attributes.CssStyle.Add("background-color", "#bfffaf");
+                            break;
+                        }
+                    case 5:
+                        {
+                            if (Conversions.ToDouble(lblSchool) == (double)SchoolData.GetSchoolID(schoolNameCheckin_ddl.Items(1).Value))
+                            {
+                                e.Row.BackColor = ColorTranslator.FromHtml("#afd8ff");
+                            }
+                            else if (Conversions.ToDouble(lblSchool) == (double)SchoolData.GetSchoolID(schoolNameCheckin_ddl.Items(2).Value))
+                            {
+                                e.Row.BackColor = ColorTranslator.FromHtml("#ffafaf");
+                            }
+                            else if (Conversions.ToDouble(lblSchool) == (double)SchoolData.GetSchoolID(schoolNameCheckin_ddl.Items(3).Value))
+                            {
+                                e.Row.BackColor = ColorTranslator.FromHtml("#bfffaf");
+                            }
+                            else if (Conversions.ToDouble(lblSchool) == (double)SchoolData.GetSchoolID(schoolNameCheckin_ddl.Items(4).Value))
+                            {
+                                e.Row.BackColor = ColorTranslator.FromHtml("#afc3ff");
+                            }
+
+                            ddlSchool.Items[1].Attributes.CssStyle.Add("background-color", "#afd8ff");
+                            ddlSchool.Items[2].Attributes.CssStyle.Add("background-color", "#ffafaf");
+                            ddlSchool.Items[3].Attributes.CssStyle.Add("background-color", "#bfffaf");
+                            ddlSchool.Items[4].Attributes.CssStyle.Add("background-color", "#afc3ff");
+                            break;
+                        }
+                    case 6:
+                        {
+                            if (Conversions.ToDouble(lblSchool) == (double)SchoolData.GetSchoolID(schoolNameCheckin_ddl.Items(1).Value))
+                            {
+                                e.Row.BackColor = ColorTranslator.FromHtml("#afd8ff");
+                            }
+                            else if (Conversions.ToDouble(lblSchool) == (double)SchoolData.GetSchoolID(schoolNameCheckin_ddl.Items(2).Value))
+                            {
+                                e.Row.BackColor = ColorTranslator.FromHtml("#ffafaf");
+                            }
+                            else if (Conversions.ToDouble(lblSchool) == (double)SchoolData.GetSchoolID(schoolNameCheckin_ddl.Items(3).Value))
+                            {
+                                e.Row.BackColor = ColorTranslator.FromHtml("#bfffaf");
+                            }
+                            else if (Conversions.ToDouble(lblSchool) == (double)SchoolData.GetSchoolID(schoolNameCheckin_ddl.Items(4).Value))
+                            {
+                                e.Row.BackColor = ColorTranslator.FromHtml("#afc3ff");
+                            }
+                            else if (Conversions.ToDouble(lblSchool) == (double)SchoolData.GetSchoolID(schoolNameCheckin_ddl.Items(5).Value))
+                            {
+                                e.Row.BackColor = ColorTranslator.FromHtml("#ffd8af");
+                            }
+
+                            ddlSchool.Items[1].Attributes.CssStyle.Add("background-color", "#afd8ff");
+                            ddlSchool.Items[2].Attributes.CssStyle.Add("background-color", "#ffafaf");
+                            ddlSchool.Items[3].Attributes.CssStyle.Add("background-color", "#bfffaf");
+                            ddlSchool.Items[4].Attributes.CssStyle.Add("background-color", "#afc3ff");
+                            ddlSchool.Items[5].Attributes.CssStyle.Add("background-color", "#ffd8af");
+                            break;
+                        }
+                }
+            }
+
+            // Business Dropdown
+            DropDownList ddlBusiness = (DropDownList)e.Row.FindControl("businessNameDGV_ddl");
+            ddlBusiness.DataSource = GetData("SELECT id, businessName FROM businessInfo ORDER BY BusinessName");
+            ddlBusiness.DataTextField = "BusinessName";
+            ddlBusiness.DataValueField = "id";
+            ddlBusiness.DataBind();
+            string lblBusiness = ((Label)e.Row.FindControl("businessNameDGV_lbl")).Text;
+
+            ddlBusiness.Items.Insert(0, " ");
+
+            if (lblBusiness != "0")
+            {
+                ddlBusiness.Items.FindByValue(lblBusiness).Selected = true;
+            }
+            else
+            {
+                ddlBusiness.Items[0].Selected = true;
+            }
+
+
+            // PR Dropdown
+            DropDownList ddlPR = (DropDownList)e.Row.FindControl("prDGV_ddl");
+            string lblPR = ((Label)e.Row.FindControl("prDGV_lbl")).Text;
+
+            ddlPR.Items.FindByValue(lblPR).Selected = true;
+        }
+    }
+
+    private void volunteers_dgv_RowEditing(object sender, GridViewEditEventArgs e)
+    {
+        volunteers_dgv.EditIndex = e.NewEditIndex;
+        LoadData();
+    }
+
+    private void volunteers_dgv_RowDeleting(object sender, GridViewDeleteEventArgs e)
+    {
+        GridViewRow row = volunteers_dgv.Rows(0);                           // Code is used to enable the editing prodecure
+        int ID = Convert.ToInt32(volunteers_dgv.DataKeys(e.RowIndex).Values(0)); // Gets id number
+
+        try
+        {
+            using (var con = new SqlConnection(connection_string))
+            {
+                using (var cmd = new SqlCommand("DELETE FROM volunteers WHERE id=@ID"))
+                {
+                    cmd.Parameters.AddWithValue("@ID", ID);
+                    cmd.Connection = con;
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                }
+            }
+            volunteers_dgv.EditIndex = -1;       // reset the grid after editing
+            LoadData();
+        }
+
+        catch (Exception ex)
+        {
+            error_lbl.Text = "Error in rowDeleting. Cannot delete row.";
+            return;
+        }
+
+    }
+
+    private void volunteers_dgv_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+    {
+        volunteers_dgv.EditIndex = -1;
+        LoadData();
+    }
+
+    private void volunteers_dgv_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        volunteers_dgv.PageIndex = e.NewPageIndex;
+        LoadData();
+    }
+
+
+
+    // All button controls (most go to another sub or function)
+    protected void submit_btn_Click(object sender, EventArgs e)
+    {
+        SubmitAddNewVolunteer();
+    }
+
+    protected void submitSchedule_btn_Click(object sender, EventArgs e)
+    {
+        SubmitScheduleVolunteers();
+    }
+
+    protected void submitCheckIn_btn_Click(object sender, EventArgs e)
+    {
+        if (visitDateCheckin_tb.Text != default)
+        {
+            int VIDOfDate = Conversions.ToInteger(VisitData.GetVisitIDFromDate(visitDateCheckin_tb.Text));
+            SubmitCheckIn(VIDOfDate);
+        }
+    }
+
+    protected void search_btn_Click(object sender, EventArgs e)
+    {
+        LoadData();
+    }
+
+    protected void sortBy_btn_Click(object sender, EventArgs e)
+    {
+        LoadData();
+    }
+
+    protected void refresh_btn_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("volunteer_database.aspx");
+    }
+
+    protected void businessAssignments_btn_Click(object sender, EventArgs e)
+    {
+        string URL = "/pages/edit/Open_Closed_Status.aspx";
+        string VisitID = "";
+        string VisitDate = "";
+
+        if (visitDateCheckin_tb.Text != "")
+        {
+            VisitDate = visitDateCheckin_tb.Text;
+        }
+        else
+        {
+            VisitDate = "";
+        }
+
+        // Check if visit date has been selected or entered
+        if (!string.IsNullOrEmpty(VisitDate))
+        {
+
+            // get visit id of selected visit date
+            if (!string.IsNullOrEmpty(VisitDate))
+            {
+                VisitID = Conversions.ToString(VisitData.GetVisitIDFromDate(VisitDate));
+            }
+
+            // Add visit ID to URL
+            URL += "?b=" + VisitID;
+
+            Page.ClientScript.RegisterStartupScript(GetType(), "OpenInNewWindow", "OpenLinkInNewTab('" + URL + "');", true);
+        }
+        else
+        {
+            Page.ClientScript.RegisterStartupScript(GetType(), "OpenInNewWindow", "OpenLinkInNewTab('" + URL + "');", true);
+        }
+    }
+
+    protected void addVol_btn_Click(object sender, EventArgs e)
+    {
+
+        // Reveal add volunteer section if not revealed
+        if (addVol_div.Visible == false)
+        {
+            addVol_div.Visible = true;
+            scheduleVol_div.Visible = false;
+            checkIn_div.Visible = false;
+
+            // Clear error label and visit date
+            error_lbl.Text = "";
+            visitDateCheckin_tb.Text = "";
+            volNameSchedule_ddl.SelectedIndex = 0;
+
+            LoadData();
+
+        }
+
+    }
+
+    protected void scheduleVol_btn_Click(object sender, EventArgs e)
+    {
+
+        // Reveal add volunteer section if not revealed
+        if (scheduleVol_div.Visible == false)
+        {
+            addVol_div.Visible = false;
+            scheduleVol_div.Visible = true;
+            checkIn_div.Visible = false;
+
+            // Clear error label and visit date
+            error_lbl.Text = "";
+            visitDateCheckin_tb.Text = "";
+
+            LoadData();
+        }
+
+    }
+
+    protected void checkIn_btn_Click(object sender, EventArgs e)
+    {
+
+        // Reveal check in section
+        if (checkIn_div.Visible == false)
+        {
+            checkIn_div.Visible = true;
+            addVol_div.Visible = false;
+            scheduleVol_div.Visible = false;
+
+            // Clear error label and visit date
+            error_lbl.Text = "";
+            visitDateCheckin_tb.Text = "";
+            volNameSchedule_ddl.SelectedIndex = 0;
+
+            LoadData();
+        }
+
+    }
+
+    protected void viewVol_btn_Click(object sender, EventArgs e)
+    {
+        addVol_div.Visible = false;
+        scheduleVol_div.Visible = false;
+        checkIn_div.Visible = false;
+        viewVol_div.Visible = false;
+        viewVolControls_div.Visible = true;
+
+        LoadVolunteerNameDDL(volNameViewVolCtrl_ddl);
+    }
+
+
+
+    // All textbox functions
+    protected void visitDateCheckin_tb_TextChanged(object sender, EventArgs e)
+    {
+        if (visitDateCheckin_tb.Text != default)
+        {
+            schoolNameCheckin_ddl.Visible = true;
+            schoolNameCheckin_a.Visible = true;
+
+            // Load schools associated with selected visit date
+            SchoolData.LoadVisitDateSchoolsDDL(visitDateCheckin_tb.Text, schoolNameCheckin_ddl);
+
+            // Add an option to show all the volunteers for a visit date
+            schoolNameCheckin_ddl.Items.RemoveAt(0);
+            schoolNameCheckin_ddl.Items.Insert(0, "Show All Schools");
+
+            // Assign colors to school DDL text
+            switch (schoolNameCheckin_ddl.Items.Count)
+            {
+                case 1:
+                    {
+                        break;
+                    }
+                // The first item in the DDL is the Show All Schools item, does not need to change color
+                case 2:
+                    {
+                        schoolNameCheckin_ddl.Items(1).Attributes.CssStyle.Add("background-color", "#afd8ff");
+                        break;
+                    }
+                case 3:
+                    {
+                        schoolNameCheckin_ddl.Items(1).Attributes.CssStyle.Add("background-color", "#afd8ff");
+                        schoolNameCheckin_ddl.Items(2).Attributes.CssStyle.Add("background-color", "#ffafaf");
+                        break;
+                    }
+
+                case 4:
+                    {
+                        schoolNameCheckin_ddl.Items(1).Attributes.CssStyle.Add("background-color", "#afd8ff");
+                        schoolNameCheckin_ddl.Items(2).Attributes.CssStyle.Add("background-color", "#ffafaf");
+                        schoolNameCheckin_ddl.Items(3).Attributes.CssStyle.Add("background-color", "#bfffaf");
+                        break;
+                    }
+                case 5:
+                    {
+                        schoolNameCheckin_ddl.Items(1).Attributes.CssStyle.Add("background-color", "#afd8ff");
+                        schoolNameCheckin_ddl.Items(2).Attributes.CssStyle.Add("background-color", "#ffafaf");
+                        schoolNameCheckin_ddl.Items(3).Attributes.CssStyle.Add("background-color", "#bfffaf");
+                        schoolNameCheckin_ddl.Items(4).Attributes.CssStyle.Add("background-color", "#afc3ff");
+                        break;
+                    }
+                case 6:
+                    {
+                        schoolNameCheckin_ddl.Items(1).Attributes.CssStyle.Add("background-color", "#afd8ff");
+                        schoolNameCheckin_ddl.Items(2).Attributes.CssStyle.Add("background-color", "#ffafaf");
+                        schoolNameCheckin_ddl.Items(3).Attributes.CssStyle.Add("background-color", "#bfffaf");
+                        schoolNameCheckin_ddl.Items(4).Attributes.CssStyle.Add("background-color", "#afc3ff");
+                        schoolNameCheckin_ddl.Items(5).Attributes.CssStyle.Add("background-color", "#ffd8af");
+                        break;
+                    }
+            }
+
+            LoadData();
+        }
+    }
+
+    protected void visitDateViewVolCtrl_tb_TextChanged(object sender, EventArgs e)
+    {
+        if (visitDateViewVolCtrl_tb.Text != default)
+        {
+
+            // Make vol name ddl selected at 0
+            volNameViewVolCtrl_ddl.SelectedIndex = 0;
+
+            // Load gridview
+            LoadViewVolCtrlGridview();
+        }
+    }
+
+
+
+    // All ddl functions
+    protected void schoolNameSchedule_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (schoolNameSchedule_ddl.SelectedIndex != 0)
+        {
+
+            // Get school id and load volunteer names from school
+            string SID = SchoolData.GetSchoolID(schoolNameSchedule_ddl.SelectedValue).ToString();
+            LoadVolunteerNameDDL(volNameSchedule_ddl, SID);
+        }
+        else
+        {
+            LoadVolunteerNameDDL(volNameSchedule_ddl);
+        }
+    }
+
+    protected void schoolNameCheckin_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        LoadData();
+    }
+
+    protected void volNameSchedule_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (volNameSchedule_ddl.SelectedIndex != 0)
+        {
+            AddVolIntoTable();
+
+            // Reveal table div
+            scheduledVol_div.Visible = true;
+        }
+
+    }
+
+    protected void volNameViewVolCtrl_ddl_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (volNameViewVolCtrl_ddl.SelectedIndex != 0)
+        {
+
+            // Make visit date clear
+            visitDateViewVolCtrl_tb.Text = "";
+
+            // Load gridview
+            LoadViewVolCtrlGridview();
+        }
+    }
+}

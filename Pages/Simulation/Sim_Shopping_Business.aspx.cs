@@ -70,10 +70,11 @@ public partial class Sim_Shopping_Business : System.Web.UI.Page
                     //Assign script to label in popup
                     lblPopupText.Text = Scripts.Popup;
                 }
-            }
 
-            //Load Data
-            LoadData(StudentID);       
+                //Load Data
+                LoadData(StudentID);   
+
+            }              
         }
     }
 
@@ -132,9 +133,16 @@ public partial class Sim_Shopping_Business : System.Web.UI.Page
                 break;
         }
 
+        //Load scripts
+        lblKioskScript.Text = Scripts.Shopping.ToString();
+        lblKioskScript2.Text = Scripts.Shopping2.ToString();
+
+        //Load actions buttons
+        ActionButtons();
+
         //Load table
-        //try
-        //{
+        try
+        {
             con.ConnectionString = ConnectionString;
             con.Open();
             Review_sds.ConnectionString = ConnectionString;
@@ -145,78 +153,41 @@ public partial class Sim_Shopping_Business : System.Web.UI.Page
             cmd.Dispose();
             con.Close();
 
-        //}
-        //catch
-        //{
-        //    lblError.Text = "Error in LoadData(). Cannot load item table.";
-        //    return;
-        //}
-    }
-
-
-
-    protected void dgvShoppingItems_RowUpdating(object sender, GridViewUpdateEventArgs e)
-    {
-
-    }
-
-    protected void dgvShoppingItems_RowEditing(object sender, GridViewEditEventArgs e)
-    {
-        dgvShoppingItems.EditIndex = e.NewEditIndex;
-        LoadData(StudentID);
-    }
-
-    protected void dgvShoppingItems_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
-    {
-        dgvShoppingItems.EditIndex = -1;
-        LoadData(StudentID);
-    }
-
-    protected void dgvShoppingItems_PageIndexChanging(object sender, GridViewPageEventArgs e)
-    {
-        dgvShoppingItems.PageIndex = e.NewPageIndex;
-        LoadData(StudentID);
-    }
-
-    protected void dgvShoppingItems_RowDataBound(object sender, GridViewRowEventArgs e)
-    {
-        if ((e.Row.RowType == DataControlRowType.DataRow))
+        }
+        catch
         {
-            //string lblJobTitle = (e.Row.FindControl("lblJobTitleDGV") as Label).Text;
-            //string lblJobType = (e.Row.FindControl("lblJobTypeDGV") as Label).Text;
-            //string lblMaritalStatus = (e.Row.FindControl("lblMaritalStatusDGV") as Label).Text;
-            //string lblNumOfChild = (e.Row.FindControl("lblNumOfChildren") as Label).Text;
+            lblError.Text = "Error in LoadData(). Cannot load item table.";
+            return;
+        }
 
-            //DropDownList ddlJobTitle = e.Row.FindControl("ddlJobTitleDGV") as DropDownList;
-            //DropDownList ddlJobType = e.Row.FindControl("ddlJobTypeDGV") as DropDownList;
-            //DropDownList ddlMaritalStatus = e.Row.FindControl("ddlMaritalStatusDGV") as DropDownList;
-            //DropDownList ddlNumOfChild = e.Row.FindControl("ddlNumOfChildren") as DropDownList;
+        //Load budget in progress bar
 
-            ////Load gridview job DDLs with job title
-            ////Gridviews.JobTitle(ddlJobTitle, lblJobTitle);
+        //Load label spent, calculate remaining
 
-            ////Find job type
-            //if (lblJobType != "")
-            //{
-            //    ddlJobType.Items.FindByValue(lblJobType).Selected = true;
-            //}
+        //Load selected items 
+    }
 
-            ////Find job type
-            //if (lblMaritalStatus != "")
-            //{
-            //    ddlMaritalStatus.Items.FindByValue(lblMaritalStatus).Selected = true;
-            //}
+    protected void ActionButtons()
+    {
+        //Check for action buttons
+        var Actions = Businesses.GetActionButtons(BusinessID);
 
-            ////Find job type
-            //if (lblNumOfChild != "")
-            //{
-            //    ddlNumOfChild.Items.FindByValue(lblNumOfChild).Selected = true;
-            //}
-
+        if (Actions.Btn1SText != "")
+        {
+            btnAction.Text = Actions.Btn1SText;
+            btnAction.Visible = true;
+        }
+        if (Actions.BtnSText2 != "")
+        {
+            btnAction2.Text = Actions.BtnSText2;
+            btnAction2.Visible = true;
+        }
+        if (Actions.BtnSText3 != "")
+        {
+            btnAction3.Text = Actions.BtnSText3;
+            btnAction3.Visible = true;
         }
     }
-
-
 
 
     protected void btnNext_Click(object sender, EventArgs e)
@@ -254,18 +225,37 @@ public partial class Sim_Shopping_Business : System.Web.UI.Page
 
     }
 
+
+
     protected void chkBuy_CheckedChanged(object sender, EventArgs e)
     {
+        CheckBox chk = (CheckBox)sender;
+        GridViewRow dgv = (GridViewRow)chk.NamingContainer;
+        int ItemID;
+        
         //If checked
+        if (chk.Checked == true)
+        {
+            //Get item ID
+            ItemID = Convert.ToInt16(dgv.Cells[0].Text);
 
-        //Insert item into studentShopping
+            //Insert item into studentShopping
+            Sim.InsertShoppingItem(25, StudentID, BusinessID, ItemID);
 
-        //Load data
+            //Load data
+        }
 
         //If unchecked
+        else
+        {
+            //Get item ID
+            ItemID = Convert.ToInt16(dgv.Cells[0].Text);
 
-        //Remove item from studentShopping
+            //Remove item from studentShopping
+            Sim.DeleteShoppingItem(25, StudentID, BusinessID, ItemID);
 
-        //Load data
+            //Load data
+        }
+
     }
 }

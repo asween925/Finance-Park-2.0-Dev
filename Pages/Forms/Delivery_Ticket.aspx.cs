@@ -60,7 +60,7 @@ public partial class Delivery_Ticket : Page
                 string VisitID = Request["b"];
 
                 //Assign visit date to text box
-                tbVisitDate.Text = DateTime.Parse(VisitData.GetVisitDateFromID(VisitID).ToString()).ToString("yyyy-MM-dd");
+                tbVisitDate.Text = DateTime.Parse(VisitData.GetVisitDateFromID(int.Parse(VisitID)).ToString()).ToString("yyyy-MM-dd");
 
                 //Load data
                 LoadData();

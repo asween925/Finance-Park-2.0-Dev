@@ -307,7 +307,7 @@ nav {
 
             nav ul li ul li a:hover {
                 background: #ebebeb;
-                border-left: 4px solid #3498db;
+                border-left: 4px solid green;
             }
 
 /*-----Navigation Bar End-----*/

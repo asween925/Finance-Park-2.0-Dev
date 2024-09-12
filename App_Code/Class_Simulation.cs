@@ -501,4 +501,49 @@ public class Class_Simulation
 
         return Total;
     }
+
+    public void InsertShoppingItem (int VisitID, int StudentID, int BusinessID, int ItemID)
+    {
+        //string SQLBudget = "";
+        string SQL = "INSERT INTO studentShoppingFP (visitID, studentID, businessID, itemID) VALUES (@visitID, @studentID, @businessID, @itemID)";
+
+        //Insert new student into budgets table
+        using (var con = new SqlConnection(ConnectionString))
+        {
+            using (var cmd = new SqlCommand(SQL))
+            {
+                cmd.Parameters.Add("@visitID", SqlDbType.Int).Value = VisitID;
+                cmd.Parameters.Add("@studentID", SqlDbType.Int).Value = StudentID;
+                cmd.Parameters.Add("@businessID", SqlDbType.Int).Value = BusinessID;
+                cmd.Parameters.Add("@itemID", SqlDbType.Int).Value = ItemID;
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+        }
+    }
+
+    public void DeleteShoppingItem(int VisitID, int StudentID, int BusinessID, int ItemID)
+    {
+        string SQL = "DELETE FROM studentShoppingFP WHERE visitID=@visitID AND studentID=@studentID AND businessID=@businessID AND itemID=@itemID";
+
+        //Insert new student into budgets table
+        using (var con = new SqlConnection(ConnectionString))
+        {
+            using (var cmd = new SqlCommand(SQL))
+            {
+                cmd.Parameters.Add("@visitID", SqlDbType.Int).Value = VisitID;
+                cmd.Parameters.Add("@studentID", SqlDbType.Int).Value = StudentID;
+                cmd.Parameters.Add("@businessID", SqlDbType.Int).Value = BusinessID;
+                cmd.Parameters.Add("@itemID", SqlDbType.Int).Value = ItemID;
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+        }
+    }
+
+    //public 
 }

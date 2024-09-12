@@ -477,6 +477,75 @@ h3 {
 
 
 
+/*-----Gridview-----*/
+
+.mydatagrid {
+    width: 80%;
+    border: solid 2px black;
+    min-width: 80%;
+}
+
+.gridviewHeader {
+    background-color: #00a632;
+    color: White;
+    height: 25px;
+    text-align: center;
+}
+
+.gridviewRows {
+    color: #000;
+}
+
+    .gridviewRows:hover {
+        background-color: #52bb72;
+        color: #fff;
+    }
+
+.mydatagrid a /** FOR THE PAGING ICONS **/ {
+    background-color: Transparent;
+    padding: 5px 5px 5px 5px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+    .mydatagrid a:hover /** FOR THE PAGING ICONS HOVER STYLES**/ {
+        background-color: #000;
+        color: #fff;
+    }
+
+.mydatagrid span /** FOR THE PAGING ICONS CURRENT PAGE INDICATOR **/ {
+    background-color: #fff;
+    color: #000;
+    padding: 5px 5px 5px 5px;
+}
+
+.gridviewPager {
+    background-color: #00a632;
+    color: White;
+    height: 30px;
+    text-align: left;
+}
+
+.mydatagrid td {
+    padding: 5px;
+}
+
+.mydatagrid th {
+    padding: 5px;
+}
+
+.gridviewDiv {
+    overflow-x: scroll;
+    width: 90%;
+    height: 65%;
+}
+
+/***********Gridview CSS End************/
+
+
+
+
 /************************ SPECIFIC PAGES CLASSES *************************/
 
 /*-----Sim Start-----*/

@@ -1,0 +1,111 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Parent_Letter.aspx.cs" Inherits="Parent_Letter" %>
+
+<!doctype html>
+<html>
+<head runat="server">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0; maximum-scale=2.0; user-scalable=0;">
+
+    <title>FP 2.0 - Parent Letter</title>
+
+    <link href="../../CSS/StaffPages.css" rel="stylesheet" media="screen" type="text/css">
+    <link href="../../CSS/Print.css" rel="stylesheet" media="print" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" type="image/png" href="../../Media/faviconFP.png" />
+
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+</head>
+
+<body>
+    <form id="EMS_Form" runat="server">
+
+        <%--Header information--%>
+        <header class="headerTop no-print"><a style="float: left; padding-top: 2px;">Finance Park 2.0</a><a style="float: right; padding-right: 30px; padding-top: 2px;"><asp:Label ID="lblHeaderSchoolName" Text="School Name Here" runat="server"></asp:Label></a></header>
+
+        <%--Navigation bar--%>
+        <div id="nav-placeholder">
+        </div>
+
+        <script>
+            $(function () {
+                $("#nav-placeholder").load("../../nav.html");
+            });
+        </script>
+
+<%--Content--%>
+<div class="content">
+    <h2 class="h2 no-print">Parent Letter</h2>
+    <h3 class="no-print">This page is used to save a PDF of the parent letter. Select a visit date and click 'Save as PDF' to open the print window. When the print window appears, select Save as PDF under printers.</h3>
+    <p class="no-print">Visit Date:</p>
+    <asp:TextBox ID="tbVisitDate" runat="server" TextMode="Date" CssClass="textbox no-print" AutoPostBack="true"></asp:TextBox><a class="no-print">&ensp;</a><asp:Label ID="lblError" runat="server" Font-Bold="true" Font-Size="X-Large" ForeColor="Red"></asp:Label>
+    <p class="no-print" id="pSchoolName" runat="server" visible="false">School Name (Used to Get Volunteer Range):</p>
+    <asp:DropDownList ID="ddlSchoolName" runat="server" CssClass="ddl no-print" AutoPostBack="true" Visible="false"></asp:DropDownList>
+    <p class="no-print" id="pTeacherName" runat="server" visible="false">Teacher Name:</p>
+    <asp:DropDownList ID="ddlTeacherName" runat="server" CssClass="ddl no-print" AutoPostBack="true" Visible="false"></asp:DropDownList>
+    <br class="no-print" /><br class="no-print" />
+    <asp:Button ID="btnPrint" runat="server" Text="Save as PDF" CssClass="button no-print" />
+    <br class="no-print" />
+
+    <%--Letter--%>
+    <div id="divLetter" runat="server" visible="false">
+        <p>Date: <asp:Label ID="lblVisitDate" runat="server"></asp:Label></p>
+        <p>Dear Parents,</p>
+        <p>On <asp:Label ID="lblVisitDateLetter" runat="server"></asp:Label> our class will be going to Finance Park. This trip is a required part of the Personal Financial Management curriculum taught to all Pinellas County Schools students. <a style="font-weight: bold;">Finance Park is part of the Gus A. Stavros Institute and Pinellas County Schools.</a></p>
+        <p>Each student will become a Finance Park citzen and assume a fictional life scenario complete with a career, annual salary, family status and investments. Students will experience money management firsthand by computing their net monthly income and creating a balance budget, providing for their family and not exceeding their net monthly income.</p>
+        <p>We need <asp:TextBox ID="tbVolRange" runat="server"></asp:Textbox> volunteers to assist us at Finance Park. <a style="font-weight: bold;">We need your help!</a></p>
+        <p style="text-align: center; font-weight: bold; text-decoration: underline;">What is my role as a volunteer?</p>
+        <p>You are assigned to work in a business with a small group of children. Your duties will include:</p>
+        <ul>
+            <li>Facilitate group discussions.</li>
+            <li>Assist students with completeing tasks on time.</li>
+            <li>Provide assistance and guidance as budgets are created.</li>
+            <li>Enjoy lunch with your child during their assigned lunch break.</li>
+        </ul>
+        <p><a style="font-weight: bold;">Important:</a> You must be an active, approved volunteer at your child's school to participate. You can contact your school's Community Liaison to confirm your eligibility. Please verify your interest in participating in this simulation with your child's teacher.</p>
+        <p>We look forward to your participation in this exciting simulation experience! Please complete the form below and return by: <asp:Textbox ID="tbReplyBy" runat="server"></asp:Textbox></p>
+
+        <table style="margin-left: auto; margin-right: auto; text-align: center; width: 100%;">
+            <tr>
+                <th style="text-decoration: underline;">Teacher</th>
+                <th style="text-decoration: underline;">Volunteer Arrival Time</th>
+                <th style="text-decoration: underline;">Volunteer Dismissal Time</th>
+            </tr>
+            <tr>
+                <td><asp:Textbox ID="tbTeacherName" runat="server"></asp:Textbox></td>
+                <td><asp:Textbox ID="tbVolArrive" runat="server"></asp:Textbox></td>
+                <td><asp:Textbox ID="tbVolDepart" runat="server"></asp:Textbox></td>
+            </tr>
+        </table>
+        <p style="font-weight: bold;">Tear on the dotted line and return bottom portion to school. Keep top portion for future reference.</p>
+    </div>
+
+    <%--Return Slip--%>
+    <div id="divReturnSlip" runat="server" visible="false" class="Parent_Letter_Slip">
+        <h4 style="text-align: center;">FINANCE PARK RESPONSE FORM</h4>
+        <p>Name:______________________________________________________________________________________________</p>
+        <p>Child's Name:_____________________________________________________________________________________</p>
+        <p>Email Address:_____________________________________________________________________________________</p>
+        <p>Phone Number:_____________________________________</p>
+        <br />
+        <br />
+        <p>______ I will volunteer at Finance Park on <asp:Label ID="lblVisitDateSlip1" runat="server" Font-Bold="true"></asp:Label> and will attend the mandatory training on at <asp:Label ID="lblTrainingTimeSlip" runat="server" Font-Bold="true"></asp:Label>.</p>
+    </div>
+</div>
+
+        <asp:HiddenField ID="hfCurrentVisitID" runat="server" />
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="Scripts.js"></script>
+        <script>
+            /* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
+            $(".sub-menu ul").hide();
+            $(".sub-menu a").click(function () {
+                $(this).parent(".sub-menu").children("ul").slideToggle("100");
+                $(this).find(".right").toggleClass("fa-caret-up fa-caret-down");
+            });
+        </script>
+
+        <asp:SqlDataSource ID="Review_sds" runat="server"></asp:SqlDataSource>
+    </form>
+</body>
+</html>

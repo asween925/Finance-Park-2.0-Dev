@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Sim_Shopping_Business.aspx.cs" Inherits="Sim_Shopping_Business" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Sim_Shopping_Business.aspx.cs" EnableEventValidation="false" Inherits="Sim_Shopping_Business" %>
 
 <!DOCTYPE html>
 
@@ -16,20 +16,22 @@
 <body>
     <form id="EMS_Form" runat="server">
         <div id="Site_Wrap_Fullscreen">
-            
+
             <%--Header--%>
             <div id="divHeader" runat="server" class="header">
                 <div id="nav-placeholder"></div>
-                <a class="headerTitle" >Shopping</a>
-                <a><asp:Image ID="imgStartLogo" runat="server" ImageUrl="~/Media/FP_Logo.png" CssClass="headerFPLogo" /></a>               
+                <a class="headerTitle">Shopping</a>
+                <a>
+                    <asp:Image ID="imgStartLogo" runat="server" ImageUrl="~/Media/FP_Logo.png" CssClass="headerFPLogo" /></a>
             </div>
 
             <%--Blured Area--%>
             <div id="blur" class="blurArea">
-               
+
                 <%--Directions & Unlocked Biz--%>
-                <div class="directionsBlock2">                    
-                    <a class="directions"><asp:Image ID="imgBusinessIcon" runat="server" /><asp:Label ID="lblBusinessName" runat="server" Text="Business Name"></asp:Label></a>&ensp;
+                <div class="directionsBlock2">
+                    <a class="directions">
+                        <asp:Image ID="imgBusinessIcon" runat="server" /><asp:Label ID="lblBusinessName" runat="server" Text="Business Name"></asp:Label></a>&ensp;
                     <a>
                         <asp:Label ID="lblError" runat="server" CssClass="error_label" Text="test"></asp:Label>&ensp;<asp:Button ID="btnBack" runat="server" Text="Select Business" CssClass="button" OnClick="btnBack_Click" />
                     </a>
@@ -47,9 +49,10 @@
                             </div>
                         </div>
                         <div>
-                            $0<a style="padding-right: 25%; float: right;"><asp:Label ID="lblStudentBudget" runat="server"></asp:Label> Your Budget</a>
+                            $0<a style="padding-right: 25%; float: right;"><asp:Label ID="lblStudentBudget" runat="server"></asp:Label>
+                                Your Budget</a>
                         </div>
-        
+
                     </div>
                     <div class="Sim_Shopping_Spending">
                         <table class="Sim_Shopping_Student_Budget_Table">
@@ -85,38 +88,85 @@
                         <div class="Sim_Shopping_Script_Container">
                             <asp:Label ID="lblKioskScript" runat="server" Text="The kiosk script for the business will go here." CssClass="Sim_Shopping_Script1"></asp:Label>
                             <br />
-                            <asp:Label ID="lblKioskScript2" runat="server" Text="Tiny script here."  CssClass="Sim_Shopping_Script2"></asp:Label>
+                            <asp:Label ID="lblKioskScript2" runat="server" Text="Tiny script here." CssClass="Sim_Shopping_Script2"></asp:Label>
                         </div>
-                        
+
                         <%--Price section--%>
                         <div class="Sim_Shopping_Price_Container">
-                            <asp:Button ID="btnAction" runat="server" Text="Action" CssClass="button" Visible="true" OnClick="btnAction_Click" /><asp:Button ID="btnAction2" runat="server" Text="Action" CssClass="button" Visible="true" OnClick="btnAction2_Click" /><asp:Button ID="btnAction3" runat="server" Text="Action" CssClass="button" Visible="true" OnClick="btnAction3_Click" />
+                            <asp:Button ID="btnAction" runat="server" Text="Action" CssClass="button" Visible="false" OnClick="btnAction_Click" /><asp:Button ID="btnAction2" runat="server" Text="Action" CssClass="button" Visible="false" OnClick="btnAction2_Click" /><asp:Button ID="btnAction3" runat="server" Text="Action" CssClass="button" Visible="false" OnClick="btnAction3_Click" />
+
+                            <%--Shopping Price Table--%>
                             <table class="Sim_Shopping_Price_Table">
                                 <tr>
                                     <td>Your total cost: </td>
-                                    <td><asp:Label ID="lblTotalCost" runat="server" Text="$0"></asp:Label></td>
-                                    <td><asp:Label ID="lblItemsSelected" runat="server" Text="0"></asp:Label> item(s) selected</td>
+                                    <td>
+                                        <asp:Label ID="lblTotalCost" runat="server" Text="$0"></asp:Label></td>
+                                    <td>
+                                        <asp:Label ID="lblItemsSelected" runat="server" Text="0"></asp:Label>
+                                        item(s) selected</td>
+                                </tr>
+                            </table>
+
+                            <%--Credit Card Table--%>
+                            <table class="Sim_Shopping_Price_Table">
+                                <tr>
+                                    <td>Existing Credit: </td>
+                                    <td>
+                                        <asp:Label ID="lblCCExisting" runat="server" Text="$0"></asp:Label></td>
+                                </tr>
+                                <tr>
+                                    <td>Minimum Monthly Payment: </td>
+                                    <td>
+                                        <asp:Textbox ID="tbCCMinPay" runat="server" textmode="Number" CssClass="textbox"></asp:Textbox></td>
                                 </tr>
                             </table>
                         </div>
 
                         <%--Data gridview--%>
-                        <div>
-                            <asp:GridView ID="dgvShoppingItems" runat="server" AutoGenerateColumns="False" AutoGenerateEditButton="true" DataKeyNames="ID" CellPadding="5" Height="50" AllowPaging="True" ShowHeaderWhenEmpty="True" Font-Size="Medium" OnRowEditing="dgvShoppingItems_RowEditing" OnRowCancelingEdit="dgvShoppingItems_RowCancelingEdit" OnRowUpdating="dgvShoppingItems_RowUpdating" OnRowDataBound="dgvShoppingItems_RowDataBound" OnPageIndexChanging="dgvShoppingItems_PageIndexChanging" PagerStyle-CssClass="pager" HeaderStyle-CssClass="header" RowStyle-CssClass="rows" Visible="true">
+                        <div style="padding-top: 5px;">
+                            <asp:GridView ID="dgvShoppingItems" HorizontalAlign="Center" runat="server" AutoGenerateColumns="False" DataKeyNames="ID" CellPadding="5" Height="50" AllowPaging="True"
+                                ShowHeaderWhenEmpty="True" Font-Size="Medium" PagerStyle-CssClass="gridviewPager" HeaderStyle-CssClass="gridviewHeader" RowStyle-CssClass="gridviewRows" Visible="true">
                                 <Columns>
-                                    <asp:BoundField DataField="ID" HeaderText="Persona Number" Visible="false" />
-                                    <asp:BoundField DataField="itemName" HeaderText="Item Name" />
-                                    <asp:BoundField DataField="cost" HeaderText="Cost" />
-                                    <asp:BoundField DataField="category" HeaderText="Category" />
-                                    <asp:ImageField HeaderText="Photo"></asp:ImageField>
+                                    <asp:BoundField DataField="ID" HeaderText="ID" ReadOnly="true" />
+                                    <asp:BoundField DataField="itemName" HeaderText="Item Name" ReadOnly="true" />
+                                    <asp:BoundField DataField="cost" HeaderText="Cost" DataFormatString="{0:C}" ReadOnly="true" />
+                                    <asp:BoundField DataField="category" HeaderText="Category" ReadOnly="true" />
+                                    <asp:ImageField HeaderText="Photo" ReadOnly="true"></asp:ImageField>
                                     <asp:TemplateField HeaderText="Buy Item?">
                                         <ItemTemplate>
-                                            <asp:Checkbox ID="chkBuy" runat="server" OnCheckedChanged="chkBuy_CheckedChanged" />
+                                            <asp:CheckBox ID="chkBuy" runat="server" AutoPostBack="true" OnCheckedChanged="chkBuy_CheckedChanged" />
                                         </ItemTemplate>
-                                    </asp:TemplateField>                                    
+                                    </asp:TemplateField>
                                 </Columns>
                             </asp:GridView>
                         </div>
+
+                        <%--Credit Card Calculator--%>
+                        <div id="divRetire" runat="server" class="Sim_Business_Retire" visible="true">
+                            <a class="Sim_Business_Retire_Header">Credit Debt Calculator</a>
+
+                            <table style="padding-top: 6px;">
+                                <tr>
+                                    <td>Credit Card Debt: </td>
+                                    <td>
+                                        <asp:Label ID="lblCCDebt" runat="server" Text="$0"></asp:Label></td>
+                                </tr>
+                                <tr>
+                                    <td>Rate of Interest: </td>
+                                    <td>
+                                        <asp:Label ID="lblCCInterest" runat="server" Text="$0"></asp:Label></td>
+                                </tr>
+                                <tr>
+                                    <td>Minimum Monthly Payment: </td>
+                                    <td>
+                                        <asp:Label ID="lblCCMinPay" runat="server" Text="$0"></asp:Label></td>
+                                </tr>
+                            </table>
+
+                            <p>You will end up paying:</p>
+                            <%--<asp:Button ID="btnRetireTotal" runat="server" Text="$0" CssClass="button" Enabled="false" OnClick="btnRetireTotal_Click" />--%>
+                        </div>
+
                     </div>
 
                     <%--Content - Left Block--%>
@@ -125,10 +175,14 @@
                             <p>Sponsored By:</p>
                         </div>
                         <div style="padding-left: 5px; padding-right: 5px;">
-                            <a id="pImg1" runat="server" visible="false"><asp:Image ID="imgSponsorLogo1" runat="server" CssClass="Sim_Sponsor_Img" AlternateText="SponsorLogo1" /></a>
-                            <a id="pImg2" runat="server" visible="false"><asp:Image ID="imgSponsorLogo2" runat="server" CssClass="Sim_Sponsor_Img" AlternateText="SponsorLogo2" /></a>
-                            <a id="pImg3" runat="server" visible="false"><asp:Image ID="imgSponsorLogo3" runat="server" CssClass="Sim_Sponsor_Img" AlternateText="SponsorLogo3" /></a>
-                            <a id="pImg4" runat="server" visible="false"><asp:Image ID="imgSponsorLogo4" runat="server" CssClass="Sim_Sponsor_Img" AlternateText="SponsorLogo4" /></a>
+                            <a id="pImg1" runat="server" visible="false">
+                                <asp:Image ID="imgSponsorLogo1" runat="server" CssClass="Sim_Sponsor_Img" AlternateText="SponsorLogo1" /></a>
+                            <a id="pImg2" runat="server" visible="false">
+                                <asp:Image ID="imgSponsorLogo2" runat="server" CssClass="Sim_Sponsor_Img" AlternateText="SponsorLogo2" /></a>
+                            <a id="pImg3" runat="server" visible="false">
+                                <asp:Image ID="imgSponsorLogo3" runat="server" CssClass="Sim_Sponsor_Img" AlternateText="SponsorLogo3" /></a>
+                            <a id="pImg4" runat="server" visible="false">
+                                <asp:Image ID="imgSponsorLogo4" runat="server" CssClass="Sim_Sponsor_Img" AlternateText="SponsorLogo4" /></a>
                         </div>
                     </div>
                     <br />
@@ -141,7 +195,8 @@
             <%--Popup--%>
             <div id="popup">
                 <p class="popup_header">
-                    <asp:Label ID="lblPopupText" runat="server" Text="Popup Text"></asp:Label></p>
+                    <asp:Label ID="lblPopupText" runat="server" Text="Popup Text"></asp:Label>
+                </p>
                 <asp:TextBox ID="tbPopupTB" runat="server" CssClass="popup_textbox" TextMode="Number"></asp:TextBox>
                 <br />
                 <asp:Label ID="lblErrorPopup" runat="server" CssClass="error_label"></asp:Label>
@@ -149,7 +204,8 @@
                 <asp:Button ID="btnEnter" runat="server" Text="Enter" CssClass="button" OnClick="btnEnter_Click" /><asp:Button ID="btnCancel" runat="server" OnClick="btnCancel_Click" CssClass="buttonReset" Text="Cancel"></asp:Button>
             </div>
 
-            <br /><br />
+            <br />
+            <br />
             <asp:HiddenField ID="hfMaxBudget" runat="server" />
             <asp:SqlDataSource ID="Review_sds" runat="server"></asp:SqlDataSource>
         </div>
@@ -157,7 +213,7 @@
         <script type="text/javascript" src="../../Scripts/Scripts.js"></script>
         <script>
             $(function () {
-                 $("#nav-placeholder").load("../../navsim.html");
+                $("#nav-placeholder").load("../../navsim.html");
             });
         </script>
 

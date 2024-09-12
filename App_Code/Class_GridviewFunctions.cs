@@ -242,8 +242,8 @@ public class Class_GridviewFunctions
     //Gets all persona names in the personasFP tabel and inserts them into a DDL
     public void Sponsors(DropDownList ddlSponsors, string lblSponsors)
     {
-        ddlSponsors.DataSource = GetData("SELECT DISTINCT id FROM sponsorsFP");
-        ddlSponsors.DataTextField = "id";
+        ddlSponsors.DataSource = GetData("SELECT DISTINCT id, sponsorName FROM sponsorsFP");
+        ddlSponsors.DataTextField = "sponsorName";
         ddlSponsors.DataValueField = "id";
         ddlSponsors.DataBind();
         ddlSponsors.Items.Insert(0, "");

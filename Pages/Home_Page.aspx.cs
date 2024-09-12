@@ -59,25 +59,17 @@ public partial class Home_Page : System.Web.UI.Page
         // Populating school header
         lblHeaderSchoolName.Text = SchoolHeader.GetSchoolHeader().ToString();
 
-        //Test api values
-        var client = new HttpClient();
+        //Test api values for weather
+        //var client = new HttpClient();
+        //var request = new HttpRequestMessage(HttpMethod.Get, "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/Largo%2C%20FL?unitGroup=metric&key=US8HBUA3APA562EDF8A4K7W2L&contentType=json");
+        //var response = await client.SendAsync(request);
+        //response.EnsureSuccessStatusCode(); //Throw exception if error
+        //var body = await response.Content.ReadAsStringAsync();
+        //dynamic weather = JsonConvert.DeserializeObject(body);
+        //var day = weather.days;
+        //double MaxTemp = day[0].tempmax;
 
-        var request = new HttpRequestMessage(HttpMethod.Get, "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/Largo%2C%20FL?unitGroup=metric&key=US8HBUA3APA562EDF8A4K7W2L&contentType=json");
-        //var request = new HttpRequestMessage(HttpMethod.Get, "https://www.dnd5eapi.co/api/ability-scores/cha");
-        var response = await client.SendAsync(request);
-        response.EnsureSuccessStatusCode(); //Throw exception if error
-
-        var body = await response.Content.ReadAsStringAsync();
-
-        dynamic weather = JsonConvert.DeserializeObject(body);
-
-        var day = weather.days;
-
-        double MaxTemp = day[0].tempmax;
-
-        //Convert to F
-        MaxTemp = (MaxTemp * 9) / 5 + 32;
-
-        lblError.Text = MaxTemp.ToString();
+        ////Convert to F
+        //MaxTemp = (MaxTemp * 9) / 5 + 32;
     }
 }

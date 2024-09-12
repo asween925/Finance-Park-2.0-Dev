@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Runtime.Remoting.Lifetime;
+using System.Threading;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -23,6 +24,7 @@ public partial class Edit_Visit : Page
     private Class_SchoolData SchoolData = new Class_SchoolData();
     private Class_SchoolHeader SchoolHeader = new Class_SchoolHeader();
     private Class_GridviewFunctions Gridviews = new Class_GridviewFunctions();
+    private Class_SQLCommands SQLC = new Class_SQLCommands();
     private int VisitID;
 
     public Edit_Visit()
@@ -55,7 +57,8 @@ public partial class Edit_Visit : Page
     public void LoadData()
     {
         string VisitDate = tbVisitDate.Text;
-        int VisitID = int.Parse(VisitData.GetVisitIDFromDate(tbVisitDate.Text).ToString());
+        int VIDOfDate = int.Parse(VisitData.GetVisitIDFromDate(VisitDate).ToString());
+        int count = 1;
         string SQLStatement = @"SELECT v.id, s.id as 'schoolid1', s2.id as 'schoolid2', s3.id as 'schoolid3', s4.id as 'schoolid4', s5.id as 'schoolid5'
                                 , s.schoolName as 'schoolname1', s2.schoolName as 'schoolname2', s3.schoolName as 'schoolname3', s4.schoolName as 'schoolname4', s5.schoolName as 'schoolname5'
                                 , v.vTrainingTime, v.vMinCount, v.vMaxCount, FORMAT(v.visitDate, 'yyyy-MM-dd') as visitDate, v.studentCount, v.visitTime, FORMAT(v.dueBy, 'yyyy-MM-dd') as dueBy 
@@ -66,7 +69,6 @@ public partial class Edit_Visit : Page
                                 LEFT JOIN schoolInfoFP s4 ON s4.ID = v.school4 
                                 LEFT JOIN schoolInfoFP s5 ON s5.ID = v.school5 
                                 WHERE v.visitDate = '" + VisitDate + "'";
-        string SQLStatementBusinesses = "SELECT * FROM openStatusFP WHERE visitID=" + VisitID + "";
 
         //Clear table
         dgvVisit.DataSource = null;
@@ -84,7 +86,6 @@ public partial class Edit_Visit : Page
             Review_sds.SelectCommand = SQLStatement;
             dgvVisit.DataSource = Review_sds;
             dgvVisit.DataBind();
-
         }
         catch
         {
@@ -96,55 +97,228 @@ public partial class Edit_Visit : Page
         cmd.Dispose();
         con.Close();
 
-        //Load open / closed businesses
-        try
-        {
-            con.ConnectionString = ConnectionString;
-            con.Open();
-            cmd.CommandText = SQLStatementBusinesses;
-            cmd.Connection = con;
-            dr = cmd.ExecuteReader();
+        //Load schools into open business
+        LoadSchoolsIntoOpenDDL(VisitDate);
 
-            while (dr.Read())
+        //Load open or closed businesses
+        while (count < 33)
+        {
+            //Check if count is 2, 3, 4, or 5. Those businesses are not needed to open
+            if (count == 2 || count == 3 || count == 4 || count == 5)
             {
-                Checkbox1.Checked = bool.Parse(dr["open1"].ToString());
-                Checkbox6.Checked = bool.Parse(dr["open6"].ToString());
-                Checkbox7.Checked = bool.Parse(dr["open7"].ToString());
-                Checkbox8.Checked = bool.Parse(dr["open8"].ToString());
-                Checkbox9.Checked = bool.Parse(dr["open9"].ToString());
-                Checkbox10.Checked = bool.Parse(dr["open10"].ToString());
-                Checkbox11.Checked = bool.Parse(dr["open11"].ToString());
-                Checkbox12.Checked = bool.Parse(dr["open12"].ToString());
-                Checkbox13.Checked = bool.Parse(dr["open13"].ToString());
-                Checkbox14.Checked = bool.Parse(dr["open14"].ToString());
-                Checkbox15.Checked = bool.Parse(dr["open15"].ToString());
-                Checkbox16.Checked = bool.Parse(dr["open16"].ToString());
-                Checkbox17.Checked = bool.Parse(dr["open17"].ToString());
-                Checkbox18.Checked = bool.Parse(dr["open18"].ToString());
-                Checkbox19.Checked = bool.Parse(dr["open19"].ToString());
-                Checkbox20.Checked = bool.Parse(dr["open20"].ToString());
-                Checkbox21.Checked = bool.Parse(dr["open21"].ToString());
-                Checkbox22.Checked = bool.Parse(dr["open22"].ToString());
-                Checkbox23.Checked = bool.Parse(dr["open23"].ToString());
-                Checkbox24.Checked = bool.Parse(dr["open24"].ToString());
-                Checkbox25.Checked = bool.Parse(dr["open25"].ToString());
-                Checkbox26.Checked = bool.Parse(dr["open26"].ToString());
-                Checkbox27.Checked = bool.Parse(dr["open27"].ToString());
-                Checkbox28.Checked = bool.Parse(dr["open28"].ToString());
-                Checkbox29.Checked = bool.Parse(dr["open29"].ToString());
-                Checkbox30.Checked = bool.Parse(dr["open30"].ToString());
-                Checkbox31.Checked = bool.Parse(dr["open31"].ToString());
-                Checkbox32.Checked = bool.Parse(dr["open32"].ToString());
+                count = count + 1;
             }
+            else
+            {
+                //Assign variable for function to get the school name and the open status of the count number (businessID)
+                var OpenStatus = LoadOpenBusinesses(VIDOfDate, count);
+
+                //Check off checkboxes and select the school name in the DDL
+                switch (count)
+                {
+                    case 1:
+                        ddlSchoolOpen1.SelectedIndex = ddlSchoolOpen1.Items.IndexOf(ddlSchoolOpen1.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox1.Checked = true;
+                        }
+                        break;
+                    case 6:
+                        ddlSchoolOpen6.SelectedIndex = ddlSchoolOpen6.Items.IndexOf(ddlSchoolOpen6.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox6.Checked = true;
+                        }
+                        break;
+                    case 7:
+                        ddlSchoolOpen7.SelectedIndex = ddlSchoolOpen7.Items.IndexOf(ddlSchoolOpen7.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox7.Checked = true;
+                        }
+                        break;
+                    case 8:
+                        ddlSchoolOpen8.SelectedIndex = ddlSchoolOpen8.Items.IndexOf(ddlSchoolOpen8.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox8.Checked = true;
+                        }
+                        break;
+                    case 9:
+                        ddlSchoolOpen9.SelectedIndex = ddlSchoolOpen9.Items.IndexOf(ddlSchoolOpen9.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox9.Checked = true;
+                        }
+                        break;
+                    case 10:
+                        ddlSchoolOpen10.SelectedIndex = ddlSchoolOpen10.Items.IndexOf(ddlSchoolOpen11.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox10.Checked = true;
+                        }
+                        break;
+                    case 11:
+                        ddlSchoolOpen11.SelectedIndex = ddlSchoolOpen11.Items.IndexOf(ddlSchoolOpen11.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox11.Checked = true;
+                        }
+                        break;
+                    case 12:
+                        ddlSchoolOpen12.SelectedIndex = ddlSchoolOpen12.Items.IndexOf(ddlSchoolOpen12.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox12.Checked = true;
+                        }
+                        break;
+                    case 13:
+                        ddlSchoolOpen13.SelectedIndex = ddlSchoolOpen13.Items.IndexOf(ddlSchoolOpen13.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox13.Checked = true;
+                        }
+                        break;
+                    case 14:
+                        ddlSchoolOpen14.SelectedIndex = ddlSchoolOpen14.Items.IndexOf(ddlSchoolOpen14.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox14.Checked = true;
+                        }
+                        break;
+                    case 15:
+                        ddlSchoolOpen15.SelectedIndex = ddlSchoolOpen15.Items.IndexOf(ddlSchoolOpen15.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox15.Checked = true;
+                        }
+                        break;
+                    case 16:
+                        ddlSchoolOpen16.SelectedIndex = ddlSchoolOpen16.Items.IndexOf(ddlSchoolOpen16.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox16.Checked = true;
+                        }
+                        break;
+                    case 17:
+                        ddlSchoolOpen17.SelectedIndex = ddlSchoolOpen17.Items.IndexOf(ddlSchoolOpen17.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox17.Checked = true;
+                        }
+                        break;
+                    case 18:
+                        ddlSchoolOpen18.SelectedIndex = ddlSchoolOpen18.Items.IndexOf(ddlSchoolOpen18.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox18.Checked = true;
+                        }
+                        break;
+                    case 19:
+                        ddlSchoolOpen19.SelectedIndex = ddlSchoolOpen19.Items.IndexOf(ddlSchoolOpen19.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox19.Checked = true;
+                        }
+                        break;
+                    case 20:
+                        ddlSchoolOpen20.SelectedIndex = ddlSchoolOpen20.Items.IndexOf(ddlSchoolOpen20.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox20.Checked = true;
+                        }
+                        break;
+                    case 21:
+                        ddlSchoolOpen21.SelectedIndex = ddlSchoolOpen21.Items.IndexOf(ddlSchoolOpen21.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox21.Checked = true;
+                        }
+                        break;
+                    case 22:
+                        ddlSchoolOpen22.SelectedIndex = ddlSchoolOpen22.Items.IndexOf(ddlSchoolOpen22.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox22.Checked = true;
+                        }
+                        break;
+                    case 23:
+                        ddlSchoolOpen23.SelectedIndex = ddlSchoolOpen23.Items.IndexOf(ddlSchoolOpen23.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox23.Checked = true;
+                        }
+                        break;
+                    case 24:
+                        ddlSchoolOpen24.SelectedIndex = ddlSchoolOpen24.Items.IndexOf(ddlSchoolOpen24.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox24.Checked = true;
+                        }
+                        break;
+                    case 25:
+                        ddlSchoolOpen25.SelectedIndex = ddlSchoolOpen25.Items.IndexOf(ddlSchoolOpen25.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox25.Checked = true;
+                        }
+                        break;
+                    case 26:
+                        ddlSchoolOpen26.SelectedIndex = ddlSchoolOpen26.Items.IndexOf(ddlSchoolOpen26.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox26.Checked = true;
+                        }
+                        break;
+                    case 27:
+                        ddlSchoolOpen27.SelectedIndex = ddlSchoolOpen27.Items.IndexOf(ddlSchoolOpen27.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox27.Checked = true;
+                        }
+                        break;
+                    case 28:
+                        ddlSchoolOpen28.SelectedIndex = ddlSchoolOpen28.Items.IndexOf(ddlSchoolOpen28.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox28.Checked = true;
+                        }
+                        break;
+                    case 29:
+                        ddlSchoolOpen29.SelectedIndex = ddlSchoolOpen29.Items.IndexOf(ddlSchoolOpen29.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox29.Checked = true;
+                        }
+                        break;
+                    case 30:
+                        ddlSchoolOpen30.SelectedIndex = ddlSchoolOpen30.Items.IndexOf(ddlSchoolOpen30.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox30.Checked = true;
+                        }
+                        break;
+                    case 31:
+                        ddlSchoolOpen31.SelectedIndex = ddlSchoolOpen31.Items.IndexOf(ddlSchoolOpen31.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox31.Checked = true;
+                        }
+                        break;
+                    case 32:
+                        ddlSchoolOpen32.SelectedIndex = ddlSchoolOpen32.Items.IndexOf(ddlSchoolOpen32.Items.FindByValue(OpenStatus.SchoolName));
+                        if (OpenStatus.Open == true)
+                        {
+                            Checkbox32.Checked = true;
+                        }
+                        break;
+                }
+
+                //Add one to count
+                count++;
+            }                     
         }
-        catch
-        {
-
-        }
-        
-
-
-
+               
         // Highlight row being edited
         foreach (GridViewRow row in dgvVisit.Rows)
         {
@@ -154,6 +328,93 @@ public partial class Edit_Visit : Page
                 row.BorderWidth = 2;
             }
         }
+    }
+
+    public (bool Open, string SchoolName) LoadOpenBusinesses(int VisitID, int BusinessID)
+    {
+        string SQLStatementBusinesses = "SELECT * FROM openStatusFP WHERE visitID=" + VisitID + " AND businessID='" + BusinessID + "'";
+        string SchoolName = "";
+        bool Open = false;
+
+        //Load values
+        con.ConnectionString = ConnectionString;
+        con.Open();
+        cmd.CommandText = SQLStatementBusinesses;
+        cmd.Connection = con;
+        dr = cmd.ExecuteReader();
+
+        while (dr.Read())
+        {
+            Open = bool.Parse(dr["openStatus"].ToString());
+            SchoolName = SchoolData.GetSchoolNameFromID(dr["schoolID"].ToString()).ToString();
+        }
+
+        cmd.Dispose();
+        con.Close();
+
+        return (Open, SchoolName);
+    }
+
+    public void LoadSchoolsIntoOpenDDL(string VisitDate)
+    {
+        //Add the passed through school name to all open status ddls
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen1);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen6);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen7);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen8);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen9);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen10);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen11);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen12);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen13);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen14);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen15);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen16);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen17);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen18);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen19);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen20);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen21);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen22);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen23);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen24);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen25);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen26);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen27);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen28);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen29);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen30);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen31);
+        SchoolData.LoadVisitDateSchoolsDDL(VisitDate, ddlSchoolOpen32);
+
+        ddlSchoolOpen1.Items.RemoveAt(0);
+        ddlSchoolOpen6.Items.RemoveAt(0);
+        ddlSchoolOpen7.Items.RemoveAt(0);
+        ddlSchoolOpen8.Items.RemoveAt(0);
+        ddlSchoolOpen9.Items.RemoveAt(0);
+        ddlSchoolOpen10.Items.RemoveAt(0);
+        ddlSchoolOpen11.Items.RemoveAt(0);
+        ddlSchoolOpen12.Items.RemoveAt(0);
+        ddlSchoolOpen13.Items.RemoveAt(0);
+        ddlSchoolOpen14.Items.RemoveAt(0);
+        ddlSchoolOpen15.Items.RemoveAt(0);
+        ddlSchoolOpen16.Items.RemoveAt(0);
+        ddlSchoolOpen17.Items.RemoveAt(0);
+        ddlSchoolOpen18.Items.RemoveAt(0);
+        ddlSchoolOpen19.Items.RemoveAt(0);
+        ddlSchoolOpen20.Items.RemoveAt(0);
+        ddlSchoolOpen21.Items.RemoveAt(0);
+        ddlSchoolOpen22.Items.RemoveAt(0);
+        ddlSchoolOpen23.Items.RemoveAt(0);
+        ddlSchoolOpen24.Items.RemoveAt(0);
+        ddlSchoolOpen25.Items.RemoveAt(0);
+        ddlSchoolOpen26.Items.RemoveAt(0);
+        ddlSchoolOpen27.Items.RemoveAt(0);
+        ddlSchoolOpen28.Items.RemoveAt(0);
+        ddlSchoolOpen29.Items.RemoveAt(0);
+        ddlSchoolOpen30.Items.RemoveAt(0);
+        ddlSchoolOpen31.Items.RemoveAt(0);
+        ddlSchoolOpen32.Items.RemoveAt(0);
     }
 
     public void UpdateCurrentVisitDate(string VisitDate, string SchoolID)
@@ -176,6 +437,264 @@ public partial class Edit_Visit : Page
                 return;
             }
         }
+    }
+
+    public void UpdateOpenClosedStatus()
+    {
+        int VisitID = int.Parse(VisitData.GetVisitIDFromDate(tbVisitDate.Text).ToString());
+        int schoolID;
+        int count = 1;
+        string openStatus;
+
+        //Load open or closed businesses
+        while (count < 33)
+        {
+            openStatus = "0";
+
+            //Check if count is 2, 3, 4, or 5. Those businesses are not needed to open
+            if (count == 2 || count == 3 || count == 4 || count == 5)
+            {
+                count = count + 1;
+            }
+            else
+            {
+                //Check off checkboxes and select the school name in the DDL
+                switch (count)
+                {
+                    case 1:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen1.SelectedValue);
+                        if (Checkbox1.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 6:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen6.SelectedValue);
+                        if (Checkbox6.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 7:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen7.SelectedValue);
+                        if (Checkbox7.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 8:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen8.SelectedValue);
+                        if (Checkbox8.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 9:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen9.SelectedValue);
+                        if (Checkbox9.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 10:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen10.SelectedValue);
+                        if (Checkbox10.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 11:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen11.SelectedValue);
+                        if (Checkbox11.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 12:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen12.SelectedValue);
+                        if (Checkbox12.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 13:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen13.SelectedValue);
+                        if (Checkbox13.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 14:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen14.SelectedValue);
+                        if (Checkbox14.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 15:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen15.SelectedValue);
+                        if (Checkbox15.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 16:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen16.SelectedValue);
+                        if (Checkbox16.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 17:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen17.SelectedValue);
+                        if (Checkbox17.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 18:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen18.SelectedValue);
+                        if (Checkbox18.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 19:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen19.SelectedValue);
+                        if (Checkbox19.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 20:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen20.SelectedValue);
+                        if (Checkbox20.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 21:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen21.SelectedValue);
+                        if (Checkbox21.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 22:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen22.SelectedValue);
+                        if (Checkbox22.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 23:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen23.SelectedValue);
+                        if (Checkbox23.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 24:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen24.SelectedValue);
+                        if (Checkbox24.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 25:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen25.SelectedValue);
+                        if (Checkbox25.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 26:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen26.SelectedValue);
+                        if (Checkbox26.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 27:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen27.SelectedValue);
+                        if (Checkbox27.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 28:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen28.SelectedValue);
+                        if (Checkbox28.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 29:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen29.SelectedValue);
+                        if (Checkbox29.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 30:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen30.SelectedValue);
+                        if (Checkbox30.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 31:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen31.SelectedValue);
+                        if (Checkbox31.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                    case 32:
+                        schoolID = SchoolData.GetSchoolID(ddlSchoolOpen32.SelectedValue);
+                        if (Checkbox32.Checked == true)
+                        {
+                            openStatus = "1";
+                        }
+                        SQLC.ExecuteSQL("UPDATE openStatusFP SET schoolID='" + schoolID + "', openStatus='" + openStatus + "' WHERE visitID='" + VisitID + "' AND businessID='" + count + "'");
+                        break;
+                        
+                }
+
+                //Add one to count
+                count++;
+            }
+        }
+
+        //Load data again
+        LoadData();
     }
 
 
@@ -386,57 +905,6 @@ public partial class Edit_Visit : Page
 
     protected void btnUpdate_Click(object sender, EventArgs e)
     {
-        int VisitID = int.Parse(VisitData.GetVisitIDFromDate(tbVisitDate.Text).ToString());
-
-        //Update openStatusFP
-        try
-        {
-            using (SqlConnection con = new SqlConnection(ConnectionString))
-            {
-                using (SqlCommand cmd = new SqlCommand(@"UPDATE openStatusFP SET open1=@open1, open6=@open6, open7=@open7, open8=@open8, open9=@open9, open10=@open10, open11=@open11, open12=@open12, open13=@open13, open14=@open14, open15=@open15, open16=@open16, open17=@open17, open18=@open18, open19=@open19, open20=@open20, open21=@open21, open22=@open22, open23=@open23, open24=@open24, open25=@open25, open26=@open26, open27=@open27, open28=@open28, open29=@open29, open30=@open30, open31=@open31, open32=@open32 WHERE visitID=@visitID"))
-
-                {
-                    // Date that is inputed in the textbox
-                    cmd.Parameters.Add("@visitID", SqlDbType.Int).Value = VisitID;
-                    cmd.Parameters.Add("@open1", SqlDbType.Bit).Value = Checkbox1.Checked;
-                    cmd.Parameters.Add("@open6", SqlDbType.Bit).Value = Checkbox6.Checked;
-                    cmd.Parameters.Add("@open7", SqlDbType.Bit).Value = Checkbox7.Checked;
-                    cmd.Parameters.Add("@open8", SqlDbType.Bit).Value = Checkbox8.Checked;
-                    cmd.Parameters.Add("@open9", SqlDbType.Bit).Value = Checkbox9.Checked;
-                    cmd.Parameters.Add("@open10", SqlDbType.Bit).Value = Checkbox10.Checked;
-                    cmd.Parameters.Add("@open11", SqlDbType.Bit).Value = Checkbox11.Checked;
-                    cmd.Parameters.Add("@open12", SqlDbType.Bit).Value = Checkbox12.Checked;
-                    cmd.Parameters.Add("@open13", SqlDbType.Bit).Value = Checkbox13.Checked;
-                    cmd.Parameters.Add("@open14", SqlDbType.Bit).Value = Checkbox14.Checked;
-                    cmd.Parameters.Add("@open15", SqlDbType.Bit).Value = Checkbox15.Checked;
-                    cmd.Parameters.Add("@open16", SqlDbType.Bit).Value = Checkbox16.Checked;
-                    cmd.Parameters.Add("@open17", SqlDbType.Bit).Value = Checkbox17.Checked;
-                    cmd.Parameters.Add("@open18", SqlDbType.Bit).Value = Checkbox18.Checked;
-                    cmd.Parameters.Add("@open19", SqlDbType.Bit).Value = Checkbox19.Checked;
-                    cmd.Parameters.Add("@open20", SqlDbType.Bit).Value = Checkbox20.Checked;
-                    cmd.Parameters.Add("@open21", SqlDbType.Bit).Value = Checkbox21.Checked;
-                    cmd.Parameters.Add("@open22", SqlDbType.Bit).Value = Checkbox22.Checked;
-                    cmd.Parameters.Add("@open23", SqlDbType.Bit).Value = Checkbox23.Checked;
-                    cmd.Parameters.Add("@open24", SqlDbType.Bit).Value = Checkbox24.Checked;
-                    cmd.Parameters.Add("@open25", SqlDbType.Bit).Value = Checkbox25.Checked;
-                    cmd.Parameters.Add("@open26", SqlDbType.Bit).Value = Checkbox26.Checked;
-                    cmd.Parameters.Add("@open27", SqlDbType.Bit).Value = Checkbox27.Checked;
-                    cmd.Parameters.Add("@open28", SqlDbType.Bit).Value = Checkbox28.Checked;
-                    cmd.Parameters.Add("@open29", SqlDbType.Bit).Value = Checkbox29.Checked;
-                    cmd.Parameters.Add("@open30", SqlDbType.Bit).Value = Checkbox30.Checked;
-                    cmd.Parameters.Add("@open31", SqlDbType.Bit).Value = Checkbox31.Checked;
-                    cmd.Parameters.Add("@open32", SqlDbType.Bit).Value = Checkbox32.Checked;
-                    cmd.Connection = con;
-                    con.Open();
-                    cmd.ExecuteNonQuery();
-                    con.Close();
-                }
-            }
-        }
-        catch
-        {
-            lblError.Text = "Error in Submit(). Could not edit opened/closed businesses.";
-            return;
-        }
+        UpdateOpenClosedStatus();
     }
 }

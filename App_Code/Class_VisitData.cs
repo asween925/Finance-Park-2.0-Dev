@@ -69,7 +69,7 @@ public partial class Class_VisitData
         return returnValue;
     }
 
-    public object GetVisitDateFromID(string VisitID)
+    public object GetVisitDateFromID(int VisitID)
     {
         string ConnectionString = "Server=" + sqlserver + ";database=" + sqldatabase + ";uid=" + sqluser + ";pwd=" + sqlpassword + ";Connection Timeout=20;";
         string dateSQL = "SELECT visitDate FROM visitInfoFP WHERE id = '" + VisitID + "'";

@@ -382,7 +382,7 @@ public partial class Class_BusinessData
 
 
     //Get action button data
-    public (string Btn1Text, string BtnText2, string BtnText3, string Btn1A, string Btn2A, string Btn3A) GetActionButtons (int BusinessID)
+    public (string Btn1Text, string BtnText2, string BtnText3, string Btn1A, string Btn2A, string Btn3A, string Btn1SText, string BtnSText2, string BtnSText3, string BtnS1A, string BtnS2A, string BtnS3A) GetActionButtons (int BusinessID)
     {
         string Btn1Text = "";
         string Btn2Text = "";
@@ -390,11 +390,17 @@ public partial class Class_BusinessData
         string Btn1A = "";
         string Btn2A = "";
         string Btn3A = "";
+        string Btn1SText = "";
+        string Btn2SText = "";
+        string Btn3SText = "";
+        string Btn1SA = "";
+        string Btn2SA = "";
+        string Btn3SA = "";
 
         con.ConnectionString = ConnectionString;
         con.Open();
         cmd.Connection = con;
-        cmd.CommandText = "SELECT actionBtnText, actionBtnText2, actionBtnText3, actionBtn1Action, actionBtn2Action, actionBtn3Action FROM businessInfoFP WHERE id='" + BusinessID + "'";
+        cmd.CommandText = "SELECT actionBtnText, actionBtnText2, actionBtnText3, actionBtn1Action, actionBtn2Action, actionBtn3Action, actionBtnShopText, actionBtnShopText2, actionBtnShopText3, actionBtn1ShopAction, actionBtn2ShopAction, actionBtn3ShopAction FROM businessInfoFP WHERE id='" + BusinessID + "'";
         dr = cmd.ExecuteReader();
 
         while (dr.Read())
@@ -405,12 +411,18 @@ public partial class Class_BusinessData
             Btn1A = dr["actionBtn1Action"].ToString();
             Btn2A = dr["actionBtn2Action"].ToString();
             Btn3A = dr["actionBtn3Action"].ToString();
+            Btn1SText = dr["actionBtnShopText"].ToString();
+            Btn2SText = dr["actionBtnShopText2"].ToString();
+            Btn3SText = dr["actionBtnShopText3"].ToString();
+            Btn1SA = dr["actionBtn1ShopAction"].ToString();
+            Btn2SA = dr["actionBtn2ShopAction"].ToString();
+            Btn3SA = dr["actionBtn3ShopAction"].ToString();
         }
 
         cmd.Dispose();
         con.Close();
 
-        return (Btn1Text, Btn2Text, Btn3Text, Btn1A, Btn2A, Btn3A);
+        return (Btn1Text, Btn2Text, Btn3Text, Btn1A, Btn2A, Btn3A, Btn1SText, Btn2SText, Btn3SText, Btn1SA, Btn2A, Btn3A);
     }
 
 
@@ -452,7 +464,7 @@ public partial class Class_BusinessData
         con.ConnectionString = ConnectionString;
         con.Open();
         cmd.Connection = con;
-        cmd.CommandText = "SELECT * FROM businessInfoFP WHERE id='" + BusinessID + "'";
+        cmd.CommandText = "SELECT * FROM researchTablesFP WHERE id='" + BusinessID + "'";
         dr = cmd.ExecuteReader();
 
         while (dr.Read())

@@ -9,6 +9,8 @@ using System.Web.UI.HtmlControls;
 using System.Data;
 using Microsoft.AspNet.Identity;
 using System.Activities.Statements;
+using System.Collections.Specialized;
+using Microsoft.Owin.Security;
 
 public partial class Create_Visit : System.Web.UI.Page
 {
@@ -72,7 +74,7 @@ public partial class Create_Visit : System.Web.UI.Page
         string school3 = ddlSchools3.SelectedValue;
         string school4 = ddlSchools4.SelectedValue;
         string school5 = ddlSchools5.SelectedValue;
-        string newVisitID;
+        string newVisitID;      
 
         // Check for empty fields
         if (tbVisitDate.Text == "" || ddlSchools.SelectedIndex == 0)
@@ -160,59 +162,8 @@ public partial class Create_Visit : System.Web.UI.Page
         newVisitID = VisitData.GetVisitIDFromDate(visitDate).ToString();
 
         //Insert openStatusFP
-        try
-        {
-            using (SqlConnection con = new SqlConnection(ConnectionString))
-            {
-                using (SqlCommand cmd = new SqlCommand(@"INSERT INTO openStatusFP(visitID, open1, open6, open7, open8, open9, open10, open11, open12, open13, open14, open15, open16, open17, open18, open19, open20, open21, open22, open23, open24, open25, open26, open27, open28, open29, open30, open31, open32 )
-										            
-                                                        VALUES (@visitID, @open1, @open6, @open7, @open8, @open9, @open10, @open11, @open12, @open13, @open14, @open15, @open16, @open17, @open18, @open19, @open20, @open21, @open22, @open23, @open24, @open25, @open26, @open27, @open28, @open29, @open30, @open31, @open32);"))
-
-                {
-
-                    // Date that is inputed in the textbox
-                    cmd.Parameters.Add("@visitID", SqlDbType.Int).Value = newVisitID;
-                    cmd.Parameters.Add("@open1", SqlDbType.Bit).Value = Checkbox1.Checked;
-                    cmd.Parameters.Add("@open6", SqlDbType.Bit).Value = Checkbox6.Checked;
-                    cmd.Parameters.Add("@open7", SqlDbType.Bit).Value = Checkbox7.Checked;
-                    cmd.Parameters.Add("@open8", SqlDbType.Bit).Value = Checkbox8.Checked;
-                    cmd.Parameters.Add("@open9", SqlDbType.Bit).Value = Checkbox9.Checked;
-                    cmd.Parameters.Add("@open10", SqlDbType.Bit).Value = Checkbox10.Checked;
-                    cmd.Parameters.Add("@open11", SqlDbType.Bit).Value = Checkbox11.Checked;
-                    cmd.Parameters.Add("@open12", SqlDbType.Bit).Value = Checkbox12.Checked;
-                    cmd.Parameters.Add("@open13", SqlDbType.Bit).Value = Checkbox13.Checked;
-                    cmd.Parameters.Add("@open14", SqlDbType.Bit).Value = Checkbox14.Checked;
-                    cmd.Parameters.Add("@open15", SqlDbType.Bit).Value = Checkbox15.Checked;
-                    cmd.Parameters.Add("@open16", SqlDbType.Bit).Value = Checkbox16.Checked;
-                    cmd.Parameters.Add("@open17", SqlDbType.Bit).Value = Checkbox17.Checked;
-                    cmd.Parameters.Add("@open18", SqlDbType.Bit).Value = Checkbox18.Checked;
-                    cmd.Parameters.Add("@open19", SqlDbType.Bit).Value = Checkbox19.Checked;
-                    cmd.Parameters.Add("@open20", SqlDbType.Bit).Value = Checkbox20.Checked;
-                    cmd.Parameters.Add("@open21", SqlDbType.Bit).Value = Checkbox21.Checked;
-                    cmd.Parameters.Add("@open22", SqlDbType.Bit).Value = Checkbox22.Checked;
-                    cmd.Parameters.Add("@open23", SqlDbType.Bit).Value = Checkbox23.Checked;
-                    cmd.Parameters.Add("@open24", SqlDbType.Bit).Value = Checkbox24.Checked;
-                    cmd.Parameters.Add("@open25", SqlDbType.Bit).Value = Checkbox25.Checked;
-                    cmd.Parameters.Add("@open26", SqlDbType.Bit).Value = Checkbox26.Checked;
-                    cmd.Parameters.Add("@open27", SqlDbType.Bit).Value = Checkbox27.Checked;
-                    cmd.Parameters.Add("@open28", SqlDbType.Bit).Value = Checkbox28.Checked;
-                    cmd.Parameters.Add("@open29", SqlDbType.Bit).Value = Checkbox29.Checked;
-                    cmd.Parameters.Add("@open30", SqlDbType.Bit).Value = Checkbox30.Checked;
-                    cmd.Parameters.Add("@open31", SqlDbType.Bit).Value = Checkbox31.Checked;
-                    cmd.Parameters.Add("@open32", SqlDbType.Bit).Value = Checkbox32.Checked;
-                    cmd.Connection = con;
-                    con.Open();
-                    cmd.ExecuteNonQuery();
-                    con.Close();
-                }
-            }
-        }
-        catch
-        {
-            lblSuccess.Text = "Error in Submit(). Could not open businesses.";
-            return;
-        }
-
+        SubmitOpenStatus(newVisitID);
+      
         //Update current visit ID in teachersInfoFP
         UpdateTeachers(newVisitID);
         
@@ -223,6 +174,267 @@ public partial class Create_Visit : System.Web.UI.Page
         this.Page.Controls.Add(meta);
         //ScriptManager.RegisterStartupScript(Page, this.GetType(), "ScrollPage", "window.scroll(0,0);", true);
         lblSuccess.Text = "Submission Successful! Refreshing page...";      
+    }
+
+    public void SubmitOpenStatus(string newVisitID)
+    {
+        int count = 1;
+        int schoolID;
+        int open;     
+
+        //Start while loop for business ID
+        while (count < 33)
+        {
+            //Check if count is 2, 3, 4, or 5. Those businesses are not needed to open
+            if (count == 2 || count == 3 || count == 4 || count == 5)
+            {
+                count = count + 1;
+            }
+            else
+            {
+                var OpenStatus = GetSchoolIDAndOpenStatus(count);
+
+                //Get schoolID from ddl
+                schoolID = OpenStatus.schoolID;
+                open = OpenStatus.openStatus;
+
+                //Insert data into openStatusFP
+                try
+                {
+                    using (SqlConnection con = new SqlConnection(ConnectionString))
+                    {
+                        using (SqlCommand cmd = new SqlCommand(@"INSERT INTO openStatusFP (visitID, schoolID, businessID, openStatus) VALUES (@visitID, @schoolID, @businessID, @openStatus);"))
+                        {
+                            // Date that is inputed in the textbox
+                            cmd.Parameters.Add("@visitID", SqlDbType.Int).Value = newVisitID;
+                            cmd.Parameters.Add("@schoolID", SqlDbType.Int).Value = schoolID;
+                            cmd.Parameters.Add("@businessID", SqlDbType.Int).Value = count;
+                            cmd.Parameters.Add("@openStatus", SqlDbType.Bit).Value = open;
+                            cmd.Connection = con;
+                            con.Open();
+                            cmd.ExecuteNonQuery();
+                            con.Close();
+                        }
+                    }
+                }
+                catch
+                {
+                    lblSuccess.Text = "Error in SubmitOpenStatus(). Could not insert open status for business ID: " + count;
+                    return;
+                }
+            }
+
+            //Add one to count, start loop over again
+            count++;
+        }
+    }
+
+    public (int schoolID, int openStatus) GetSchoolIDAndOpenStatus(int countNumber)
+    {
+        int schoolID = 0;
+        int openStatus = 0;
+
+        //Get school ID from the ddl tied to the checkboxes businessID number (count number) AND get the businessID if it is checked
+        switch (countNumber) {
+            case 1:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen1.SelectedValue);
+                if (Checkbox1.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 6:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen6.SelectedValue);
+                if (Checkbox6.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 7:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen7.SelectedValue);
+                if (Checkbox7.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 8:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen8.SelectedValue);
+                if (Checkbox8.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 9:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen9.SelectedValue);
+                if (Checkbox9.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 10:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen10.SelectedValue);
+                if (Checkbox10.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 11:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen11.SelectedValue);
+                if (Checkbox11.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 12:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen12.SelectedValue);
+                if (Checkbox12.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 13:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen13.SelectedValue);
+                if (Checkbox13.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 14:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen14.SelectedValue);
+                if (Checkbox14.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 15:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen15.SelectedValue);
+                if (Checkbox15.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 16:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen16.SelectedValue);
+                if (Checkbox16.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 17:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen17.SelectedValue);
+                if (Checkbox17.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 18:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen18.SelectedValue);
+                if (Checkbox18.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 19:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen19.SelectedValue);
+                if (Checkbox19.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 20:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen20.SelectedValue);
+                if (Checkbox20.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 21:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen21.SelectedValue);
+                if (Checkbox21.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 22:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen22.SelectedValue);
+                if (Checkbox22.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 23:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen23.SelectedValue);
+                if (Checkbox23.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 24:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen24.SelectedValue);
+                if (Checkbox24.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 25:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen25.SelectedValue);
+                if (Checkbox25.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 26:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen26.SelectedValue);
+                if (Checkbox26.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 27:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen27.SelectedValue);
+                if (Checkbox27.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 28:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen28.SelectedValue);
+                if (Checkbox28.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 29:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen29.SelectedValue);
+                if (Checkbox29.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 30:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen30.SelectedValue);
+                if (Checkbox30.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 31:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen31.SelectedValue);
+                if (Checkbox31.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+            case 32:
+                schoolID = SchoolData.GetSchoolID(ddlSchoolOpen32.SelectedValue);
+                if (Checkbox32.Checked == true)
+                {
+                    openStatus = 1;
+                }
+                break;
+        }
+
+        return (schoolID, openStatus);
     }
 
     public void UpdateTeachers(string VisitID)
@@ -360,6 +572,39 @@ public partial class Create_Visit : System.Web.UI.Page
         }
     }
 
+    public void AddSchoolToOpenDDL(string SchoolName)
+    {
+        //Add the passed through school name to all open status ddls
+        ddlSchoolOpen1.Items.Add(SchoolName);
+        ddlSchoolOpen6.Items.Add(SchoolName);
+        ddlSchoolOpen7.Items.Add(SchoolName);
+        ddlSchoolOpen8.Items.Add(SchoolName);
+        ddlSchoolOpen9.Items.Add(SchoolName);
+        ddlSchoolOpen10.Items.Add(SchoolName);
+        ddlSchoolOpen11.Items.Add(SchoolName);
+        ddlSchoolOpen12.Items.Add(SchoolName); 
+        ddlSchoolOpen13.Items.Add(SchoolName);
+        ddlSchoolOpen14.Items.Add(SchoolName);
+        ddlSchoolOpen15.Items.Add(SchoolName);
+        ddlSchoolOpen16.Items.Add(SchoolName);
+        ddlSchoolOpen17.Items.Add(SchoolName);
+        ddlSchoolOpen18.Items.Add(SchoolName);
+        ddlSchoolOpen19.Items.Add(SchoolName);
+        ddlSchoolOpen20.Items.Add(SchoolName);
+        ddlSchoolOpen21.Items.Add(SchoolName);
+        ddlSchoolOpen22.Items.Add(SchoolName);
+        ddlSchoolOpen23.Items.Add(SchoolName);
+        ddlSchoolOpen24.Items.Add(SchoolName);
+        ddlSchoolOpen25.Items.Add(SchoolName);
+        ddlSchoolOpen26.Items.Add(SchoolName);
+        ddlSchoolOpen27.Items.Add(SchoolName);
+        ddlSchoolOpen28.Items.Add(SchoolName);
+        ddlSchoolOpen29.Items.Add(SchoolName);
+        ddlSchoolOpen30.Items.Add(SchoolName);
+        ddlSchoolOpen31.Items.Add(SchoolName);
+        ddlSchoolOpen32.Items.Add(SchoolName);
+    }
+
 
 
     protected void ddlVisitTime_SelectedIndexChanged1(object sender, EventArgs e)
@@ -480,20 +725,29 @@ public partial class Create_Visit : System.Web.UI.Page
         ddlTeacher12.Items.Clear();
         ddlTeacher13.Items.Clear();
 
+        //If ddl is selected
         if (ddlSchools.SelectedIndex != 0)
         {
+            //Make teacher div and header tag and school 2 ddl visible
             aTeacher1.Visible = true;
             divTeachers1.Visible = true;
+            pSchool2.Visible = true;
+            ddlSchools2.Visible = true;
 
             //Load teacher DDLs
             TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools.SelectedValue, ddlTeacher1);
             TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools.SelectedValue, ddlTeacher12);
             TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools.SelectedValue, ddlTeacher13);
+
+            //Add selected school name from ddlschools to all open status ddls
+            AddSchoolToOpenDDL(ddlSchools.SelectedValue);
         }
         else
         {
             aTeacher1.Visible=false;
             divTeachers1.Visible=false;
+            pSchool2.Visible = false;
+            ddlSchools2.Visible = false;
         }
     }
 
@@ -504,20 +758,29 @@ public partial class Create_Visit : System.Web.UI.Page
         ddlTeacher22.Items.Clear();
         ddlTeacher23.Items.Clear();
 
+        //If schools 2 is selected
         if (ddlSchools2.SelectedIndex != 0)
         {
+            //Make teacher div and header tag and school 3 ddl visible
             aTeacher2.Visible = true;
             divTeachers2.Visible = true;
+            pSchool3.Visible = true;
+            ddlSchools3.Visible = true;
 
             //Load teacher DDLs
             TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools2.SelectedValue, ddlTeacher2);
             TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools2.SelectedValue, ddlTeacher22);
             TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools2.SelectedValue, ddlTeacher23);
+
+            //Add selected school name from ddlschools to all open status ddls
+            AddSchoolToOpenDDL(ddlSchools2.SelectedValue);
         }
         else
         {
             aTeacher2.Visible = false;
             divTeachers2.Visible = false;
+            pSchool3.Visible = false;
+            ddlSchools3.Visible = false;
         }
     }
 
@@ -528,20 +791,29 @@ public partial class Create_Visit : System.Web.UI.Page
         ddlTeacher32.Items.Clear();
         ddlTeacher33.Items.Clear();
 
+        //If schools 3 is selected
         if (ddlSchools3.SelectedIndex != 0)
         {
+            //Make teacher div and header tag and school 4 ddl visible
             aTeacher3.Visible = true;
             divTeachers3.Visible = true;
+            pSchool4.Visible = true;
+            ddlSchools4.Visible = true;
 
             //Load teacher DDLs
             TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools3.SelectedValue, ddlTeacher3);
             TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools3.SelectedValue, ddlTeacher32);
             TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools3.SelectedValue, ddlTeacher33);
+
+            //Add selected school name from ddlschools to all open status ddls
+            AddSchoolToOpenDDL(ddlSchools3.SelectedValue);
         }
         else
         {
             aTeacher3.Visible = false;
             divTeachers3.Visible = false;
+            pSchool4.Visible = false;
+            ddlSchools4.Visible = false;
         }
     }
 
@@ -552,20 +824,29 @@ public partial class Create_Visit : System.Web.UI.Page
         ddlTeacher42.Items.Clear();
         ddlTeacher43.Items.Clear();
 
+        //if schools 4 is selected
         if (ddlSchools4.SelectedIndex != 0)
         {
+            //Make teacher div and header tag and school 5 ddl visible
             aTeacher4.Visible = true;
             divTeachers4.Visible = true;
+            pSchool5.Visible = true;
+            ddlSchools5.Visible = true;
 
             //Load teacher DDLs
             TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools4.SelectedValue, ddlTeacher4);
             TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools4.SelectedValue, ddlTeacher42);
             TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools4.SelectedValue, ddlTeacher43);
+
+            //Add selected school name from ddlschools to all open status ddls
+            AddSchoolToOpenDDL(ddlSchools4.SelectedValue);
         }
         else
         {
             aTeacher4.Visible = false;
             divTeachers4.Visible = false;
+            pSchool5.Visible = false;
+            ddlSchools5.Visible = false;
         }
     }
 
@@ -576,8 +857,10 @@ public partial class Create_Visit : System.Web.UI.Page
         ddlTeacher52.Items.Clear();
         ddlTeacher53.Items.Clear();
 
+        //If schools 5 is selected
         if (ddlSchools5.SelectedIndex != 0)
         {
+            //Make teacher div and header tag visible
             aTeacher5.Visible = true;
             divTeachers5.Visible = true;
 
@@ -585,6 +868,9 @@ public partial class Create_Visit : System.Web.UI.Page
             TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools5.SelectedValue, ddlTeacher5);
             TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools5.SelectedValue, ddlTeacher52);
             TeacherData.LoadTeacherNameDDLFromSchoolName(ddlSchools5.SelectedValue, ddlTeacher53);
+
+            //Add selected school name from ddlschools to all open status ddls
+            AddSchoolToOpenDDL(ddlSchools5.SelectedValue);
         }
         else
         {

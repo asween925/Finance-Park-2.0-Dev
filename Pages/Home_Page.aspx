@@ -85,6 +85,7 @@
                     <div class="Home_Page_Drop_Down_Content">
                         <a href="../Pages/Tools/School_Visit_Checklist.aspx">School Visit Checklist</a>
                         <a href="../Pages/Tools/Lunch_System.aspx">Lunch System</a>
+                        <a href="../Pages/Tools/Volunteer_Database.aspx">Volunteer Database</a>
                     </div>
                 </div>
 
@@ -109,6 +110,7 @@
                         <a href="../Pages/Forms/Liaison_Letter.aspx">Family and Community Liason Information Forms</a>
                         <a href="../Pages/Forms/Teacher_Reminders.aspx">Teacher Reminders</a>
                         <a href="../Pages/Forms/Business_Assignments.aspx">Business Assignments</a>
+                        <a href="../Pages/Forms/Parent_Letter.aspx">Parent Letter</a>
                     </div>
                 </div>
 
