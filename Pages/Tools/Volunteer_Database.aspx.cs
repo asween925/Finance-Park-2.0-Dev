@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Ajax.Utilities;
+using System;
 using System.Activities.Expressions;
 using System.Activities.Statements;
 using System.Configuration;
@@ -224,8 +225,9 @@ public partial class Volunteer_Database : Page
             else
             {
 
-                // Make volunteers div visible
-                divViewVol.Visible = true;
+                // Make volunteers div invisible
+                lblError.Text = "No visit date today.";
+                divViewVol.Visible = false;
 
             }
         }
@@ -1171,11 +1173,11 @@ public partial class Volunteer_Database : Page
         string VolName;
         string[] VolIDWithParentheses;
         string VolID;
-        string SQLStatement = @"SELECT vs.id, vs.volunteerID, vo.firstName, vo.lastName, FORMAT(v.visitDate, 'MM/dd/yyyy') as visitDate, s.schoolName, vo.pr, vo.svHours, vo.notes, vo.regular
+        string SQLStatement = @"SELECT vo.id, vo.id as volunteerID, vo.firstName, vo.lastName, FORMAT(v.visitDate, 'MM/dd/yyyy') as visitDate, s.schoolName, vo.pr, vo.svHours, vo.notes, vo.regular
 										FROM volunteersFP vo
-										JOIN volunteersScheduleFP vs ON vo.id = vs.volunteerID
-										JOIN visitInfoFp v ON v.id = vs.visitID
-										JOIN schoolInfoFP s ON s.id = vo.schoolID";
+										LEFT JOIN volunteersScheduleFP vs ON vo.id = vs.volunteerID
+										LEFT JOIN visitInfoFp v ON v.id = vs.visitID
+										LEFT JOIN schoolInfoFP s ON s.id = vo.schoolID";
 
         // Clear error and reset all fields
         lblError.Text = "";
@@ -1209,7 +1211,7 @@ public partial class Volunteer_Database : Page
             VolID = VolIDWithParentheses[0];
 
             // Update SQL statement
-            SQLStatement = SQLStatement + " WHERE vs.volunteerID='" + VolID + "'";
+            SQLStatement = SQLStatement + " WHERE vo.id='" + VolID + "'";
 
         }
 
@@ -2495,6 +2497,9 @@ public partial class Volunteer_Database : Page
         PR = ddlPR.SelectedValue;
         Notes = tbNotes.Text;
 
+        //lblError.Text = SchoolID.ToString();
+        //return;
+
         // Check if volunteer first and last name are already apart of the selected school
         try
         {
@@ -2584,7 +2589,7 @@ public partial class Volunteer_Database : Page
         CountOfVolunteers = dgvScheduledVol.Rows.Count;
 
         // Start a for loop to add volunteer IDs and visit IDs to the insert query
-        for (int i = 0; i == (CountOfVolunteers - 1); i++)
+        for (int i = 0; i < CountOfVolunteers; i++)
         {
 
             // Assign volunteer ID
@@ -2593,11 +2598,12 @@ public partial class Volunteer_Database : Page
             // Check if volunteer ID is already assigned to visitID
             if (CheckVolunteerSchedule(VolunteerID, int.Parse(VisitID)) == true)
             {
+                //Go back to start of the loop
                 continue;
             }
 
             // If adding data for the first row, do not add a comma to the beginning of the query
-            if (i == 0 | !SQLInsertQuery.Contains("VALUES ("))
+            if (i == 0 || !SQLInsertQuery.Contains("VALUES ("))
             {
                 SQLInsertQuery = SQLInsertQuery + " (" + VolunteerID + ", " + VisitID + ")";
             }
@@ -2607,14 +2613,24 @@ public partial class Volunteer_Database : Page
             }
 
             // Remove business ID from exsiting volunteers (if they are being added into the insert 
-            if (i == 0 | !SQLRemoveBusiness.Contains("WHERE id"))
+            if (i == 0 || !SQLRemoveBusiness.Contains("id="))
             {
                 SQLRemoveBusiness = SQLRemoveBusiness + " id=" + VolunteerID + " ";
             }
             else
             {
-                SQLRemoveBusiness = SQLRemoveBusiness + "AND id=" + VolunteerID + "";
+                SQLRemoveBusiness = SQLRemoveBusiness + " AND id=" + VolunteerID + "";
             }
+        }
+
+        //lblError.Text = SQLRemoveBusiness + CountOfVolunteers;
+        //return;
+
+        //Check if there are any values for insertion
+        if (!SQLInsertQuery.Contains("VALUES ("))
+        {
+            lblError.Text = "All volunteers have already been scheduled.";
+            return;
         }
 
         // Insert into volunteerSchedule table in the database
@@ -2629,9 +2645,8 @@ public partial class Volunteer_Database : Page
             con.Close();
         }
         catch
-        {
-            //"Error in submission for Schedule Volunteers. Cannot insert volunteers into database."
-            lblError.Text = SQLInsertQuery;
+        {           
+            lblError.Text = "Error in submission for Schedule Volunteers. Cannot insert volunteers into database.";
             return;
         }
 
@@ -2648,7 +2663,8 @@ public partial class Volunteer_Database : Page
         }
         catch
         {
-            lblError.Text = "Error in submission for Schedule Volunteers. Cannot remove old assigned business into database.";
+            //lblError.Text = "Error in submission for Schedule Volunteers. Cannot remove old assigned business into database.";
+            lblError.Text = SQLRemoveBusiness;
             return;
         }
 
@@ -3310,25 +3326,6 @@ public partial class Volunteer_Database : Page
 
     }
 
-    // Gets data (tbh idk what this does but its in everything)
-    private DataSet GetData(string query)
-    {
-        var cmd = new SqlCommand(query);
-        using (var con = new SqlConnection(ConnectionString))
-        {
-            using (var sda = new SqlDataAdapter())
-            {
-                cmd.Connection = con;
-                sda.SelectCommand = cmd;
-                using (var ds = new DataSet())
-                {
-                    sda.Fill(ds);
-                    return ds;
-                }
-            }
-        }
-    }
-
 
 
     // All of the volunteers gridview modules
@@ -3370,14 +3367,13 @@ public partial class Volunteer_Database : Page
         {
             using (var con = new SqlConnection(ConnectionString))
             {
-                using (var cmd = new SqlCommand("UPDATE volunteersFP SET firstName=@firstName, lastName=@lastName, sponsorID=@sponsorID, schoolID=@schoolID, visitID=@visitID, pr=@pr, svHours=@svHours, notes=@notes, regular=@regular WHERE ID=@Id"))
+                using (var cmd = new SqlCommand("UPDATE volunteersFP SET firstName=@firstName, lastName=@lastName, sponsorID=@sponsorID, schoolID=@schoolID, pr=@pr, svHours=@svHours, notes=@notes, regular=@regular WHERE ID=@Id"))
                 {
                     cmd.Parameters.AddWithValue("@ID", ID);
                     cmd.Parameters.AddWithValue("@firstName", firstName);
                     cmd.Parameters.AddWithValue("@lastName", lastName);
                     cmd.Parameters.AddWithValue("@sponsorID", sponsorID);
                     cmd.Parameters.AddWithValue("@schoolID", schoolID);
-                    cmd.Parameters.AddWithValue("@visitID", VIDOfDate);
                     cmd.Parameters.AddWithValue("@pr", pr);
                     cmd.Parameters.AddWithValue("@svHours", svHours);
                     cmd.Parameters.AddWithValue("@notes", notes);
@@ -3402,6 +3398,36 @@ public partial class Volunteer_Database : Page
         {
             // Update checkboxes
             SubmitCheckIn(int.Parse(VIDOfDate));
+        }
+
+        //Update vol schedule
+        try
+        {
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                using (var cmd = new SqlCommand("UPDATE volunteersScheduleFP SET visitID=@visitID WHERE volunteerID=@volunteerID AND visitID=@visitID"))
+                {
+                    cmd.Parameters.AddWithValue("@ID", ID);
+                    cmd.Parameters.AddWithValue("@firstName", firstName);
+                    cmd.Parameters.AddWithValue("@lastName", lastName);
+                    cmd.Parameters.AddWithValue("@sponsorID", sponsorID);
+                    cmd.Parameters.AddWithValue("@schoolID", schoolID);
+                    cmd.Parameters.AddWithValue("@pr", pr);
+                    cmd.Parameters.AddWithValue("@svHours", svHours);
+                    cmd.Parameters.AddWithValue("@notes", notes);
+                    cmd.Parameters.AddWithValue("@regular", regular);
+                    cmd.Connection = con;
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                }
+            }
+            dgvVolunteers.EditIndex = -1; // reset the grid after editing
+            LoadData();
+        }
+        catch
+        {
+
         }
 
     }
@@ -3558,12 +3584,24 @@ public partial class Volunteer_Database : Page
     {
         GridViewRow row = dgvVolunteers.Rows[0];                           // Code is used to enable the editing prodecure
         int ID = Convert.ToInt32(dgvVolunteers.DataKeys[e.RowIndex].Values[0]); // Gets id number
+        string SQLStatement;
+
+        //If check in screen is visible, only delete the volunteer's entry on the volunteerScheduleFP table
+        if (divCheckIn.Visible == true)
+        {
+            string VisitID = VisitData.GetVisitIDFromDate(tbVisitDateCheckin.Text).ToString();
+            SQLStatement = "DELETE FROM volunteersScheduleFP WHERE volunteerID=@ID AND visitID='" + VisitID + "'";
+        }
+        else //deletes the volunteer entirely from the volunteersFP table
+        {
+            SQLStatement = "DELETE FROM volunteersFP WHERE id=@ID";
+        }
 
         try
         {
             using (var con = new SqlConnection(ConnectionString))
             {
-                using (var cmd = new SqlCommand("DELETE FROM volunteersFP WHERE id=@ID"))
+                using (var cmd = new SqlCommand(SQLStatement))
                 {
                     cmd.Parameters.AddWithValue("@ID", ID);
                     cmd.Connection = con;
@@ -3576,7 +3614,7 @@ public partial class Volunteer_Database : Page
             LoadData();
         }
 
-        catch (Exception ex)
+        catch
         {
             lblError.Text = "Error in rowDeleting. Cannot delete row.";
             return;
@@ -3594,6 +3632,40 @@ public partial class Volunteer_Database : Page
     {
         dgvVolunteers.PageIndex = e.NewPageIndex;
         LoadData();
+    }
+
+
+    //Deletion handler for the view volunteers gridview
+    protected void dgvViewVolCtrl_RowDeleting(object sender, GridViewDeleteEventArgs e)
+    {
+        GridViewRow row = dgvViewVolCtrl.Rows[0];                           // Code is used to enable the editing prodecure
+        int ID = Convert.ToInt32(dgvViewVolCtrl.DataKeys[e.RowIndex].Values[0]); // Gets id number
+        string SQLStatement;
+
+        SQLStatement = "DELETE FROM volunteersFP WHERE id=@ID";
+
+        try
+        {
+            using (var con = new SqlConnection(ConnectionString))
+            {
+                using (var cmd = new SqlCommand(SQLStatement))
+                {
+                    cmd.Parameters.AddWithValue("@ID", ID);
+                    cmd.Connection = con;
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                }
+            }
+            dgvViewVolCtrl.EditIndex = -1;       // reset the grid after editing
+            LoadViewVolCtrlGridview();
+        }
+
+        catch
+        {
+            lblError.Text = "Error in rowDeleting in View Volunteers. Cannot delete row.";
+            return;
+        }
     }
 
 
@@ -3678,6 +3750,7 @@ public partial class Volunteer_Database : Page
             divAddVol.Visible = true;
             divScheduleVol.Visible = false;
             divCheckIn.Visible = false;
+            divViewVolControls.Visible = false;
 
             // Clear error label and visit date
             lblError.Text = "";
@@ -3699,6 +3772,7 @@ public partial class Volunteer_Database : Page
             divAddVol.Visible = false;
             divScheduleVol.Visible = true;
             divCheckIn.Visible = false;
+            divViewVolControls.Visible = false;
 
             // Clear error label and visit date
             lblError.Text = "";
@@ -3722,6 +3796,7 @@ public partial class Volunteer_Database : Page
             divCheckIn.Visible = true;
             divAddVol.Visible = false;
             divScheduleVol.Visible = false;
+            divViewVolControls.Visible = false;
 
             // Clear error label and visit date
             lblError.Text = "";
@@ -3871,4 +3946,6 @@ public partial class Volunteer_Database : Page
             LoadViewVolCtrlGridview();
         }
     }
+
+    
 }
