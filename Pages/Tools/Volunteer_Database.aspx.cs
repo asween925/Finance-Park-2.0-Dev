@@ -59,8 +59,8 @@ public partial class Volunteer_Database : Page
             lblHeaderSchoolName.Text = SH.GetSchoolHeader().ToString();
 
             // Populate school name ddl in Add New Volunteer
-            SchoolData.LoadSchoolsDDL(ddlSchoolNameAdd, false);
-            SchoolData.LoadSchoolsDDL(ddlSchoolNameSchedule, false);
+            SchoolData.LoadSchoolsDDL(ddlSchoolNameAdd, true);
+            SchoolData.LoadSchoolsDDL(ddlSchoolNameSchedule, true);
 
             // Populate volunteer names in ddl in Schedule Volunteers
             LoadVolunteerNameDDL(ddlVolNameSchedule);
@@ -101,7 +101,7 @@ public partial class Volunteer_Database : Page
         // Add Volunteer
         if (divAddVol.Visible == true)
         {
-            divViewVol.Visible = true;
+            divViewVol.Visible = false;
         }
 
         // Schedule Volunteer
@@ -232,6 +232,7 @@ public partial class Volunteer_Database : Page
             }
         }
 
+        //View Volunteers
         else
         {
             divViewVol.Visible = true;
@@ -240,11 +241,7 @@ public partial class Volunteer_Database : Page
         // Check if search bar is filled
         if (tbSearch.Text != "")
         {
-            SQLStatement = SQLStatement + " WHERE vo.firstName LIKE '%" + tbSearch.Text + "%' OR vo.lastName LIKE '%" + tbSearch.Text + "%'";
-        }
-        else
-        {
-            SQLStatement = SQLStatement;
+            SQLStatement = SQLStatement + " AND vo.lastName LIKE '%" + tbSearch.Text + "%'";
         }
 
         // Add order by to SQLStatement
@@ -2486,6 +2483,12 @@ public partial class Volunteer_Database : Page
         if (tbFirstName.Text == "" | tbLastName.Text == "")
         {
             lblError.Text = "Please enter a first name, last name, business, visit date, school name and regular volunteer status before submitting.";
+            return;
+        }
+
+        if (ddlSchoolNameAdd.SelectedIndex == 0)
+        {
+            lblError.Text = "Please select a school name before submitting.";
             return;
         }
 

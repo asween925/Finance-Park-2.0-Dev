@@ -195,7 +195,7 @@
                     <div class="popup content_home_changelog" onclick="myFunction()">
                         Latest Updates
                         <div class="popuptext" id="myPopup">
-                            <span>Last Updated: 1/11/2023 (v2.2.20)</span>                           
+                            <span>Last Updated: 9/16/2024 (v0.7.0b)</span>                           
                         </div>
                     </div>
                     |
@@ -210,7 +210,7 @@
                         </div>
                     </div>
                     <div class="content_home_bottom">
-                        <p>Last Updated: 1/11/2024 @ 3:30pm&ensp;Version: 2.2.20&ensp;Current Visit ID:<asp:Label ID="lblVisitID" runat="server"></asp:Label></p>
+                        <p>Last Updated: 9/16/2024 &ensp;Version: 0.7.0b&ensp;Current Visit ID:<asp:Label ID="lblVisitID" runat="server"></asp:Label></p>
                     </div>
 
                     <br />
