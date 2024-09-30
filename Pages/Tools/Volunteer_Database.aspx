@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Volunteer_Database.aspx.cs" Inherits="Volunteer_Database" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Volunteer_Database.aspx.cs" Inherits="Volunteer_Database" MaintainScrollPositionOnPostback="true" %>
 
 <!doctype html>
 <html>
@@ -313,9 +313,9 @@
                     <asp:TextBox ID="tbSearch" runat="server" CssClass="textbox"></asp:TextBox>&ensp;<asp:Button ID="btnSearch" runat="server" CssClass="button" Text="Search" OnClick="search_btn_Click" />&ensp;|&ensp;
                     Sort By:
                     <asp:DropDownList ID="ddlSortBy" runat="server" CssClass="ddl">
-                        <asp:ListItem>Recently Added</asp:ListItem>
-                        <asp:ListItem>First Name</asp:ListItem>
                         <asp:ListItem>Last Name</asp:ListItem>
+                        <asp:ListItem>Recently Added</asp:ListItem>
+                        <asp:ListItem>First Name</asp:ListItem>                    
                         <asp:ListItem>Sponsor Name</asp:ListItem>
                         <asp:ListItem>School Name</asp:ListItem>
                         <asp:ListItem>Visit Date</asp:ListItem>
@@ -325,8 +325,8 @@
                     </asp:DropDownList>
                     &ensp;
                     <asp:DropDownList ID="ddlAscDesc" runat="server" CssClass="ddl">
-                        <asp:ListItem>Descending</asp:ListItem>
                         <asp:ListItem>Ascending</asp:ListItem>
+                        <asp:ListItem>Descending</asp:ListItem>
                     </asp:DropDownList>&ensp;<asp:Button ID="btnSortBy" runat="server" CssClass="button" Text="Sort" OnClick="sortBy_btn_Click" />
                     &ensp;
                     <a>Total SV Hours:
@@ -354,7 +354,7 @@
                             </asp:TemplateField>
                             <asp:TemplateField HeaderText="Assigned<br/>Sponsor">
                                 <ItemTemplate>
-                                    <asp:Label ID="lblSponsorNameDGV" runat="server" Text='<%#Bind("sponsorID") %>' Visible="false"></asp:Label>
+                                    <asp:Label ID="lblSponsorNameDGV" runat="server" Text='<%#Bind("sponsorID") %>' Visible="true"></asp:Label>
                                     <asp:DropDownList CssClass="ddl" ID="ddlSponsorNameDGV" runat="server" Width="200px" ReadOnly="false"></asp:DropDownList>
                                 </ItemTemplate>
                             </asp:TemplateField>

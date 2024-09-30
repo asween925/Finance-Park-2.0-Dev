@@ -128,84 +128,100 @@
                         <td>
                             <asp:DropDownList ID="ddlSchoolOpen1" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox1" runat="server" Text="Auto Insurance" /></td>
                         <td>
-                            <asp:DropDownList ID="ddlSchoolOpen6" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox6" runat="server" Text="Bank Mortgage" /></td>
+                            <asp:DropDownList ID="ddlSchoolOpen2" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox2" runat="server" Text="Auto Insurance" /></td>
                         <td>
-                            <asp:DropDownList ID="ddlSchoolOpen7" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox7" runat="server" Text="Bank Savings" /></td>
+                            <asp:DropDownList ID="ddlSchoolOpen3" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox3" runat="server" Text="Auto Insurance" /></td>
                     </tr>
                     <tr>
+                        <td>
+                            <asp:DropDownList ID="ddlSchoolOpen4" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox4" runat="server" Text="Auto Insurance" /></td>
+                        <td>
+                            <asp:DropDownList ID="ddlSchoolOpen5" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox5" runat="server" Text="Auto Insurance" /></td>
+                        <td>
+                            <asp:DropDownList ID="ddlSchoolOpen6" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox6" runat="server" Text="Auto Insurance" /></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <asp:DropDownList ID="ddlSchoolOpen7" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox7" runat="server" Text="Bank Savings" /></td>
                         <td>
                             <asp:DropDownList ID="ddlSchoolOpen8" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox8" runat="server" Text="Bank Auto Loan" /></td>
                         <td>
                             <asp:DropDownList ID="ddlSchoolOpen9" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox9" runat="server" Text="Cable" /></td>
-                        <td>
-                            <asp:DropDownList ID="ddlSchoolOpen10" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox10" runat="server" Text="Childcare" /></td>
                     </tr>
                     <tr>
+                        <td>
+                            <asp:DropDownList ID="ddlSchoolOpen10" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox10" runat="server" Text="Childcare" /></td>
                         <td>
                             <asp:DropDownList ID="ddlSchoolOpen11" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox11" runat="server" Text="Clothing" /></td>
                         <td>
                             <asp:DropDownList ID="ddlSchoolOpen12" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox12" runat="server" Text="Credit Cards" /></td>
-                        <td>
-                            <asp:DropDownList ID="ddlSchoolOpen13" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox13" runat="server" Text="Dining Out" /></td>
+
                     </tr>
                     <tr>
+                        <td>
+                            <asp:DropDownList ID="ddlSchoolOpen13" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox13" runat="server" Text="Dining Out" /></td>
                         <td>
                             <asp:DropDownList ID="ddlSchoolOpen14" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox14" runat="server" Text="Disability/Life Insurance" /></td>
                         <td>
                             <asp:DropDownList ID="ddlSchoolOpen15" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox15" runat="server" Text="Education" /></td>
-                        <td>
-                            <asp:DropDownList ID="ddlSchoolOpen16" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox16" runat="server" Text="Entertainment" /></td>
+
                     </tr>
                     <tr>
+                        <td>
+                            <asp:DropDownList ID="ddlSchoolOpen16" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox16" runat="server" Text="Entertainment" /></td>
                         <td>
                             <asp:DropDownList ID="ddlSchoolOpen17" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox17" runat="server" Text="Furniture" /></td>
                         <td>
                             <asp:DropDownList ID="ddlSchoolOpen18" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox18" runat="server" Text="Gas and Maintenance" /></td>
-                        <td>
-                            <asp:DropDownList ID="ddlSchoolOpen19" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox19" runat="server" Text="Grocery" /></td>
+
                     </tr>
                     <tr>
+                        <td>
+                            <asp:DropDownList ID="ddlSchoolOpen19" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox19" runat="server" Text="Grocery" /></td>
                         <td>
                             <asp:DropDownList ID="ddlSchoolOpen20" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox20" runat="server" Text="Health Insurance" /></td>
                         <td>
                             <asp:DropDownList ID="ddlSchoolOpen21" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox21" runat="server" Text="Home Improvement" /></td>
-                        <td>
-                            <asp:DropDownList ID="ddlSchoolOpen22" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox22" runat="server" Text="Home Insurance" /></td>
+
                     </tr>
                     <tr>
+                        <td>
+                            <asp:DropDownList ID="ddlSchoolOpen22" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox22" runat="server" Text="Home Insurance" /></td>
                         <td>
                             <asp:DropDownList ID="ddlSchoolOpen23" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox23" runat="server" Text="Housing" /></td>
                         <td>
                             <asp:DropDownList ID="ddlSchoolOpen24" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox24" runat="server" Text="Internet" /></td>
-                        <td>
-                            <asp:DropDownList ID="ddlSchoolOpen25" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox25" runat="server" Text="Investments" /></td>
+
                     </tr>
                     <tr>
+                        <td>
+                            <asp:DropDownList ID="ddlSchoolOpen25" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox25" runat="server" Text="Investments" /></td>
                         <td>
                             <asp:DropDownList ID="ddlSchoolOpen26" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox26" runat="server" Text="Philanthropy" /></td>
                         <td>
                             <asp:DropDownList ID="ddlSchoolOpen27" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox27" runat="server" Text="Phone" /></td>
-                        <td>
-                            <asp:DropDownList ID="ddlSchoolOpen28" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox28" runat="server" Text="That's Life" /></td>
+
                     </tr>
                     <tr>
+                        <td>
+                            <asp:DropDownList ID="ddlSchoolOpen28" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox28" runat="server" Text="That's Life" /></td>
                         <td>
                             <asp:DropDownList ID="ddlSchoolOpen29" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox29" runat="server" Text="Transportation" /></td>
                         <td>
                             <asp:DropDownList ID="ddlSchoolOpen30" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox30" runat="server" Text="Utilities - Water/Sewer/Trash" /></td>
-                        <td>
-                            <asp:DropDownList ID="ddlSchoolOpen31" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox31" runat="server" Text="Utilities - Electricity" /></td>
+
                     </tr>
                     <tr>
                         <td>
+                            <asp:DropDownList ID="ddlSchoolOpen31" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox31" runat="server" Text="Utilities - Electricity" /></td>
+                        <td>
                             <asp:DropDownList ID="ddlSchoolOpen32" runat="server" CssClass="ddl"></asp:DropDownList>&ensp;<asp:CheckBox ID="Checkbox32" runat="server" Text="Utilities - Gas" /></td>
-                        <td></td>
                         <td></td>
                     </tr>
                 </table>
                 <br />
                 <br />
-                <asp:Button ID="btnOpenAll" runat="server" CssClass="button" Text="Open All Businesses" OnClick="btnOpenAll_Click" />&ensp;<asp:Button ID="btnUpdate" runat="server" Text="Update" CssClass="button" OnClick="btnUpdate_Click" />
+                <asp:Button ID="btnOpenAll" runat="server" CssClass="button" Text="Open All Businesses" OnClick="btnOpenAll_Click" />&ensp;<asp:Button ID="btnUpdate" runat="server" Text="Update Open Status" CssClass="button" OnClick="btnUpdate_Click" />
                 <br />
                 <br />
             </div>

@@ -11,6 +11,7 @@ using Microsoft.AspNet.Identity;
 using System.Activities.Statements;
 using System.Collections.Specialized;
 using Microsoft.Owin.Security;
+using System.Runtime.Remoting.Lifetime;
 
 public partial class Create_Visit : System.Web.UI.Page
 {
@@ -22,6 +23,7 @@ public partial class Create_Visit : System.Web.UI.Page
     Class_SchoolHeader SchoolHeader = new Class_SchoolHeader();
     Class_SchoolSchedule SchoolSchedule = new Class_SchoolSchedule();
     Class_TeacherData TeacherData = new Class_TeacherData();
+    Class_SponsorData Sponsors = new Class_SponsorData();
     string sqlserver = System.Configuration.ConfigurationManager.AppSettings["FP_sfp"];
     string sqldatabase = System.Configuration.ConfigurationManager.AppSettings["FP_DB"];
     string sqluser = System.Configuration.ConfigurationManager.AppSettings["db_user"];
@@ -58,7 +60,10 @@ public partial class Create_Visit : System.Web.UI.Page
             SchoolData.LoadSchoolsDDL(ddlSchools5, false);
 
             //Populate visit time DDL
-            SchoolSchedule.LoadVisitTimeDDL(ddlVisitTime);           
+            SchoolSchedule.LoadVisitTimeDDL(ddlVisitTime);
+
+            //Load sponsor names onto checkboxes
+            LoadSponsorNamesOnCheckboxes();
         }
     }
 
@@ -186,12 +191,12 @@ public partial class Create_Visit : System.Web.UI.Page
         while (count < 33)
         {
             //Check if count is 2, 3, 4, or 5. Those businesses are not needed to open
-            if (count == 2 || count == 3 || count == 4 || count == 5)
-            {
-                count = count + 1;
-            }
-            else
-            {
+            //if (count == 2 || count == 3 || count == 4 || count == 5)
+            //{
+            //    count = count + 1;
+            //}
+            //else
+            //{
                 var OpenStatus = GetSchoolIDAndOpenStatus(count);
 
                 //Get schoolID from ddl
@@ -203,12 +208,12 @@ public partial class Create_Visit : System.Web.UI.Page
                 {
                     using (SqlConnection con = new SqlConnection(ConnectionString))
                     {
-                        using (SqlCommand cmd = new SqlCommand(@"INSERT INTO openStatusFP (visitID, schoolID, businessID, openStatus) VALUES (@visitID, @schoolID, @businessID, @openStatus);"))
+                        using (SqlCommand cmd = new SqlCommand(@"INSERT INTO openStatusFP (visitID, schoolID, sponsorID, openStatus) VALUES (@visitID, @schoolID, @sponsorID, @openStatus);"))
                         {
                             // Date that is inputed in the textbox
                             cmd.Parameters.Add("@visitID", SqlDbType.Int).Value = newVisitID;
                             cmd.Parameters.Add("@schoolID", SqlDbType.Int).Value = schoolID;
-                            cmd.Parameters.Add("@businessID", SqlDbType.Int).Value = count;
+                            cmd.Parameters.Add("@sponsorID", SqlDbType.Int).Value = count;
                             cmd.Parameters.Add("@openStatus", SqlDbType.Bit).Value = open;
                             cmd.Connection = con;
                             con.Open();
@@ -222,7 +227,7 @@ public partial class Create_Visit : System.Web.UI.Page
                     lblSuccess.Text = "Error in SubmitOpenStatus(). Could not insert open status for business ID: " + count;
                     return;
                 }
-            }
+            
 
             //Add one to count, start loop over again
             count++;
@@ -576,6 +581,10 @@ public partial class Create_Visit : System.Web.UI.Page
     {
         //Add the passed through school name to all open status ddls
         ddlSchoolOpen1.Items.Add(SchoolName);
+        ddlSchoolOpen2.Items.Add(SchoolName);
+        ddlSchoolOpen3.Items.Add(SchoolName);
+        ddlSchoolOpen4.Items.Add(SchoolName);
+        ddlSchoolOpen5.Items.Add(SchoolName);
         ddlSchoolOpen6.Items.Add(SchoolName);
         ddlSchoolOpen7.Items.Add(SchoolName);
         ddlSchoolOpen8.Items.Add(SchoolName);
@@ -605,6 +614,121 @@ public partial class Create_Visit : System.Web.UI.Page
         ddlSchoolOpen32.Items.Add(SchoolName);
     }
 
+    public void LoadSponsorNamesOnCheckboxes()
+    {
+        int count = 1;
+
+        //Get sponsor names and apply them to each checkbox
+        while (count < 33)
+        {
+
+            //Check off checkboxes and select the school name in the DDL
+            switch (count)
+            {
+                case 1:
+                    Checkbox1.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 2:
+                    Checkbox2.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 3:
+                    Checkbox3.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 4:
+                    Checkbox4.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 5:
+                    Checkbox5.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 6:
+                    Checkbox6.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 7:
+                    Checkbox7.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 8:
+                    Checkbox8.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 9:
+                    Checkbox9.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 10:
+                    Checkbox10.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 11:
+                    Checkbox11.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 12:
+                    Checkbox12.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 13:
+                    Checkbox13.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 14:
+                    Checkbox14.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 15:
+                    Checkbox15.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 16:
+                    Checkbox16.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 17:
+                    Checkbox17.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 18:
+                    Checkbox18.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 19:
+                    Checkbox19.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 20:
+                    Checkbox20.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 21:
+                    Checkbox21.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 22:
+                    Checkbox22.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 23:
+                    Checkbox23.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 24:
+                    Checkbox24.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 25:
+                    Checkbox25.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 26:
+                    Checkbox26.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 27:
+                    Checkbox27.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 28:
+                    Checkbox28.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 29:
+                    Checkbox29.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 30:
+                    Checkbox30.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 31:
+                    Checkbox31.Text = Sponsors.GetSponsorName(count);
+                    break;
+                case 32:
+                    Checkbox32.Text = Sponsors.GetSponsorName(count);
+                    break;
+
+            }
+
+            //Add one to count
+            count++;
+
+        }
+    }
 
 
     protected void ddlVisitTime_SelectedIndexChanged1(object sender, EventArgs e)
@@ -623,6 +747,10 @@ public partial class Create_Visit : System.Web.UI.Page
         {
             //Check off all checkboxes
             Checkbox1.Checked = true;
+            Checkbox2.Checked = true;
+            Checkbox3.Checked = true;
+            Checkbox4.Checked = true;
+            Checkbox5.Checked = true;
             Checkbox6.Checked = true;
             Checkbox7.Checked = true;
             Checkbox8.Checked = true;
@@ -658,6 +786,10 @@ public partial class Create_Visit : System.Web.UI.Page
         {
             //Check off all checkboxes
             Checkbox1.Checked = false;
+            Checkbox2.Checked = false;
+            Checkbox3.Checked = false;
+            Checkbox4.Checked = false;
+            Checkbox5.Checked = false;
             Checkbox6.Checked = false;
             Checkbox7.Checked = false;
             Checkbox8.Checked = false;

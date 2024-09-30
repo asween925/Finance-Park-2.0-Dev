@@ -1449,7 +1449,7 @@ public partial class Volunteer_Database : Page
         while (count < 33)
         {
                 //Update SQLstatment, assign count to the open column name
-                SQLStatement = "SELECT sp.id, sp.sponsorName, o.businessID, s.schoolName, o.openStatus FROM openStatusFP o JOIN schoolInfoFP s ON s.id = o.schoolID LEFT JOIN sponsorsFP sp ON sp.businessID = o.businessID OR sp.businessID2 = o.businessID OR sp.businessID3 = o.businessID OR sp.businessID4 = o.businessID WHERE o.visitID = '" + VIDOfDate + "' AND o.openStatus = '1' AND o.businessID = '" + count + "'";
+                SQLStatement = "SELECT sp.id, sp.sponsorName, o.sponsorID, s.schoolName, o.openStatus FROM openStatusFP o JOIN schoolInfoFP s ON s.id = o.schoolID LEFT JOIN sponsorsFP sp ON sp.businessID = o.sponsorID OR sp.businessID2 = o.sponsorID OR sp.businessID3 = o.sponsorID OR sp.businessID4 = o.sponsorID WHERE o.visitID = '" + VIDOfDate + "' AND o.openStatus = '1' AND o.sponsorID = '" + count + "'";
 
                 //try
                 //{
@@ -1465,7 +1465,7 @@ public partial class Volunteer_Database : Page
                         if (dr.HasRows == true)
                         {
                             // If sponsor ID equals the count number then check the boxes
-                            if (dr["businessID"].ToString() == count.ToString())
+                            if (dr["sponsorID"].ToString() == count.ToString())
                             {
                                 // Set color of text based on school assigned and enable vol reg ddl
                                 switch (count.ToString())
@@ -3025,7 +3025,9 @@ public partial class Volunteer_Database : Page
                 con.ConnectionString = ConnectionString;
                 con.Open();
                 cmd.CommandText = @"SELECT COUNT(*) as occur FROM volunteersFP v
-									  WHERE v.visitID='" + VIDOfDate + "' AND v.sponsorID='" + BusinessCount + @"'
+                                    JOIN volunteersScheduleFP vs
+                                    ON vs.volunteerID = v.id
+									  WHERE vs.visitID='" + VIDOfDate + "' AND v.sponsorID='" + BusinessCount + @"'
 									  GROUP BY v.sponsorID";
                 cmd.Connection = con;
                 dr = cmd.ExecuteReader();
@@ -3302,10 +3304,10 @@ public partial class Volunteer_Database : Page
         }
 
         // Refresh page
-        var meta = new HtmlMeta();
-        meta.HttpEquiv = "Refresh";
-        meta.Content = "3;url=volunteer_database.aspx";
-        Page.Controls.Add(meta);
+        //var meta = new HtmlMeta();
+        //meta.HttpEquiv = "Refresh";
+        //meta.Content = "3;url=volunteer_database.aspx";
+        //Page.Controls.Add(meta);
 
     }
 
@@ -3408,17 +3410,10 @@ public partial class Volunteer_Database : Page
         {
             using (var con = new SqlConnection(ConnectionString))
             {
-                using (var cmd = new SqlCommand("UPDATE volunteersScheduleFP SET visitID=@visitID WHERE volunteerID=@volunteerID AND visitID=@visitID"))
+                using (var cmd = new SqlCommand("UPDATE volunteersScheduleFP SET visitID=@visitID WHERE volunteerID=@ID AND visitID=@visitID"))
                 {
                     cmd.Parameters.AddWithValue("@ID", ID);
-                    cmd.Parameters.AddWithValue("@firstName", firstName);
-                    cmd.Parameters.AddWithValue("@lastName", lastName);
-                    cmd.Parameters.AddWithValue("@sponsorID", sponsorID);
-                    cmd.Parameters.AddWithValue("@schoolID", schoolID);
-                    cmd.Parameters.AddWithValue("@pr", pr);
-                    cmd.Parameters.AddWithValue("@svHours", svHours);
-                    cmd.Parameters.AddWithValue("@notes", notes);
-                    cmd.Parameters.AddWithValue("@regular", regular);
+                    cmd.Parameters.AddWithValue("@visitID", VIDOfDate);
                     cmd.Connection = con;
                     con.Open();
                     cmd.ExecuteNonQuery();
@@ -3430,7 +3425,8 @@ public partial class Volunteer_Database : Page
         }
         catch
         {
-
+            lblError.Text = "Error in Updating(). Error with updating volunteer schedule table.";
+            return;
         }
 
     }
